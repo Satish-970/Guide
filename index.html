@@ -185,11 +185,38 @@
       color: var(--accent-1);
     }
 
+    /* TWEAK: Custom Scrollbar Styling (Webkit only) */
+    .sidebar::-webkit-scrollbar {
+      width: 8px;
+      /* Width of the scrollbar */
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: var(--bg-2);
+      /* Dark track color */
+      border-radius: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      /* Scroll thumb uses the accent color */
+      background: var(--accent-2);
+      border-radius: 10px;
+      border: 2px solid var(--bg-2);
+      /* Provides a visual border */
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-1);
+      /* Lighten on hover */
+    }
+
     .sidebar {
       position: fixed;
       right: 18px;
       top: 92px;
       width: 260px;
+      max-height: 80vh;
+      overflow-y: auto;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
       border: 1px solid var(--glass-border);
       border-radius: 14px;
@@ -221,10 +248,19 @@
       border-radius: 8px;
       margin-bottom: 6px;
       font-weight: 600;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    /* TWEAK: Add a hover state to the fixed sidebar */
+    .sidebar:hover {
+      /* Slightly more intense glow/shadow on hover */
+      box-shadow: 0 8px 40px rgba(244, 186, 186, 0.2);
+      transform: translateX(18px) scale(1);
+      /* Bring it closer / normalize scale */
     }
 
     .sidebar a:hover {
-      background: linear-gradient(90deg, rgba(169, 107, 255, 0.06), rgba(123, 227, 255, 0.03));
+      background: linear-gradient(90deg, rgba(236, 236, 236, 0.06), rgba(248, 251, 252, 0.03));
       color: var(--accent-1);
     }
 
@@ -601,8 +637,14 @@
       <h3>Quick Links</h3>
       <a href="pages/java.html" data-target="java">Java</a>
       <a href="pages/dsa.html" data-target="dsa">DSA</a>
+      <a href="pages/DBMS.html" data-target="dbms">DBMS</a>
+      <a href="pages/SQL.html" data-target="sql">SQL</a>
       <a href="pages/C++.html" data-target="cpp">C++</a>
       <a href="pages/C.html" data-target="c">C</a>
+      <a href="pages/COD.html" data-target="cod">COD</a>
+      <a href="pages/OS.html" data-target="os">OS</a>
+      <a href="pages/Networking.html" data-target="Networking">Networking</a>
+      <a href="pages/PEA.html" data-target="PEA">PEA</a>
       <a href="pages/Python.html" data-target="python">Python</a>
       <a href="pages/JavaScript.html" data-target="js">JavaScript</a>
       <a href="pages/Kotlin.html" data-target="kotlin">Kotlin</a>
@@ -671,6 +713,201 @@
             </div>
           </div>
         </div>
+
+        <div class="flip reveal" role="listitem">
+          <div class="card" tabindex="0" aria-label="DBMS card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">DBMS</div>
+                    <div class="lang-sub">Storage & Transactions</div>
+                  </div>
+                  <div class="orb">🗄️</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Deep dive into database internals, storage engines, transactions, ACID properties, and distributed
+                  systems.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Infrastructure</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Mastering DBMS internals helps you design robust systems, optimize storage, and
+                  understand distributed consistency.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/DBMS.html" data-lang="dbms">Open DBMS</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="dbms-topics">Topics</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal" role="listitem">
+          <div class="card" tabindex="0" aria-label="SQL card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">SQL</div>
+                    <div class="lang-sub">Querying & Analytics</div>
+                  </div>
+                  <div class="orb">🧾</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Master declarative querying, complex joins, performance tuning, and schema design for production
+                  systems.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Data</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">SQL is the language of data. Learn to write efficient queries, understand
+                  execution plans, and optimize for scale.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/SQL.html" data-lang="sql">Open SQL</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="sql-topics">Topics</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal" role="listitem">
+          <div class="card" tabindex="0" aria-label="Operating Systems card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Operating Systems</div>
+                    <div class="lang-sub">Processes & Memory</div>
+                  </div>
+                  <div class="orb">🖥️</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Processes, Memory, Scheduling, Concurrency & File Systems — Clear concepts + interview problems.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Infrastructure</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">OS knowledge separates scripters from engineers. Understand how your code
+                  interacts with hardware.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/OS.html" data-lang="os">Open OS</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="os-topics">Topics</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal" role="listitem">
+          <div class="card" tabindex="0" aria-label="Networking card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Networking</div>
+                    <div class="lang-sub">Protocols & Architecture</div>
+                  </div>
+                  <div class="orb">🌐</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  From Bits on the Wire to BGP — Clear concepts, real-world examples, and interview problems.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Infrastructure</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Networking powers the cloud. Learn how bytes move reliably across the world.
+                </div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/Networking.html" data-lang="networking">Open Net</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="net-topics">Topics</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal" role="listitem">
+          <div class="card" tabindex="0" aria-label="Computer Architecture card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Computer Arch</div>
+                    <div class="lang-sub">System Internals</div>
+                  </div>
+                  <div class="orb">⚙️</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Pipelines, Cache Hierarchies, ISAs, Parallelism & Interview Problems — Understand the hardware.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Hardware</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Architecture bridges software and silicon. Master pipelines, caches, and
+                  performance engineering.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/COD.html" data-lang="cod">Open COD</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="cod-topics">Topics</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal" role="listitem">
+          <div class="card" tabindex="0" aria-label="Probability & Analytics card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">P/Stats & Analytics</div>
+                    <div class="lang-sub">Data Science Math</div>
+                  </div>
+                  <div class="orb">📈</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Probability, Statistics, Hypothesis Testing, and Data Interpretation for Analytics roles.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Analytics</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Quant skills are critical. Master probability, stats, and data interpretation
+                  for analytics careers.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/PEA.html" data-lang="pea">Open Analytics</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="pea-topics">Topics</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         <div class="flip reveal" role="listitem">
           <div class="card" tabindex="0" aria-label="Java card">
@@ -892,7 +1129,7 @@
                 <div class="back-desc">Kotlin reduces boilerplate and improves developer productivity — great for mobile
                   and server-side JVM projects.</div>
                 <div class="back-actions">
-                  <a class="link-btn" href="pages/Kotlin.html" data-lang="kotlin">Open Kotlin</a>
+                  <a class="link-btn" href="pages/kotlin.html" data-lang="kotlin">Open Kotlin</a>
                   <button class="ghost-btn ghost-btn-modal" data-content-id="kotlin-examples">Examples</button>
                 </div>
               </div>
@@ -924,7 +1161,7 @@
                 <div class="back-desc">Swift offers modern syntax and performance; great for mobile developers
                   practicing algorithms for apps.</div>
                 <div class="back-actions">
-                  <a class="link-btn" href="pages/Swift.html" data-lang="swift">Open Swift</a>
+                  <a class="link-btn" href="pages/swift.html" data-lang="swift">Open Swift</a>
                   <button class="ghost-btn ghost-btn-modal" data-content-id="swift-docs">Docs</button>
                 </div>
               </div>
@@ -1097,6 +1334,72 @@
                 <li><p><strong>Advanced Structures:</strong> Trees (Binary, AVL, Red-Black), Heaps (Min/Max), Hash Tables, Graphs.</p></li>
                 <li><p><strong>Algorithms:</strong> Sorting (Merge, Quick, Heap), Searching (Binary, DFS, BFS), Dynamic Programming, Greedy Algorithms.</p></li>
                 <li><p><strong>Complexity Analysis:</strong> Big O Notation $(\\mathcal{O})$, Big Omega $(\\Omega)$, Big Theta $(\\Theta)$.</p></li>
+            </ul>
+        `
+      },
+      'dbms-topics': {
+        title: 'DBMS: Core Concepts',
+        content: `
+            <ul>
+                <li><p><strong>Fundamentals:</strong> ACID Properties, Normalization (1NF, 2NF, 3NF, BCNF), CAP Theorem.</p></li>
+                <li><p><strong>Storage:</strong> Row vs Column Stores, Indexing (B-Tree, Hash, LSM Trees).</p></li>
+                <li><p><strong>Concurrency:</strong> Transactions, Isolation Levels, Locking, MVCC.</p></li>
+                <li><p><strong>Distributed:</strong> Sharding, Replication (Leader-Follower), Consistency Models.</p></li>
+            </ul>
+        `
+      },
+      'sql-topics': {
+        title: 'SQL: Essentials & Tuning',
+        content: `
+            <ul>
+                <li><p><strong>Querying:</strong> SELECT patterns, Joins (Inner, Left, Cross), Subqueries, Common Table Expressions (CTEs).</p></li>
+                <li><p><strong>Advanced:</strong> Window Functions (RANK, LEAD/LAG), Recursive Queries, JSONB operations.</p></li>
+                <li><p><strong>Performance:</strong> Indexing strategies, Query Execution Plans, EXPLAIN ANALYZE.</p></li>
+                <li><p><strong>Schema:</strong> DDL, Constraints, Migrations, Data Modeling best practices.</p></li>
+            </ul>
+        `
+      },
+      'os-topics': {
+        title: 'OS: Core Concepts',
+        content: `
+            <ul>
+                <li><p><strong>Fundamentals:</strong> Processes vs Threads, Context Switching, Kernel vs User Mode.</p></li>
+                <li><p><strong>Scheduling:</strong> FCFS, SJF, Round Robin, Multilevel Feedback Queue.</p></li>
+                <li><p><strong>Concurrency:</strong> Mutex, Semaphores, Monitors, Deadlocks (Banker's Algorithm).</p></li>
+                <li><p><strong>Memory:</strong> Virtual Memory, Paging, Page Replacement (LRU), Segmentation.</p></li>
+            </ul>
+        `
+      },
+      'net-topics': {
+        title: 'Networking: Essentials',
+        content: `
+            <ul>
+                <li><p><strong>Layers:</strong> OSI Model (7 layers), TCP/IP Stack, Encapsulation.</p></li>
+                <li><p><strong>Transport:</strong> TCP (3-way handshake, flow control) vs UDP.</p></li>
+                <li><p><strong>Network:</strong> IPv4/IPv6, Subnetting (CIDR), Routing Protocols (BGP, OSPF).</p></li>
+                <li><p><strong>App & Security:</strong> HTTP/HTTPS, DNS Resolution, TLS Handshake, Firewalls.</p></li>
+            </ul>
+        `
+      },
+      'cod-topics': {
+        title: 'COD: System Internals',
+        content: `
+            <ul>
+                <li><p><strong>ISA:</strong> RISC vs CISC, Instruction Encodings, Addressing Modes.</p></li>
+                <li><p><strong>Pipeline:</strong> Stages, Hazards (Data, Control, Structural), Stalls & Forwarding.</p></li>
+                <li><p><strong>Memory:</strong> Cache Hierarchy (L1/L2/L3), Hit/Miss Rates, AMAT, Virtual Memory.</p></li>
+                <li><p><strong>Parallelism:</strong> ILP, Superscalar, SIMD, Multicore, Amdahl's Law.</p></li>
+            </ul>
+        `
+      },
+      'pea-topics': {
+        title: 'Analytics: Math Core',
+        content: `
+            <ul>
+                <li><p><strong>Probability:</strong> Bayes Theorem, Conditional Probability, Combinatorics.</p></li>
+                <li><p><strong>Statistics:</strong> Distributions (Normal, Binomial), Hypothesis Testing, P-values.</p></li>
+                <li><p><strong>Analytics:</strong> A/B Testing, Metrics (LTV, CAC), Data Interpretation, Correlation vs Causation.</p></li>
+                <li><p><strong>Math:</strong> Arithmetic, Percentages, Ratios, Time/Work/Distance problems.</p></li>
             </ul>
         `
       },
@@ -1307,6 +1610,5 @@
     }
   </script>
 </body>
-
 
 </html>
