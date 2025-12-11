@@ -1,0 +1,2961 @@
+﻿<!-- PART 1/3 - analytics.html (C: full enhanced version) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Probability, Statistics & Data Analytics — Master Guide (Placement-Ready)</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+    <header class="header">
+        <div class="brand" style="display:flex;align-items:center;gap:12px;">
+            <div class="logo" style="font-size:28px;">____________📈</div>
+            <div>
+                <h1 style="margin:0">___Probability, Statistics & Data Analytics</h1>
+
+            </div>
+        </div>
+        <nav class="top-actions" style="margin-top:10px;">
+            <a class="btn" href="../index.html">Home</a>
+            <a class="btn ghost" href="analytics.html">P/Stats & Analytics</a>
+            <button class="btn" id="exportBtn" title="Save this page as HTML">Export HTML</button>
+            <button class="btn" id="printBtn" title="Print / Save as PDF">Print/PDF</button>
+        </nav>
+    </header>
+
+    <div class="layout" style="display:flex; gap:20px; align-items:flex-start;">
+        <aside class="sidebar" style="width:320px; flex:0 0 320px;">
+            <div class="toc-title">Table of Contents</div>
+            <div class="search-container" style="margin:10px 0;">
+                <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()"
+                    style="width:100%; padding:8px; border-radius:6px;">
+            </div>
+            <ul class="toc" id="tocListAN" style="list-style:none; padding:0;">
+                <li><a href="#intro">Introduction & How to Use This Page</a></li>
+                <li><a href="#fundamentals">I. Number Systems & Fundamentals</a></li>
+                <li><a href="#arithmetic">II. Core Arithmetic (Percent, Ratio, Averages, Interest)</a></li>
+                <li><a href="#timemotion">III. Time, Speed, Work & Related Problems</a></li>
+                <li><a href="#modernmath">IV. Modern Math (P&C, Probability, Sets)</a></li>
+                <li><a href="#geometry">V. Geometry, Algebra & Mensuration</a></li>
+                <li><a href="#di">VI. Data Interpretation & Analytics Skills</a></li>
+                <li><a href="#formula-tweaks">Formula-Tweak Patterns</a></li>
+                <li><a href="#problems">Placement-Style Problems (Beginner → Advanced)</a></li>
+                <li><a href="#cheatsheet">Cheat Sheet & Quick Tricks</a></li>
+                <li><a href="#studyplan">Study Plan & Resources</a></li>
+            </ul>
+            <div style="margin-top:12px; font-size:0.88rem;" class="small">
+                <strong>Tip:</strong> Search by keyword (e.g., \"Bayes\", \"WMA\", \"substitution\"). Use the reveal
+                buttons only after you attempt solutions.
+            </div>
+        </aside>
+
+        <main class="content" style="flex:1 1 auto; min-width:0;">
+            <section id="intro" class="panel">
+                <h2>Introduction — How to use this page</h2>
+                <p class="muted">This file is a complete revision vault for quantitative aptitude and analytics
+                    interviews. It's arranged to move you from fundamentals to advanced analytics problems. Each section
+                    has quick formulas, real-world context, and practice problems with revealable answers. Use the
+                    Formula-Tweak section to unlock solving many problems by small substitutions.</p>
+                <p class="muted">Workflow I recommend: timed drills → concept check → formula-tweak practice → mock DI
+                    caselets → interview Q&A recap.</p>
+            </section>
+
+            <section id="fundamentals" class="panel">
+                <h2>I. Number Systems & Fundamentals</h2>
+                <h3 class="section-title">Key Concepts</h3>
+                <ul class="muted bullets">
+                    <li><strong>Number classification:</strong> natural, whole, integer, rational (p/q), irrational (π,
+                        √2), prime numbers (no divisors ≠ 1,n).</li>
+                    <li><strong>Primality checks:</strong> trial division up to √n; deterministic Miller-Rabin bases for
+                        32/64-bit integers if needed.</li>
+                    <li><strong>Divisibility shortcuts:</strong> last digit (2,5), last two (4), digit sum (3,9),
+                        alternating sum (11).</li>
+                    <li><strong>Modular arithmetic:</strong> use congruences; for large exponents reduce via Euler φ(n)
+                        or Carmichael λ(n) when coprime.</li>
+                    <li><strong>LCM/HCF:</strong> gcd by Euclid; lcm(a,b) = a*b / gcd(a,b). Extend to multiple numbers
+                        iteratively.</li>
+                </ul>
+
+                <h3 class="section-title">Real-world uses</h3>
+                <p class="muted">Remainder tricks help in hashing and sharding logic; gcd/lcm appear in scheduling and
+                    cyclic pattern detection.</p>
+
+                <h3 class="section-title">Quick Example</h3>
+                <pre class="code" id="code-mod1">
+Find remainder when 3^100 is divided by 5.
+3 ≡ 3 (mod 5). Powers cycle: 3,4,2,1 (period 4). 100 mod 4 = 0 -> remainder 1.
+        </pre>
+            </section>
+
+            <section id="arithmetic" class="panel">
+                <h2>II. Core Arithmetic</h2>
+                <h3 class="section-title">Percentages</h3>
+                <p class="muted">Factor form: new = old × (1 ± p/100). Multiply successive factors for multi-step
+                    changes. Use multiplicative inverse 1/(1+p) to reverse a percentage increase.</p>
+
+                <h3 class="section-title">Profit & Loss</h3>
+                <p class="muted">Profit% = (SP - CP)/CP × 100. When discount applied on MP: SP = MP × (1 - discount%).
+                    Markup vs margin distinction is crucial in business problems.</p>
+
+                <h3 class="section-title">Ratio & Proportion</h3>
+                <p class="muted">If A:B = x:y and total T, A = T × x/(x+y). Ratios used heavily in allocation and
+                    revenue-share problems.</p>
+
+                <h3 class="section-title">Averages</h3>
+                <p class="muted">Weighted average: (Σ w_i x_i)/Σ w_i. Replacement problems: new_avg = (old_sum - removed
+                    + added)/n — memorize and apply fast.</p>
+
+                <h3 class="section-title">Interest</h3>
+                <p class="muted">Simple interest: SI = P × R × T / 100. Compound: A = P×(1 + r/n)^(n×t). Continuous: A =
+                    P×e^(r t). Financial approximations often use continuous compounding for limits.</p>
+            </section>
+
+            <section id="timemotion" class="panel">
+                <h2>III. Time, Motion & Work</h2>
+                <h3 class="section-title">Time & Work</h3>
+                <p class="muted">Work = rate × time. If A takes a days, rate_A = 1/a. Combine rates by sum. For partial
+                    work or leaving mid-job apply time-weighted contributions.</p>
+
+                <h3 class="section-title">Speed & Distance</h3>
+                <p class="muted">Distance = speed × time. Average speed:
+                <ul class="muted bullets">
+                    <li>Equal distances: Harmonic mean = n / Σ(1/v_i).</li>
+                    <li>Equal times: Arithmetic mean.</li>
+                </ul>
+                </p>
+
+                <h3 class="section-title">Trains & Boats</h3>
+                <p class="muted">Relative speed (opposite) = v1 + v2. Crossing time = (L_train + L_object) /
+                    relative_speed. For boats: downstream = u + v, upstream = u - v (where u = boat speed in still
+                    water, v = current).</p>
+            </section>
+            <!-- PART 2/3 - continue analytics.html -->
+            <section id="modernmath" class="panel">
+                <h2>IV. Modern Mathematics</h2>
+                <h3 class="section-title">Permutations & Combinations</h3>
+                <p class="muted">nPr = n!/(n-r)!, nCr = n!/(r!(n-r)!). Use stars-and-bars: combinations with repetition
+                    C(n + r - 1, r). Permutation with repeated items: n! / (k1! k2! ...).</p>
+
+                <h3 class="section-title">Probability</h3>
+                <p class="muted">Basic rules:
+                <ul class="muted bullets">
+                    <li>P(A ∪ B) = P(A) + P(B) - P(A ∩ B).</li>
+                    <li>Conditional: P(A|B) = P(A ∩ B) / P(B).</li>
+                    <li>Independence: P(A ∩ B) = P(A) P(B).</li>
+                    <li>Complement: P(at least one) = 1 - P(none).</li>
+                </ul>
+                </p>
+
+                <h3 class="section-title">Set Theory & Venn</h3>
+                <p class="muted">Inclusion-exclusion for n sets; visualize with Venn diagrams for interviews.</p>
+
+                <h3 class="section-title">Real-world note</h3>
+                <p class="muted">Probability underpins A/B testing, conversion rate estimation, and risk calculations —
+                    you'll see these in analytics interviews and product/data roles.</p>
+            </section>
+
+            <section id="geometry" class="panel">
+                <h2>V. Geometry, Algebra & Mensuration</h2>
+                <h3 class="section-title">Key formulas</h3>
+                <ul class="muted bullets">
+                    <li>Area triangle = ½ × base × height.</li>
+                    <li>Circle area = π r², circumference = 2π r.</li>
+                    <li>Rect/Parallelogram area rules; volume cylinder = π r² h, sphere = 4/3 π r³.</li>
+                    <li>Coordinate geometry: distance formula, slope, line eqn y = mx + c.</li>
+                </ul>
+
+                <h3 class="section-title">Algebra & Logs</h3>
+                <p class="muted">Solve linear & quadratic equations. Log properties: log_b(x y) = log_b x + log_b y;
+                    log_b(x^k) = k log_b x. These appear in growth and doubling-time problems.</p>
+            </section>
+
+            <section id="di" class="panel">
+                <h2>VI. Data Interpretation & Analytics Skills</h2>
+                <h3 class="section-title">Quick DI strategy</h3>
+                <ol class="muted bullets">
+                    <li>Read the question first — know which numbers you need.</li>
+                    <li>Extract base values and transform to percentages for comparison.</li>
+                    <li>Use ratios and differences; prefer approximate arithmetic to narrow answer quickly.</li>
+                    <li>Double-check edge cases (zeros, missing data) and whether questions ask relative or absolute
+                        changes.</li>
+                </ol>
+
+                <h3 class="section-title">Charts & Common traps</h3>
+                <p class="muted">Watch axes (absolute vs indexed), stacked charts (composition vs absolute), and moving
+                    averages that hide volatility. In caselets ask for contribution to change — compute absolute delta
+                    and divide by global delta.</p>
+
+                <h3 class="section-title">Mini-caselet (practice)</h3>
+                <p class="muted">Company X: Region A revenue grew from 200 → 260, Region B from 500 → 550. Which
+                    contributed more to company revenue increase?</p>
+                <p class="muted">Compute absolute deltas: A = +60, B = +50 → A contributed more despite B being larger
+                    base. For percent growth, A = 30%, B = 10%.</p>
+            </section>
+
+            <section id="formula-tweaks" class="panel">
+                <h2>Formula-Tweak Patterns — One core formula, many problems</h2>
+                <p class="muted">Memorize base formulas; then learn 2–3 small tweaks for families of problems. Below are
+                    canonical patterns with examples and 'tweak' variants you will use in interviews.</p>
+
+                <h3 class="section-title">A — Work / Rate</h3>
+                <p class="muted"><strong>Base:</strong> Work = Rate × Time. If task = 1 unit, time = 1 / (sum rates).
+                </p>
+                <p class="muted"><strong>Tweak 1:</strong> Worker leaves at time t: work_done = t × (sum rates) +
+                    remaining by others.</p>
+                <p class="muted"><strong>Tweak 2:</strong> Different jobs/time-shared — convert to 'per unit' rates and
+                    aggregate.</p>
+                <pre class="code" id="code-wrk">
+Example: A=12 days (rate 1/12), B=20 days (1/20). If A works x days with B, then leaves; B finishes in 6 days:
+1 - x*(1/12+1/20) = 6*(1/20) -> solve for x
+        </pre>
+
+                <h3 class="section-title">B — Percentage Compound</h3>
+                <p class="muted"><strong>Base:</strong> Net factor = Π(1 + p_i). For repeated increases/decreases,
+                    multiply properly. To reverse a p% increase use divide by (1+p/100).</p>
+
+                <h3 class="section-title">C — Probability via Complement</h3>
+                <p class="muted"><strong>Base:</strong> P(at least one) = 1 - Π (1 - p_i) for independent small events.
+                    For dependent events, use inclusion-exclusion.</p>
+
+                <h3 class="section-title">D — Mean/Replacement</h3>
+                <p class="muted"><strong>Base:</strong> new_avg = (old_sum - removed + added) / n. Tweak for sequence of
+                    replacements — apply iteratively or form direct algebraic expression.</p>
+
+                <h3 class="section-title">E — Permutations with constraints</h3>
+                <p class="muted">Use complementary counting (total - bad) or place constrained items first and arrange
+                    rest. For repeated letters use factorial division.</p>
+            </section>
+            <!-- PART 3/3 - finish analytics.html -->
+            <section id="problems" class="panel">
+                <h2>Placement-Style Problems — Beginner → Advanced (50+ included)</h2>
+                <p class="muted">Attempt without looking. Problems labeled B / M / A. Use reveal buttons to check
+                    answers.</p>
+                <div class="total-count"
+                    style="padding:8px 14px;border:1px solid #ccc;border-radius:6px;width:max-content;margin-bottom:20px;">
+                    Total Questions: 200
+                </div>
+                <!-- I'll include a wide set grouped by topic. You can expand any group later. -->
+                <div class="qa">
+                    <h3>1. (B) Number Theory — remainder powers</h3>
+                    <p class="muted">Find remainder when 7^222 is divided by 8.</p>
+                    <button class="reveal" onclick="toggleReveal('ans1')">Reveal Solution</button>
+                    <pre id="ans1" class="solution code"
+                        style="display:none">7 ≡ -1 (mod 8). (-1)^222 = 1 → remainder 1.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>2. (B) Percentage — successive change</h3>
+                    <p class="muted">Price increases by 10% then decreases by 10%. Net change?</p>
+                    <button class="reveal" onclick="toggleReveal('ans2')">Reveal Solution</button>
+                    <pre id="ans2" class="solution code"
+                        style="display:none">Net factor = 1.1 × 0.9 = 0.99 → net -1%.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>3. (M) Ratio & Partnership</h3>
+                    <p class="muted">A:B invest 3:2. A adds an amount equal to his investment after 6 months. Profit =
+                        5000 after 12 months. Find A's share.</p>
+                    <button class="reveal" onclick="toggleReveal('ans3')">Reveal Solution</button>
+                    <pre id="ans3" class="solution code"
+                        style="display:none">A time-weighted = 3*6 + 6*(3+3?) — correct calculation: A initial=3 for 12 months, but actually A adds 3 after 6 months, so A's capital-months = 3*6 + 6*(3+3?) Wait: simpler: months: first 6 -> A=3,B=2; next 6 -> A=6 (3+3),B=2. So A = 3*6 + 6*6 = 18+36=54; B = 2*12=24. Ratio 54:24=9:4 -> A's share = 9/13*5000 ≈ 3461.54.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>4. (M) Work/Rate — leaving early</h3>
+                    <p class="muted">A finishes in 12 days, B in 20. They work together x days, A leaves, B finishes 6
+                        days later. Find x.</p>
+                    <button class="reveal" onclick="toggleReveal('ans4')">Reveal Solution</button>
+                    <pre id="ans4" class="solution code"
+                        style="display:none">Rates: 1/12 + 1/20 = 2/15. After x days, remaining = 1 - x*(2/15) = B's 6 days = 6*(1/20)=3/10. Solve: x*(2/15)=7/10 -> x=5.25 days.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>5. (A) Permutation with repeated letters</h3>
+                    <p class="muted">Number of arrangements of \"ANALYTICS\" where A's are not together?</p>
+                    <button class="reveal" onclick="toggleReveal('ans5')">Reveal Solution</button>
+                    <pre id="ans5" class="solution code"
+                        style="display:none">Total=9!/2!=181440; Treat A together: 8!*2=80640; Non-adjacent = 181440-80640=100800.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>6. (A) Conditional Probability (Bayes basics)</h3>
+                    <p class="muted">Two boxes: B1 {2R,3B}, B2 {1R,4B}. Pick box randomly, draw ball. P(red)? P(box1 |
+                        red)?</p>
+                    <button class="reveal" onclick="toggleReveal('ans6')">Reveal Solution</button>
+                    <pre id="ans6" class="solution code"
+                        style="display:none">P(red)=0.5*(2/5)+0.5*(1/5)=3/10. P(B1|red)=(0.5*2/5)/(3/10)= (1/5)/(3/10)=2/3.</pre>
+                </div>
+
+                <!-- Add many more problems across topics: probability, combinatorics, DI, stats, bayes, hypothesis -->
+                <div class="qa">
+                    <h3>7. (B) DI quick — quarter growth</h3>
+                    <p class="muted">Sales Q1..Q4: 100,120,150,130. Which quarter had highest % growth?</p>
+                    <button class="reveal" onclick="toggleReveal('ans7')">Reveal Solution</button>
+                    <pre id="ans7" class="solution code"
+                        style="display:none">Q1->Q2:20%; Q2->Q3:25%; Q3->Q4:-13.33%. Highest = Q2->Q3 (25%).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>8. (B) Mean/Median/Mode</h3>
+                    <p class="muted">Dataset [2,3,3,5,7,9,11]. Find mean, median, mode.</p>
+                    <button class="reveal" onclick="toggleReveal('ans8')">Reveal Solution</button>
+                    <pre id="ans8" class="solution code"
+                        style="display:none">Mean = 40/7 ≈5.714; Median = 5; Mode = 3.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>9. (M) Inclusion-exclusion</h3>
+                    <p class="muted">Class of 100: tea 70, coffee 60, juice 50; tea&coffee 40, tea&juice 30,
+                        coffee&juice 20; all three 10. How many at least one?</p>
+                    <button class="reveal" onclick="toggleReveal('ans9')">Reveal Solution</button>
+                    <pre id="ans9" class="solution code"
+                        style="display:none">Sum singles 180 - pairs 90 + triple 10 = 100 → all 100.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>10. (B) Replacement average</h3>
+                    <p class="muted">Average of 50 numbers = 60. Replace 70 with 40. New average?</p>
+                    <button class="reveal" onclick="toggleReveal('ans10')">Reveal Solution</button>
+                    <pre id="ans10" class="solution code"
+                        style="display:none">Old sum=3000. New sum=2970 => avg=59.4.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>11. (M) Bayes in practice</h3>
+                    <p class="muted">Disease prevalence 0.5%; sensitivity 99%; specificity 98%. P(disease|positive)?</p>
+                    <button class="reveal" onclick="toggleReveal('ans11')">Reveal Solution</button>
+                    <pre id="ans11" class="solution code"
+                        style="display:none">P=0.005*0.99/(0.005*0.99+0.995*0.02)=0.00495/0.02485≈0.199 ≈19.9%.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>12. (A) WMA — Analytics</h3>
+                    <p class="muted">3-day WMA with weights 0.5,0.3,0.2 for values [100,110,120] (most recent 120).</p>
+                    <button class="reveal" onclick="toggleReveal('ans12')">Reveal Solution</button>
+                    <pre id="ans12" class="solution code"
+                        style="display:none">WMA = 0.5*120 + 0.3*110 + 0.2*100 = 113.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>13. (M) DI Caselet — Contribution to growth</h3>
+                    <p class="muted">Given regional numbers (old & new), how to find region with highest % growth and
+                        top contributor to revenue increase? Outline steps.</p>
+                    <button class="reveal" onclick="toggleReveal('ans13')">Reveal Solution</button>
+                    <pre id="ans13" class="solution code"
+                        style="display:none">Compute % change per region and absolute deltas; highest % = max((new-old)/old); top contributor = max(abs_delta); contribution% = abs_delta / total_delta.</pre>
+                </div>
+
+                <!-- Continue adding more grouped problems to reach many items -->
+                <div class="qa">
+                    <h3>14. (M) Geometric-series quick</h3>
+                    <p class="muted">Sum S = a(1 - r^n)/(1 - r) for r ≠ 1. If a=3, r=2, n=4, what's S?</p>
+                    <button class="reveal" onclick="toggleReveal('ans14')">Reveal Solution</button>
+                    <pre id="ans14" class="solution code"
+                        style="display:none">S = 3(1 - 16)/(1 - 2) = 3(-15)/(-1) = 45.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>15. (A) Probability — coupon collector (approx)</h3>
+                    <p class="muted">Expected draws to collect n coupons ≈ n * H_n (Harmonic number). For n=5, expected
+                        ≈ 5*(1+1/2+...+1/5)=5*2.2833=11.4165.</p>
+                    <button class="reveal" onclick="toggleReveal('ans15')">Reveal Solution</button>
+                    <pre id="ans15" class="solution code" style="display:none">≈11.4165 draws.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>16. (A) Chi-squared quick concept</h3>
+                    <p class="muted">Explain when to use chi-squared test vs t-test in analytics interviews.</p>
+                    <button class="reveal" onclick="toggleReveal('ans16')">Reveal Solution</button>
+                    <pre id="ans16" class="solution code"
+                        style="display:none">Chi-sq: categorical variables independence/goodness-of-fit. t-test: compare means of continuous variables (small sample/normal approx).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>17. (M) Sampling — Central Limit Theorem</h3>
+                    <p class="muted">State CLT and explain relevance in product analytics for sample means.</p>
+                    <button class="reveal" onclick="toggleReveal('ans17')">Reveal Solution</button>
+                    <pre id="ans17" class="solution code"
+                        style="display:none">CLT: sample mean ~ Normal(μ, σ/√n) for sufficiently large n. Justifies normal-based CI and hypothesis tests for means.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>18. (A) Hypothesis testing quick</h3>
+                    <p class="muted">Define p-value and Type I/II errors concisely.</p>
+                    <button class="reveal" onclick="toggleReveal('ans18')">Reveal Solution</button>
+                    <pre id="ans18" class="solution code"
+                        style="display:none">p-value = prob of observing data at least as extreme assuming H0 true. Type I error = false positive (α); Type II = false negative (β).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>19. (A) Correlation vs Causation</h3>
+                    <p class="muted">Short explanation and how to investigate causation in product data.</p>
+                    <button class="reveal" onclick="toggleReveal('ans19')">Reveal Solution</button>
+                    <pre id="ans19" class="solution code"
+                        style="display:none">Correlation measures linear association; causation needs experiment (A/B test) or causal inference (instrumental variables, diff-in-diff).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>20. (M) Expected value — multi-stage</h3>
+                    <p class="muted">Roll two dice. What is expected value of maximum face?</p>
+                    <button class="reveal" onclick="toggleReveal('ans20')">Reveal Solution</button>
+                    <pre id="ans20" class="solution code"
+                        style="display:none">Compute P(max ≤ k)= (k/6)^2 -> P(max = k) = P(max ≤ k) - P(max ≤ k-1). EV=Σ k*P(max=k). Calculation yields EV ≈ 4.4722.</pre>
+                </div>
+
+                <!-- More problem placeholders (21..50) -->
+                <div class="qa">
+                    <h3>21. (M) Logarithm solving</h3>
+                    <p class="muted">Solve log_2(x) + log_2(x-2) = 3.</p>
+                    <button class="reveal" onclick="toggleReveal('ans21')">Reveal Solution</button>
+                    <pre id="ans21" class="solution code"
+                        style="display:none">log_2(x(x-2))=3 -> x^2 - 2x = 8 -> x^2 -2x -8=0 -> (x-4)(x+2)=0 -> x=4 (x>2 only) -> 4.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>22. (A) Linear equation practical</h3>
+                    <p class="muted">If mean of n numbers is m. Adding a new number x increases mean to m+δ. Find x in
+                        terms of m,n,δ.</p>
+                    <button class="reveal" onclick="toggleReveal('ans22')">Reveal Solution</button>
+                    <pre id="ans22" class="solution code"
+                        style="display:none">Old sum = nm. New sum = (n+1)(m+δ) = nm + x -> x = (n+1)(m+δ) - nm = m + (n+1)δ.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>23. (M) Confidence interval quick</h3>
+                    <p class="muted">Given sample mean 50, σ=10, n=100. 95% CI for mean?</p>
+                    <button class="reveal" onclick="toggleReveal('ans23')">Reveal Solution</button>
+                    <pre id="ans23" class="solution code"
+                        style="display:none">SE=σ/√n=10/10=1. 95% CI = 50 ± 1.96*1 => [48.04,51.96].</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>24. (A) Regression basics</h3>
+                    <p class="muted">Explain R² and overfitting in simple terms for interviews.</p>
+                    <button class="reveal" onclick="toggleReveal('ans24')">Reveal Solution</button>
+                    <pre id="ans24" class="solution code"
+                        style="display:none">R² = fraction of variance explained. Overfitting: model fits noise — test on unseen data and prefer simpler models if generalization suffers.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>25. (M) Transformations — log rules in modeling</h3>
+                    <p class="muted">When to log-transform a target variable in regression?</p>
+                    <button class="reveal" onclick="toggleReveal('ans25')">Reveal Solution</button>
+                    <pre id="ans25" class="solution code"
+                        style="display:none">When distribution is skewed, multiplicative effects present, or to stabilize variance. Interpret coefficients accordingly (elasticities).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>26. (A) Sampling bias check</h3>
+                    <p class="muted">List three types of sampling bias and quick fixes.</p>
+                    <button class="reveal" onclick="toggleReveal('ans26')">Reveal Solution</button>
+                    <pre id="ans26" class="solution code"
+                        style="display:none">Selection bias (use randomization), survivorship bias (include dropped/failed units), non-response bias (follow up or weight data).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>27. (M) A/B test power</h3>
+                    <p class="muted">What is statistical power and how do you increase it?</p>
+                    <button class="reveal" onclick="toggleReveal('ans27')">Reveal Solution</button>
+                    <pre id="ans27" class="solution code"
+                        style="display:none">Power = 1-β, probability to detect true effect. Increase by larger sample, larger effect size, lower variance, or higher α.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>28. (A) Correlation — Spearman vs Pearson</h3>
+                    <p class="muted">When to use Spearman rank instead of Pearson?</p>
+                    <button class="reveal" onclick="toggleReveal('ans28')">Reveal Solution</button>
+                    <pre id="ans28" class="solution code"
+                        style="display:none">Use Spearman for monotonic relationships or ordinal data (nonlinear). Pearson measures linear correlation.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>29. (A) Poisson process quick</h3>
+                    <p class="muted">If average 5 events/hour, probability of 2 events in half hour?</p>
+                    <button class="reveal" onclick="toggleReveal('ans29')">Reveal Solution</button>
+                    <pre id="ans29" class="solution code"
+                        style="display:none">λ_half = 5 × 0.5 = 2.5. P(2) = e^-2.5 * 2.5^2 / 2! ≈ 0.2565.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>30. (M) Chi-square example</h3>
+                    <p class="muted">Given contingency table, outline chi-square test steps (no numeric calc needed).
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans30')">Reveal Solution</button>
+                    <pre id="ans30" class="solution code"
+                        style="display:none">Compute expected counts under independence, sum (obs-exp)^2/exp, compare to χ²(df) critical value, conclude reject/fail to reject.</pre>
+                </div>
+
+                <!-- Additional advanced / system-problem style questions -->
+                <div class="qa">
+                    <h3>31. (A) Bootstrapping quick</h3>
+                    <p class="muted">Explain bootstrap resampling and when you'd use it.</p>
+                    <button class="reveal" onclick="toggleReveal('ans31')">Reveal Solution</button>
+                    <pre id="ans31" class="solution code"
+                        style="display:none">Bootstrap: sample with replacement to estimate sampling distribution empirically; use when analytic CI hard or small sample assumptions fail.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>32. (M) Time series — stationarity</h3>
+                    <p class="muted">What is stationarity and why important for ARIMA?</p>
+                    <button class="reveal" onclick="toggleReveal('ans32')">Reveal Solution</button>
+                    <pre id="ans32" class="solution code"
+                        style="display:none">Stationarity: mean/variance constant over time; ARIMA assumes stationarity (use differencing to induce).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>33. (A) ROC / AUC intuition</h3>
+                    <p class="muted">What does ROC curve show and why AUC matters?</p>
+                    <button class="reveal" onclick="toggleReveal('ans33')">Reveal Solution</button>
+                    <pre id="ans33" class="solution code"
+                        style="display:none">ROC: TPR vs FPR tradeoff across thresholds. AUC = probability classifier ranks random positive above random negative. Useful for unbalanced data.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>34. (A) Outliers handling quick</h3>
+                    <p class="muted">List 4 ways to handle outliers in analytics.</p>
+                    <button class="reveal" onclick="toggleReveal('ans34')">Reveal Solution</button>
+                    <pre id="ans34" class="solution code"
+                        style="display:none">Remove if data error, winsorize, transform (log), or use robust models (median-based, tree-based).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>35. (M) PCA intuition</h3>
+                    <p class="muted">Explain principal component analysis in two sentences.</p>
+                    <button class="reveal" onclick="toggleReveal('ans35')">Reveal Solution</button>
+                    <pre id="ans35" class="solution code"
+                        style="display:none">PCA finds orthogonal directions capturing max variance; reduces dimensionality while preserving variance (linear projection).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>36. (M) Rolling averages application</h3>
+                    <p class="muted">Why use rolling averages in dashboards? One downside?</p>
+                    <button class="reveal" onclick="toggleReveal('ans36')">Reveal Solution</button>
+                    <pre id="ans36" class="solution code"
+                        style="display:none">Smooths noise and reveals trends; downside: it lags and can hide sudden changes.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>37. (A) LTV / CAC quick definition</h3>
+                    <p class="muted">Quick formula for customer lifetime value (simple) and acquisition cost.</p>
+                    <button class="reveal" onclick="toggleReveal('ans37')">Reveal Solution</button>
+                    <pre id="ans37" class="solution code"
+                        style="display:none">Simplest LTV = ARPU × Gross margin % × Avg customer lifetime. CAC = total marketing cost / # customers acquired.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>38. (A) Transform check — heteroscedasticity</h3>
+                    <p class="muted">What is heteroscedasticity and quick fix?</p>
+                    <button class="reveal" onclick="toggleReveal('ans38')">Reveal Solution</button>
+                    <pre id="ans38" class="solution code"
+                        style="display:none">Non-constant variance of residuals. Fix: transform target (log), use weighted least squares or robust SEs.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>39. (M) Bootstrap CI example</h3>
+                    <p class="muted">Outline steps to create bootstrap CI for median from sample of 50.</p>
+                    <button class="reveal" onclick="toggleReveal('ans39')">Reveal Solution</button>
+                    <pre id="ans39" class="solution code"
+                        style="display:none">Resample 10k bootstrap samples with replacement, compute median each time, take 2.5/97.5 percentiles for 95% CI.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>40. (A) Business metric sanity check</h3>
+                    <p class="muted">You see daily active users jump 3× overnight — list immediate diagnostic steps.</p>
+                    <button class="reveal" onclick="toggleReveal('ans40')">Reveal Solution</button>
+                    <pre id="ans40" class="solution code"
+                        style="display:none">Check instrumentation, logs, sampling, GA filters, timezone shifts, bot traffic, deployment changes, A/B tests, data pipeline lag or duplicates.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>41. (M) A/B test sample size calc</h3>
+                    <p class="muted">High-level formula ingredients for sample size to detect δ difference with power
+                        80% and α=5%.</p>
+                    <button class="reveal" onclick="toggleReveal('ans41')">Reveal Solution</button>
+                    <pre id="ans41" class="solution code"
+                        style="display:none">n ≈ (Z_{1-α/2} √(2p(1-p)) + Z_{power} √(p1(1-p1)+p2(1-p2)))^2 / δ^2 (approx). Use online calculators in practice.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>42. (A) Entropy quick</h3>
+                    <p class="muted">Define Shannon entropy and give one analytics use-case.</p>
+                    <button class="reveal" onclick="toggleReveal('ans42')">Reveal Solution</button>
+                    <pre id="ans42" class="solution code"
+                        style="display:none">Entropy H = -Σ p_i log p_i. Use-case: measure uncertainty in user behavior or decision tree splits.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>43. (M) Imputation strategies</h3>
+                    <p class="muted">List 4 imputation strategies and when to use each.</p>
+                    <button class="reveal" onclick="toggleReveal('ans43')">Reveal Solution</button>
+                    <pre id="ans43" class="solution code"
+                        style="display:none">Mean/median for MCAR; model-based imputation (regression) for MAR; KNN for local similarity; indicator for missingness as feature.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>44. (A) Log-odds interpretation</h3>
+                    <p class="muted">In logistic regression, interpret coefficient β of a predictor.</p>
+                    <button class="reveal" onclick="toggleReveal('ans44')">Reveal Solution</button>
+                    <pre id="ans44" class="solution code"
+                        style="display:none">Exp(β) gives multiplicative change in odds for 1 unit increase of predictor (odds ratio).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>45. (M) Funnel conversion check</h3>
+                    <p class="muted">If funnel conversion drops at step 3, list experimental checks and quick analyses.
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans45')">Reveal Solution</button>
+                    <pre id="ans45" class="solution code"
+                        style="display:none">Check instrumentation, segment by device/OS, A/B tests, deployments, UX changes, backend errors, load times; compute diagnostics and run cohort analysis.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>46. (A) Weighted average vs median</h3>
+                    <p class="muted">When is median preferred to mean?</p>
+                    <button class="reveal" onclick="toggleReveal('ans46')">Reveal Solution</button>
+                    <pre id="ans46" class="solution code"
+                        style="display:none">Median preferred for skewed distributions or when outliers distort mean (e.g., income data).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>47. (A) Quick combinatorics</h3>
+                    <p class="muted">Number of ways to choose 3 people from 10 when order doesn't matter?</p>
+                    <button class="reveal" onclick="toggleReveal('ans47')">Reveal Solution</button>
+                    <pre id="ans47" class="solution code" style="display:none">C(10,3)=120.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>48. (M) Jensen's inequality intuition</h3>
+                    <p class="muted">Explain Jensen's inequality and give a small analytic example.</p>
+                    <button class="reveal" onclick="toggleReveal('ans48')">Reveal Solution</button>
+                    <pre id="ans48" class="solution code"
+                        style="display:none">For convex φ, φ(E[X]) ≤ E[φ(X)]. Example: variance relation or log concavity use cases; shows transformation bias.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>49. (A) Percentile quick</h3>
+                    <p class="muted">Definition: 90th percentile in a sorted list.</p>
+                    <button class="reveal" onclick="toggleReveal('ans49')">Reveal Solution</button>
+                    <pre id="ans49" class="solution code"
+                        style="display:none">Value such that 90% of observations are <= that value (interpolate if needed).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>50. (A) Final mock: end-to-end case</h3>
+                    <p class="muted">You have weekly active users drop 15% after a release. Outline investigative steps
+                        and metrics you'd present to PM in 30 minutes.</p>
+                    <button class="reveal" onclick="toggleReveal('ans50')">Reveal Solution</button>
+                    <pre id="ans50" class="solution code"
+                        style="display:none">Immediate: segment by cohort/device/region, check releases/rollbacks, check instrumentation and error rates, A/B exposure, retention curves, funnel step drop, and suggest rollback or hotfix if impact large. Present absolute and relative changes, CI for effect, and mitigation plan.</pre>
+                </div>
+                <div class="qa">
+                    <h3>50. (A) Final mock: end-to-end case</h3>
+                    <p class="muted">You have weekly active users drop 15% after a release. Outline investigative steps
+                        and metrics you'd present to PM in 30 minutes.</p>
+                    <button class="reveal" onclick="toggleReveal('ans50')">Reveal Solution</button>
+                    <pre id="ans50" class="solution code"
+                        style="display:none">Immediate: segment by cohort/device/region, check releases/rollbacks, check instrumentation and error rates, A/B exposure, retention curves, funnel step drop, and suggest rollback or hotfix if impact large. Present absolute and relative changes, CI for effect, and mitigation plan.</pre>
+                </div>
+
+                <!-- NUMBER SYSTEMS & FUNDAMENTALS (51-70) -->
+                <h3 class="section-title" style="margin-top:40px;">Number Systems & Fundamentals</h3>
+
+                <div class="qa">
+                    <h3>51. (B) HCF Application <span class="muted" style="font-size:0.85em;">[TCS, Infosys]</span></h3>
+                    <p class="muted">Find the largest number that divides 615 and 963 leaving remainders 6 and 7
+                        respectively.</p>
+                    <button class="reveal" onclick="toggleReveal('ans51')">Reveal Solution</button>
+                    <pre id="ans51" class="solution code"
+                        style="display:none">Subtract remainders: 615-6=609, 963-7=956. HCF(609,956) = HCF(609,347) = HCF(262,347) = HCF(262,85) = HCF(7,85) = 1... Actually: 609=3×7×29, 956=4×239. Direct: HCF(609,956)=29. Answer: 29.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>52. (M) Prime Factorization <span class="muted" style="font-size:0.85em;">[Wipro,
+                            Accenture]</span></h3>
+                    <p class="muted">How many prime factors does 2520 have? What is the sum of distinct prime factors?
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans52')">Reveal Solution</button>
+                    <pre id="ans52" class="solution code"
+                        style="display:none">2520 = 2³×3²×5×7. Prime factors (with repetition): 8 total. Distinct primes: {2,3,5,7}. Sum = 17.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>53. (B) Divisibility Rule <span class="muted" style="font-size:0.85em;">[Cognizant,
+                            Capgemini]</span></h3>
+                    <p class="muted">Find the smallest 4-digit number divisible by 88.</p>
+                    <button class="reveal" onclick="toggleReveal('ans53')">Reveal Solution</button>
+                    <pre id="ans53" class="solution code"
+                        style="display:none">1000 ÷ 88 = 11.36... Next integer: 12. 12×88 = 1056.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>54. (M) LCM-HCF Relationship <span class="muted" style="font-size:0.85em;">[Amazon,
+                            Microsoft]</span></h3>
+                    <p class="muted">Two numbers have HCF 16 and LCM 160. If one number is 32, find the other.</p>
+                    <button class="reveal" onclick="toggleReveal('ans54')">Reveal Solution</button>
+                    <pre id="ans54" class="solution code"
+                        style="display:none">Product = HCF × LCM. 32 × other = 16 × 160 = 2560. Other = 2560/32 = 80.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>55. (A) Modular Exponentiation <span class="muted" style="font-size:0.85em;">[Google,
+                            Adobe]</span></h3>
+                    <p class="muted">Find the last two digits of 17^256.</p>
+                    <button class="reveal" onclick="toggleReveal('ans55')">Reveal Solution</button>
+                    <pre id="ans55" class="solution code"
+                        style="display:none">Last 2 digits = 17^256 mod 100. φ(100)=40. 256 mod 40 = 16. Compute 17^16 mod 100 by successive squaring: 17²=289≡89, 17⁴≡89²=7921≡21, 17⁸≡21²=441≡41, 17^16≡41²=1681≡81. Answer: 81.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>56. (B) Unit Digit Pattern <span class="muted" style="font-size:0.85em;">[TCS Digital,
+                            Infosys]</span></h3>
+                    <p class="muted">What is the unit digit of 3^47 × 7^58 × 13^72?</p>
+                    <button class="reveal" onclick="toggleReveal('ans56')">Reveal Solution</button>
+                    <pre id="ans56" class="solution code"
+                        style="display:none">3 cycles {3,9,7,1} period 4: 47 mod 4 = 3 → 7. 7 cycles {7,9,3,1}: 58 mod 4 = 2 → 9. 13≡3 cycles: 72 mod 4 = 0 → 1. Product: 7×9×1=63 → unit digit 3.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>57. (M) Remainder Theorem <span class="muted" style="font-size:0.85em;">[Wipro, Tech
+                            Mahindra]</span></h3>
+                    <p class="muted">Find remainder when (7^100 + 13^100) is divided by 10.</p>
+                    <button class="reveal" onclick="toggleReveal('ans57')">Reveal Solution</button>
+                    <pre id="ans57" class="solution code"
+                        style="display:none">7^100 mod 10: cycle {7,9,3,1}, 100 mod 4 = 0 → 1. 13^100 mod 10: 3^100, same cycle → 1. Sum = 1+1 = 2.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>58. (A) Euler's Totient <span class="muted" style="font-size:0.85em;">[Adobe, Oracle]</span>
+                    </h3>
+                    <p class="muted">Calculate φ(72) where φ is Euler's totient function.</p>
+                    <button class="reveal" onclick="toggleReveal('ans58')">Reveal Solution</button>
+                    <pre id="ans58" class="solution code"
+                        style="display:none">72 = 2³×3². φ(72) = 72(1-1/2)(1-1/3) = 72×(1/2)×(2/3) = 24.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>59. (B) Co-prime Numbers <span class="muted" style="font-size:0.85em;">[Cognizant,
+                            Capgemini]</span></h3>
+                    <p class="muted">How many numbers between 1 and 50 are co-prime to 50?</p>
+                    <button class="reveal" onclick="toggleReveal('ans59')">Reveal Solution</button>
+                    <pre id="ans59" class="solution code"
+                        style="display:none">50 = 2×5². φ(50) = 50(1-1/2)(1-1/5) = 50×(1/2)×(4/5) = 20.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>60. (M) Perfect Numbers <span class="muted" style="font-size:0.85em;">[TCS Ninja,
+                            Infosys]</span></h3>
+                    <p class="muted">Is 28 a perfect number? Verify by showing sum of its proper divisors.</p>
+                    <button class="reveal" onclick="toggleReveal('ans60')">Reveal Solution</button>
+                    <pre id="ans60" class="solution code"
+                        style="display:none">Divisors of 28: 1,2,4,7,14. Sum = 1+2+4+7+14 = 28. Yes, it's perfect.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>61. (A) Chinese Remainder Theorem <span class="muted" style="font-size:0.85em;">[Amazon,
+                            Microsoft]</span></h3>
+                    <p class="muted">Find the smallest positive integer x such that x ≡ 2 (mod 3), x ≡ 3 (mod 5), x ≡ 2
+                        (mod 7).</p>
+                    <button class="reveal" onclick="toggleReveal('ans61')">Reveal Solution</button>
+                    <pre id="ans61" class="solution code"
+                        style="display:none">Use CRT. M=3×5×7=105. M₁=35, M₂=21, M₃=15. Find inverses: 35⁻¹≡2(mod 3), 21⁻¹≡1(mod 5), 15⁻¹≡1(mod 7). x = (2×35×2 + 3×21×1 + 2×15×1) mod 105 = (140+63+30) mod 105 = 233 mod 105 = 23.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>62. (B) Sum of Digits <span class="muted" style="font-size:0.85em;">[Wipro, Accenture]</span>
+                    </h3>
+                    <p class="muted">Find the sum of digits of 10^20 - 1.</p>
+                    <button class="reveal" onclick="toggleReveal('ans62')">Reveal Solution</button>
+                    <pre id="ans62" class="solution code"
+                        style="display:none">10^20 - 1 = 99999...9 (20 nines). Sum = 20×9 = 180.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>63. (M) Base Conversion <span class="muted" style="font-size:0.85em;">[Google, Adobe]</span>
+                    </h3>
+                    <p class="muted">Convert (ABC)₁₆ to decimal.</p>
+                    <button class="reveal" onclick="toggleReveal('ans63')">Reveal Solution</button>
+                    <pre id="ans63" class="solution code"
+                        style="display:none">A=10, B=11, C=12. 10×16² + 11×16 + 12 = 2560 + 176 + 12 = 2748.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>64. (A) Factorial Trailing Zeros <span class="muted" style="font-size:0.85em;">[Amazon,
+                            Microsoft]</span></h3>
+                    <p class="muted">How many trailing zeros does 100! have?</p>
+                    <button class="reveal" onclick="toggleReveal('ans64')">Reveal Solution</button>
+                    <pre id="ans64" class="solution code"
+                        style="display:none">Count factors of 5: ⌊100/5⌋ + ⌊100/25⌋ + ⌊100/125⌋ = 20 + 4 + 0 = 24.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>65. (B) Arithmetic Progression <span class="muted" style="font-size:0.85em;">[TCS,
+                            Cognizant]</span></h3>
+                    <p class="muted">Find the 50th term of AP: 3, 7, 11, 15, ...</p>
+                    <button class="reveal" onclick="toggleReveal('ans65')">Reveal Solution</button>
+                    <pre id="ans65" class="solution code"
+                        style="display:none">a=3, d=4. a₅₀ = a + 49d = 3 + 49×4 = 199.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>66. (M) Geometric Progression <span class="muted" style="font-size:0.85em;">[Infosys,
+                            Wipro]</span></h3>
+                    <p class="muted">Sum of infinite GP: 4 + 2 + 1 + 0.5 + ...</p>
+                    <button class="reveal" onclick="toggleReveal('ans66')">Reveal Solution</button>
+                    <pre id="ans66" class="solution code"
+                        style="display:none">a=4, r=0.5. S∞ = a/(1-r) = 4/(1-0.5) = 8.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>67. (A) Diophantine Equation <span class="muted" style="font-size:0.85em;">[Adobe,
+                            Oracle]</span></h3>
+                    <p class="muted">Find positive integer solutions for 7x + 12y = 100.</p>
+                    <button class="reveal" onclick="toggleReveal('ans67')">Reveal Solution</button>
+                    <pre id="ans67" class="solution code"
+                        style="display:none">Try values: x=4, y=6 works (28+72=100). General: x=4-12t, y=6+7t. Positive: t=0 gives (4,6); t=-1 invalid. Only (4,6).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>68. (B) Digital Root <span class="muted" style="font-size:0.85em;">[Capgemini, Tech
+                            Mahindra]</span></h3>
+                    <p class="muted">Find the digital root of 9875.</p>
+                    <button class="reveal" onclick="toggleReveal('ans68')">Reveal Solution</button>
+                    <pre id="ans68" class="solution code"
+                        style="display:none">9+8+7+5=29 → 2+9=11 → 1+1=2. Digital root = 2.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>69. (M) Catalan Numbers <span class="muted" style="font-size:0.85em;">[Google, Amazon]</span>
+                    </h3>
+                    <p class="muted">Calculate the 4th Catalan number (C₃).</p>
+                    <button class="reveal" onclick="toggleReveal('ans69')">Reveal Solution</button>
+                    <pre id="ans69" class="solution code"
+                        style="display:none">Cₙ = (2n)!/(n+1)!n!. C₃ = 6!/(4!×3!) = 720/(24×6) = 5.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>70. (A) Wilson's Theorem <span class="muted" style="font-size:0.85em;">[Microsoft, Adobe]</span>
+                    </h3>
+                    <p class="muted">Verify Wilson's theorem for p=7 and use it to find 6! mod 7.</p>
+                    <button class="reveal" onclick="toggleReveal('ans70')">Reveal Solution</button>
+                    <pre id="ans70" class="solution code"
+                        style="display:none">Wilson: (p-1)! ≡ -1 (mod p) for prime p. 6! ≡ -1 (mod 7) ≡ 6 (mod 7). Verify: 720 = 7×102 + 6.</pre>
+                </div>
+
+                <!-- PERCENTAGES & ARITHMETIC (71-90) -->
+                <h3 class="section-title" style="margin-top:40px;">Percentages & Core Arithmetic</h3>
+
+                <div class="qa">
+                    <h3>71. (B) Basic Percentage <span class="muted" style="font-size:0.85em;">[TCS, Infosys]</span>
+                    </h3>
+                    <p class="muted">If 25% of a number is 60, find 40% of that number.</p>
+                    <button class="reveal" onclick="toggleReveal('ans71')">Reveal Solution</button>
+                    <pre id="ans71" class="solution code"
+                        style="display:none">Number = 60/(0.25) = 240. 40% = 0.4×240 = 96.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>72. (M) Successive Percentage Change <span class="muted" style="font-size:0.85em;">[Wipro,
+                            Cognizant]</span></h3>
+                    <p class="muted">Population increases by 20% in year 1 and decreases by 20% in year 2. Net change?
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans72')">Reveal Solution</button>
+                    <pre id="ans72" class="solution code" style="display:none">Net = 1.2×0.8 = 0.96 → -4%.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>73. (A) Reverse Percentage <span class="muted" style="font-size:0.85em;">[Amazon, Google]</span>
+                    </h3>
+                    <p class="muted">After increasing price by 25%, the new price is ₹500. What was the original price?
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans73')">Reveal Solution</button>
+                    <pre id="ans73" class="solution code"
+                        style="display:none">Original × 1.25 = 500. Original = 500/1.25 = ₹400.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>74. (B) Profit & Loss Basic <span class="muted" style="font-size:0.85em;">[Accenture,
+                            Capgemini]</span></h3>
+                    <p class="muted">CP = ₹800, SP = ₹1000. Find profit percentage.</p>
+                    <button class="reveal" onclick="toggleReveal('ans74')">Reveal Solution</button>
+                    <pre id="ans74" class="solution code"
+                        style="display:none">Profit = 1000-800 = 200. Profit% = 200/800 × 100 = 25%.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>75. (M) Discount Problem <span class="muted" style="font-size:0.85em;">[TCS Digital,
+                            Infosys]</span></h3>
+                    <p class="muted">MP = ₹2000. After 20% discount and 10% tax, find final price.</p>
+                    <button class="reveal" onclick="toggleReveal('ans75')">Reveal Solution</button>
+                    <pre id="ans75" class="solution code"
+                        style="display:none">After discount: 2000×0.8 = 1600. After tax: 1600×1.1 = ₹1760.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>76. (A) Markup vs Margin <span class="muted" style="font-size:0.85em;">[Microsoft, Adobe]</span>
+                    </h3>
+                    <p class="muted">If profit margin is 25% on SP, what is the markup on CP?</p>
+                    <button class="reveal" onclick="toggleReveal('ans76')">Reveal Solution</button>
+                    <pre id="ans76" class="solution code"
+                        style="display:none">Margin 25% on SP means profit/SP = 0.25. SP = CP/(1-0.25) = CP/0.75 = 1.333CP. Markup = 33.33%.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>77. (B) False Weight <span class="muted" style="font-size:0.85em;">[Wipro, Tech Mahindra]</span>
+                    </h3>
+                    <p class="muted">Shopkeeper uses 800g weight instead of 1kg. Find profit%.</p>
+                    <button class="reveal" onclick="toggleReveal('ans77')">Reveal Solution</button>
+                    <pre id="ans77" class="solution code"
+                        style="display:none">He gives 800g for price of 1000g. Profit = 200g on 800g = 25%.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>78. (M) Two Successive Discounts <span class="muted" style="font-size:0.85em;">[Cognizant,
+                            Capgemini]</span></h3>
+                    <p class="muted">Find single equivalent discount for 20% and 30% successive discounts.</p>
+                    <button class="reveal" onclick="toggleReveal('ans78')">Reveal Solution</button>
+                    <pre id="ans78" class="solution code"
+                        style="display:none">Net = 0.8×0.7 = 0.56 = 44% discount.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>79. (A) Break-even Analysis <span class="muted" style="font-size:0.85em;">[Amazon,
+                            Oracle]</span></h3>
+                    <p class="muted">Fixed cost ₹50,000. Variable cost per unit ₹20. SP ₹50. Find break-even quantity.
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans79')">Reveal Solution</button>
+                    <pre id="ans79" class="solution code"
+                        style="display:none">Contribution per unit = 50-20 = 30. Break-even = 50000/30 ≈ 1667 units.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>80. (B) Partnership Profit <span class="muted" style="font-size:0.85em;">[TCS, Infosys]</span>
+                    </h3>
+                    <p class="muted">A invests ₹3000 for 12 months, B invests ₹4000 for 8 months. Profit ₹5600. Find A's
+                        share.</p>
+                    <button class="reveal" onclick="toggleReveal('ans80')">Reveal Solution</button>
+                    <pre id="ans80" class="solution code"
+                        style="display:none">Capital-months: A=36000, B=32000. Ratio 36:32 = 9:8. A's share = 9/17 × 5600 = ₹2964.71.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>81. (M) Ratio Change <span class="muted" style="font-size:0.85em;">[Wipro, Accenture]</span>
+                    </h3>
+                    <p class="muted">Ratio of milk to water is 5:3. If 8L water is added, ratio becomes 5:5. Find
+                        initial milk quantity.</p>
+                    <button class="reveal" onclick="toggleReveal('ans81')">Reveal Solution</button>
+                    <pre id="ans81" class="solution code"
+                        style="display:none">Let milk=5x, water=3x. After adding: 5x:(3x+8) = 5:5 → 5x = 3x+8 → x=4. Milk = 20L.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>82. (A) Weighted Average Revenue <span class="muted" style="font-size:0.85em;">[Google,
+                            Microsoft]</span></h3>
+                    <p class="muted">Product A: 1000 units at ₹50, Product B: 500 units at ₹80. Find weighted avg price.
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans82')">Reveal Solution</button>
+                    <pre id="ans82" class="solution code"
+                        style="display:none">WA = (1000×50 + 500×80)/(1000+500) = (50000+40000)/1500 = ₹60.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>83. (B) Simple Interest <span class="muted" style="font-size:0.85em;">[TCS, Cognizant]</span>
+                    </h3>
+                    <p class="muted">Principal ₹5000, Rate 8% p.a., Time 3 years. Find SI.</p>
+                    <button class="reveal" onclick="toggleReveal('ans83')">Reveal Solution</button>
+                    <pre id="ans83" class="solution code" style="display:none">SI = 5000×8×3/100 = ₹1200.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>84. (M) Compound Interest <span class="muted" style="font-size:0.85em;">[Infosys, Wipro]</span>
+                    </h3>
+                    <p class="muted">₹10,000 at 10% CI compounded annually for 2 years. Find amount.</p>
+                    <button class="reveal" onclick="toggleReveal('ans84')">Reveal Solution</button>
+                    <pre id="ans84" class="solution code"
+                        style="display:none">A = 10000(1.1)² = 10000×1.21 = ₹12,100.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>85. (A) CI vs SI Difference <span class="muted" style="font-size:0.85em;">[Amazon, Adobe]</span>
+                    </h3>
+                    <p class="muted">For 2 years at 10% p.a., difference between CI and SI is ₹100. Find principal.</p>
+                    <button class="reveal" onclick="toggleReveal('ans85')">Reveal Solution</button>
+                    <pre id="ans85" class="solution code"
+                        style="display:none">Diff = P(r/100)² = P×0.01 = 100 → P = ₹10,000.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>86. (B) Mixture & Alligation <span class="muted" style="font-size:0.85em;">[Capgemini, Tech
+                            Mahindra]</span></h3>
+                    <p class="muted">Mix milk at ₹50/L with water. To get ₹40/L mixture (water free), what ratio?</p>
+                    <button class="reveal" onclick="toggleReveal('ans86')">Reveal Solution</button>
+                    <pre id="ans86" class="solution code"
+                        style="display:none">Alligation: milk(50) water(0) mean(40). Ratio = (40-0):(50-40) = 40:10 = 4:1.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>87. (M) Salary Increment <span class="muted" style="font-size:0.85em;">[TCS Digital,
+                            Infosys]</span></h3>
+                    <p class="muted">Salary increased by 15% to ₹69,000. What was original salary?</p>
+                    <button class="reveal" onclick="toggleReveal('ans87')">Reveal Solution</button>
+                    <pre id="ans87" class="solution code"
+                        style="display:none">Original × 1.15 = 69000. Original = 69000/1.15 = ₹60,000.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>88. (A) Tax Calculation <span class="muted" style="font-size:0.85em;">[Oracle, Microsoft]</span>
+                    </h3>
+                    <p class="muted">Income ₹10L. Tax: 0% up to ₹2.5L, 5% on next ₹2.5L, 10% above. Find total tax.</p>
+                    <button class="reveal" onclick="toggleReveal('ans88')">Reveal Solution</button>
+                    <pre id="ans88" class="solution code"
+                        style="display:none">Tax = 0 + 0.05×250000 + 0.1×500000 = 0 + 12500 + 50000 = ₹62,500.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>89. (B) Average Replacement <span class="muted" style="font-size:0.85em;">[Wipro,
+                            Cognizant]</span></h3>
+                    <p class="muted">Average of 10 numbers is 15. Replace one number 20 with 35. New average?</p>
+                    <button class="reveal" onclick="toggleReveal('ans89')">Reveal Solution</button>
+                    <pre id="ans89" class="solution code"
+                        style="display:none">Old sum = 150. New sum = 150-20+35 = 165. New avg = 16.5.</pre>
+                </div>
+                <!-- ============================= -->
+                <!-- TOTAL QUESTION COUNT BADGE   -->
+                <!-- ============================= -->
+
+
+                <!-- ============================= -->
+                <!-- CONTINUING QUESTIONS (Q90–Q200) -->
+                <!-- ============================= -->
+
+                <!-- 90 -->
+                <div class="qa">
+                    <h3>90. (M) Ratio Adjustment — Practical</h3>
+                    <p class="muted">A mixture contains milk and water in ratio 7:5. How much water must be added to 60
+                        L mixture to make ratio 7:8?</p>
+                    <button class="reveal" onclick="toggleReveal('ans90')">Reveal Solution</button>
+                    <pre id="ans90" class="solution code"
+                        style="display:none">Milk = 7/12 × 60 = 35 L. Let water added = x. New water = 25 + x. Ratio: 35:(25+x) = 7:8 → 35×8 = 7(25+x) → 280 = 175 + 7x → x = 15 L.</pre>
+                </div>
+
+                <!-- 91 -->
+                <div class="qa">
+                    <h3>91. (B) Simple Algebra — Reverse Operation</h3>
+                    <p class="muted">If 4x + 12 = 36, find x.</p>
+                    <button class="reveal" onclick="toggleReveal('ans91')">Reveal Solution</button>
+                    <pre id="ans91" class="solution code" style="display:none">4x = 24 → x = 6.</pre>
+                </div>
+
+                <!-- 92 -->
+                <div class="qa">
+                    <h3>92. (M) Boats & Streams</h3>
+                    <p class="muted">A boat takes 3 hours upstream and 2 hours downstream to travel the same distance.
+                        Speed of stream is 2 km/h. Find ratio of boat speed to stream speed.</p>
+                    <button class="reveal" onclick="toggleReveal('ans92')">Reveal Solution</button>
+                    <pre id="ans92" class="solution code"
+                        style="display:none">Let distance = D. Upstream speed = D/3; downstream = D/2. Let boat speed = b. Then b-2 = D/3, b+2 = D/2. Divide: (b+2)/(b-2)=3/2 → 2b+4=3b-6 → b=10. Ratio = 10:2 = 5:1.</pre>
+                </div>
+
+                <!-- 93 -->
+                <div class="qa">
+                    <h3>93. (A) Probability — Defective Items</h3>
+                    <p class="muted">A batch has 5 defective and 45 good items. Two items picked without replacement.
+                        Probability both are defective?</p>
+                    <button class="reveal" onclick="toggleReveal('ans93')">Reveal Solution</button>
+                    <pre id="ans93" class="solution code"
+                        style="display:none">P = (5/50) × (4/49) = 20/2450 = 2/245.</pre>
+                </div>
+
+                <!-- 94 -->
+                <div class="qa">
+                    <h3>94. (M) Mixture Increase Problem</h3>
+                    <p class="muted">A 40 L solution has 25% acid. How much pure acid must be added to make it 40% acid?
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans94')">Reveal Solution</button>
+                    <pre id="ans94" class="solution code"
+                        style="display:none">Acid initially = 10 L. Let x be added. Final %: (10+x)/(40+x)=0.4 → 10+x=16+0.4x → 0.6x=6 → x=10 L.</pre>
+                </div>
+
+                <!-- 95 -->
+                <div class="qa">
+                    <h3>95. (B) Speed-Time</h3>
+                    <p class="muted">A man walks at 6 km/h. How much time to cover 3 km?</p>
+                    <button class="reveal" onclick="toggleReveal('ans95')">Reveal Solution</button>
+                    <pre id="ans95" class="solution code" style="display:none">Time = 3/6 = 0.5 h = 30 min.</pre>
+                </div>
+
+                <!-- 96 -->
+                <div class="qa">
+                    <h3>96. (A) Conditional Expectation — Interview Level</h3>
+                    <p class="muted">A fair die is rolled. Find E[X | X is even].</p>
+                    <button class="reveal" onclick="toggleReveal('ans96')">Reveal Solution</button>
+                    <pre id="ans96" class="solution code"
+                        style="display:none">Even outcomes: {2,4,6}. Mean = (2+4+6)/3 = 4.</pre>
+                </div>
+
+                <!-- 97 -->
+                <div class="qa">
+                    <h3>97. (M) Averages — Weighted Increase</h3>
+                    <p class="muted">Class A avg = 60 (40 students), Class B avg = 70 (20 students). Combined avg?</p>
+                    <button class="reveal" onclick="toggleReveal('ans97')">Reveal Solution</button>
+                    <pre id="ans97" class="solution code"
+                        style="display:none">Total = 40×60 + 20×70 = 2400 + 1400 = 3800. Combined avg = 3800/60 = 63.33.</pre>
+                </div>
+
+                <!-- 98 -->
+                <div class="qa">
+                    <h3>98. (A) Prime Gaps — Analytical</h3>
+                    <p class="muted">Find the number of primes between 100 and 150.</p>
+                    <button class="reveal" onclick="toggleReveal('ans98')">Reveal Solution</button>
+                    <pre id="ans98" class="solution code"
+                        style="display:none">Primes: 101,103,107,109,113,127,131,137,139,149 → 10 primes.</pre>
+                </div>
+
+                <!-- 99 -->
+                <div class="qa">
+                    <h3>99. (M) Pipes & Cisterns</h3>
+                    <p class="muted">Pipe A fills tank in 12 h, Pipe B in 18 h. Both work for 4 h, then A is closed.
+                        Time to finish?</p>
+                    <button class="reveal" onclick="toggleReveal('ans99')">Reveal Solution</button>
+                    <pre id="ans99" class="solution code"
+                        style="display:none">Rate AB = 1/12 + 1/18 = 5/36. Work done in 4h = 20/36 = 5/9. Remaining = 4/9. B alone: (4/9)/(1/18) = 8 h.</pre>
+                </div>
+
+                <!-- 100 -->
+                <div class="qa">
+                    <h3>100. (A) Statistics — Variance Scaling</h3>
+                    <p class="muted">If random variable X has variance 9, what is Var(3X + 4)?</p>
+                    <button class="reveal" onclick="toggleReveal('ans100')">Reveal Solution</button>
+                    <pre id="ans100" class="solution code"
+                        style="display:none">Var(3X+4) = 3² Var(X) = 9 × 9 = 81.</pre>
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- Because of message length limit,
+I will generate Q101–Q200 in the NEXT MESSAGE.
+Just say “continue”. -->
+                <!-- ============================= -->
+
+                <!-- 101 -->
+                <div class="qa">
+                    <h3>101. (M) Percentage Error</h3>
+                    <p class="muted">A value is measured as 198 instead of 200. Find % error.</p>
+                    <button class="reveal" onclick="toggleReveal('ans101')">Reveal Solution</button>
+                    <pre id="ans101" class="solution code"
+                        style="display:none">% error = |200 - 198| / 200 × 100 = 1%.</pre>
+                </div>
+
+                <!-- 102 -->
+                <div class="qa">
+                    <h3>102. (A) Probability — Drawing Cards</h3>
+                    <p class="muted">From a deck of 52, find probability that two cards drawn are both Kings.</p>
+                    <button class="reveal" onclick="toggleReveal('ans102')">Reveal Solution</button>
+                    <pre id="ans102" class="solution code"
+                        style="display:none">P = (4/52) × (3/51) = 12/2652 = 1/221.</pre>
+                </div>
+
+                <!-- 103 -->
+                <div class="qa">
+                    <h3>103. (M) Simple Interest Relationship</h3>
+                    <p class="muted">SI on ₹2000 for 2 years at r% is ₹400. Find r.</p>
+                    <button class="reveal" onclick="toggleReveal('ans103')">Reveal Solution</button>
+                    <pre id="ans103" class="solution code"
+                        style="display:none">SI = PRT/100 → 400 = 2000×r×2/100 → r = 10%.</pre>
+                </div>
+
+                <!-- 104 -->
+                <div class="qa">
+                    <h3>104. (A) Expected Value — Non-uniform Die</h3>
+                    <p class="muted">A biased die shows 6 with probability 0.4; remaining faces equally share remaining
+                        probability. Find expected value.</p>
+                    <button class="reveal" onclick="toggleReveal('ans104')">Reveal Solution</button>
+                    <pre id="ans104" class="solution code"
+                        style="display:none">Other faces probability = 0.6/5 = 0.12. EV = 1*0.12 + 2*0.12 + 3*0.12 + 4*0.12 + 5*0.12 + 6*0.4 = 0.12(15) + 2.4 = 1.8 + 2.4 = 4.2.</pre>
+                </div>
+
+                <!-- 105 -->
+                <div class="qa">
+                    <h3>105. (B) Linear Equation Simple</h3>
+                    <p class="muted">Solve 3x - 9 = 0.</p>
+                    <button class="reveal" onclick="toggleReveal('ans105')">Reveal Solution</button>
+                    <pre id="ans105" class="solution code" style="display:none">3x = 9 → x = 3.</pre>
+                </div>
+
+                <!-- 106 -->
+                <div class="qa">
+                    <h3>106. (A) Standard Deviation — Scaling</h3>
+                    <p class="muted">If SD of X is 5, find SD of 4X + 3.</p>
+                    <button class="reveal" onclick="toggleReveal('ans106')">Reveal Solution</button>
+                    <pre id="ans106" class="solution code" style="display:none">SD = |4| × 5 = 20.</pre>
+                </div>
+
+                <!-- 107 -->
+                <div class="qa">
+                    <h3>107. (M) Time & Work — Sharing Work</h3>
+                    <p class="muted">A does a job in 10 days, B in 15 days. They work 3 days together, then A leaves.
+                        Days for B to finish?</p>
+                    <button class="reveal" onclick="toggleReveal('ans107')">Reveal Solution</button>
+                    <pre id="ans107" class="solution code"
+                        style="display:none">Work done in 3 days = 3(1/10 + 1/15)=3(1/6)=1/2. Remaining = 1/2. B alone = (1/2)/(1/15)=7.5 days.</pre>
+                </div>
+
+                <!-- 108 -->
+                <div class="qa">
+                    <h3>108. (A) Combinatorics — Team Forming</h3>
+                    <p class="muted">Choose a team of 4 from 8 men and 5 women if at least 1 woman must be included.</p>
+                    <button class="reveal" onclick="toggleReveal('ans108')">Reveal Solution</button>
+                    <pre id="ans108" class="solution code"
+                        style="display:none">Total C(13,4)=715. All-men teams = C(8,4)=70. Valid = 715 - 70 = 645.</pre>
+                </div>
+
+                <!-- 109 -->
+                <div class="qa">
+                    <h3>109. (M) Ratio Scaling</h3>
+                    <p class="muted">The ratio of boys:girls is 3:4. If 20 more boys join, ratio becomes 4:5. Find
+                        initial girls.</p>
+                    <button class="reveal" onclick="toggleReveal('ans109')">Reveal Solution</button>
+                    <pre id="ans109" class="solution code"
+                        style="display:none">Let boys=3x, girls=4x. New: (3x+20)/4x = 4/5 → 5(3x+20)=16x → 15x+100=16x → x=100. Girls=400.</pre>
+                </div>
+
+                <!-- 110 -->
+                <div class="qa">
+                    <h3>110. (A) Probability — Coin + Die Hybrid</h3>
+                    <p class="muted">A coin is tossed, then a die rolled. Find probability of (Head AND even number).
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans110')">Reveal Solution</button>
+                    <pre id="ans110" class="solution code" style="display:none">P = (1/2) × (3/6) = 1/4.</pre>
+                </div>
+
+                <!-- 111 -->
+                <div class="qa">
+                    <h3>111. (M) Alligation — Two Milk Solutions</h3>
+                    <p class="muted">Mix 30% milk solution with 70% solution to get 50% solution. Ratio?</p>
+                    <button class="reveal" onclick="toggleReveal('ans111')">Reveal Solution</button>
+                    <pre id="ans111" class="solution code"
+                        style="display:none">Alligation: (70-50):(50-30)=20:20=1:1.</pre>
+                </div>
+
+                <!-- 112 -->
+                <div class="qa">
+                    <h3>112. (A) Expected Value — Random Tip Model</h3>
+                    <p class="muted">A restaurant tip is 5% with prob 0.6, 10% with prob 0.3, 20% with prob 0.1.
+                        Expected tip%?</p>
+                    <button class="reveal" onclick="toggleReveal('ans112')">Reveal Solution</button>
+                    <pre id="ans112" class="solution code"
+                        style="display:none">EV = 0.6(5)+0.3(10)+0.1(20)=3+3+2=8%.</pre>
+                </div>
+
+                <!-- 113 -->
+                <div class="qa">
+                    <h3>113. (B) Simple Geometry</h3>
+                    <p class="muted">Perimeter of a square is 40 cm. Find area.</p>
+                    <button class="reveal" onclick="toggleReveal('ans113')">Reveal Solution</button>
+                    <pre id="ans113" class="solution code" style="display:none">Side = 40/4 = 10 → area = 100.</pre>
+                </div>
+
+                <!-- 114 -->
+                <div class="qa">
+                    <h3>114. (A) Probability — Bayes Simple</h3>
+                    <p class="muted">Machine A produces 30% of items, defect rate 2%. Machine B produces 70%, defect
+                        rate 1%. If item is defective, probability it came from A?</p>
+                    <button class="reveal" onclick="toggleReveal('ans114')">Reveal Solution</button>
+                    <pre id="ans114" class="solution code"
+                        style="display:none">P(A|D)=0.3×0.02/(0.3×0.02+0.7×0.01)=0.006/(0.006+0.007)=0.462.</pre>
+                </div>
+
+                <!-- 115 -->
+                <div class="qa">
+                    <h3>115. (M) Train Crossing</h3>
+                    <p class="muted">A 200 m train crosses a pole in 10 sec. Find speed km/h.</p>
+                    <button class="reveal" onclick="toggleReveal('ans115')">Reveal Solution</button>
+                    <pre id="ans115" class="solution code" style="display:none">Speed = 200/10 = 20 m/s = 72 km/h.</pre>
+                </div>
+
+                <!-- 116 -->
+                <div class="qa">
+                    <h3>116. (A) Regression — Interpretation</h3>
+                    <p class="muted">If regression slope is 0.7, interpret it in simple terms.</p>
+                    <button class="reveal" onclick="toggleReveal('ans116')">Reveal Solution</button>
+                    <pre id="ans116" class="solution code"
+                        style="display:none">For each 1-unit increase in X, Y is expected to increase by 0.7 units on average.</pre>
+                </div>
+
+                <!-- 117 -->
+                <div class="qa">
+                    <h3>117. (M) Time Zones — Analytics</h3>
+                    <p class="muted">User logs from Region A (UTC+2) and Region B (UTC−3). If events are recorded at
+                        15:00 local in both regions, what is the UTC difference in timestamps?</p>
+                    <button class="reveal" onclick="toggleReveal('ans117')">Reveal Solution</button>
+                    <pre id="ans117" class="solution code"
+                        style="display:none">UTC times: A: 13:00; B: 18:00. Difference = 5 hours.</pre>
+                </div>
+
+                <!-- 118 -->
+                <div class="qa">
+                    <h3>118. (A) Entropy — Binary Variable</h3>
+                    <p class="muted">Compute entropy for p=0.8, q=0.2.</p>
+                    <button class="reveal" onclick="toggleReveal('ans118')">Reveal Solution</button>
+                    <pre id="ans118" class="solution code"
+                        style="display:none">H = -0.8 log2(0.8) - 0.2 log2(0.2) ≈ 0.721.</pre>
+                </div>
+
+                <!-- 119 -->
+                <div class="qa">
+                    <h3>119. (M) Quadratic Equation Roots</h3>
+                    <p class="muted">Find roots of x² - 7x + 12 = 0.</p>
+                    <button class="reveal" onclick="toggleReveal('ans119')">Reveal Solution</button>
+                    <pre id="ans119" class="solution code" style="display:none">(x-3)(x-4)=0 → x=3,4.</pre>
+                </div>
+
+                <!-- 120 -->
+                <div class="qa">
+                    <h3>120. (A) Decision Trees — Gini</h3>
+                    <p class="muted">For a node with class split (40 positive, 60 negative), compute Gini impurity.</p>
+                    <button class="reveal" onclick="toggleReveal('ans120')">Reveal Solution</button>
+                    <pre id="ans120" class="solution code"
+                        style="display:none">p=0.4 → G=1-(p²+(1-p)²)=1-(0.16+0.36)=0.48.</pre>
+                </div>
+
+                <!-- 121 -->
+                <div class="qa">
+                    <h3>121. (B) Series — Identify Pattern</h3>
+                    <p class="muted">Series: 3, 6, 12, 24, 48, ?. Find next.</p>
+                    <button class="reveal" onclick="toggleReveal('ans121')">Reveal Solution</button>
+                    <pre id="ans121" class="solution code" style="display:none">Multiply by 2 → 96.</pre>
+                </div>
+
+                <!-- 122 -->
+                <div class="qa">
+                    <h3>122. (A) Optimization — Cost Function</h3>
+                    <p class="muted">If cost C = x² + 10x, find x that minimizes C.</p>
+                    <button class="reveal" onclick="toggleReveal('ans122')">Reveal Solution</button>
+                    <pre id="ans122" class="solution code" style="display:none">Vertex at -b/2a = -10/2 = -5.</pre>
+                </div>
+
+                <!-- 123 -->
+                <div class="qa">
+                    <h3>123. (M) Profit & Loss Advanced</h3>
+                    <p class="muted">An item sold at 20% loss. If sold for ₹240 more, it becomes 10% profit. Find CP.
+                    </p>
+                    <button class="reveal" onclick="toggleReveal('ans123')">Reveal Solution</button>
+                    <pre id="ans123" class="solution code"
+                        style="display:none">Let CP=x. 0.8x +240 =1.1x → 240=0.3x → x=800.</pre>
+                </div>
+
+                <!-- 124 -->
+                <div class="qa">
+                    <h3>124. (A) Normal Distribution</h3>
+                    <p class="muted">Z ~ N(0,1). Find P(Z > 1.64).</p>
+                    <button class="reveal" onclick="toggleReveal('ans124')">Reveal Solution</button>
+                    <pre id="ans124" class="solution code" style="display:none">≈ 0.05.</pre>
+                </div>
+
+                <!-- 125 -->
+                <div class="qa">
+                    <h3>125. (M) Pipes & Cisterns 2</h3>
+                    <p class="muted">A fills in 8 h, B in 10 h, and C empties in 20 h. All operate together. Time to
+                        fill?</p>
+                    <button class="reveal" onclick="toggleReveal('ans125')">Reveal Solution</button>
+                    <pre id="ans125" class="solution code"
+                        style="display:none">Rate = 1/8+1/10−1/20=1/5. Time=5 h.</pre>
+                </div>
+
+                <!-- 126 -->
+                <div class="qa">
+                    <h3>126. (A) Correlation Significance</h3>
+                    <p class="muted">If correlation r = 0.9, what does it imply?</p>
+                    <button class="reveal" onclick="toggleReveal('ans126')">Reveal Solution</button>
+                    <pre id="ans126" class="solution code"
+                        style="display:none">Strong positive linear relationship.</pre>
+                </div>
+
+                <!-- 127 -->
+                <div class="qa">
+                    <h3>127. (M) Inequalities</h3>
+                    <p class="muted">Solve 5x - 3 < 12.</p>
+                            <button class="reveal" onclick="toggleReveal('ans127')">Reveal Solution</button>
+                            <pre id="ans127" class="solution code" style="display:none">5x < 15 → x < 3.</pre>
+                </div>
+
+                <!-- 128 -->
+                <div class="qa">
+                    <h3>128. (A) Sample Size for Proportion</h3>
+                    <p class="muted">Estimate sample size for margin ±5% with 95% confidence, p≈0.5.</p>
+                    <button class="reveal" onclick="toggleReveal('ans128')">Reveal Solution</button>
+                    <pre id="ans128" class="solution code" style="display:none">n ≈ (1.96² × 0.25)/0.05² ≈ 384.</pre>
+                </div>
+
+                <!-- 129 -->
+                <div class="qa">
+                    <h3>129. (M) Distance-Speed</h3>
+                    <p class="muted">A car travels 60 km at 40 km/h and returns 60 km at 60 km/h. Average speed?</p>
+                    <button class="reveal" onclick="toggleReveal('ans129')">Reveal Solution</button>
+                    <pre id="ans129" class="solution code"
+                        style="display:none">Avg = total distance / total time =120/(1.5+1)=120/2.5=48 km/h.</pre>
+                </div>
+
+                <!-- 130 -->
+                <div class="qa">
+                    <h3>130. (A) Probability — Continuous</h3>
+                    <p class="muted">X uniform on [0,10]. Find P(3 < X < 7).</p>
+                            <button class="reveal" onclick="toggleReveal('ans130')">Reveal Solution</button>
+                            <pre id="ans130" class="solution code" style="display:none">Length = 4/10 = 0.4.</pre>
+                </div>
+
+                <!-- 131 -->
+                <div class="qa">
+                    <h3>131. (M) Logarithm Simplification</h3>
+                    <p class="muted">Simplify log(a²b³) - log(ab).</p>
+                    <button class="reveal" onclick="toggleReveal('ans131')">Reveal Solution</button>
+                    <pre id="ans131" class="solution code" style="display:none">= log(a²b³/(ab)) = log(ab²).</pre>
+                </div>
+
+                <!-- 132 -->
+                <div class="qa">
+                    <h3>132. (A) Gradient Descent Intuition</h3>
+                    <p class="muted">What happens if learning rate is too high?</p>
+                    <button class="reveal" onclick="toggleReveal('ans132')">Reveal Solution</button>
+                    <pre id="ans132" class="solution code"
+                        style="display:none">Model overshoots minima and may diverge.</pre>
+                </div>
+
+                <!-- 133 -->
+                <div class="qa">
+                    <h3>133. (B) Simple Triangles</h3>
+                    <p class="muted">Find area of triangle with base 10, height 6.</p>
+                    <button class="reveal" onclick="toggleReveal('ans133')">Reveal Solution</button>
+                    <pre id="ans133" class="solution code" style="display:none">Area = 1/2 × 10 × 6 = 30.</pre>
+                </div>
+
+                <!-- 134 -->
+                <div class="qa">
+                    <h3>134. (A) Confidence Intervals — Interpretation</h3>
+                    <p class="muted">What does a 95% confidence interval for mean imply?</p>
+                    <button class="reveal" onclick="toggleReveal('ans134')">Reveal Solution</button>
+                    <pre id="ans134" class="solution code"
+                        style="display:none">If repeated many samples, 95% of constructed CIs contain true mean.</pre>
+                </div>
+
+                <!-- 135 -->
+                <div class="qa">
+                    <h3>135. (M) Percentage Change</h3>
+                    <p class="muted">Value rises from 400 to 500. % increase?</p>
+                    <button class="reveal" onclick="toggleReveal('ans135')">Reveal Solution</button>
+                    <pre id="ans135" class="solution code" style="display:none">100/400 ×100 = 25%.</pre>
+                </div>
+
+                <!-- 136 -->
+                <div class="qa">
+                    <h3>136. (A) PCA — Variance Capture</h3>
+                    <p class="muted">If first 2 PCs explain 85% of variance, what does this mean?</p>
+                    <button class="reveal" onclick="toggleReveal('ans136')">Reveal Solution</button>
+                    <pre id="ans136" class="solution code"
+                        style="display:none">The 2D projection retains 85% of dataset variability.</pre>
+                </div>
+
+                <!-- 137 -->
+                <div class="qa">
+                    <h3>137. (M) Venn Diagram Basic</h3>
+                    <p class="muted">If |A|=40, |B|=30, |A∩B|=10, find |A∪B|.</p>
+                    <button class="reveal" onclick="toggleReveal('ans137')">Reveal Solution</button>
+                    <pre id="ans137" class="solution code" style="display:none">40+30−10=60.</pre>
+                </div>
+
+                <!-- 138 -->
+                <div class="qa">
+                    <h3>138. (A) Random Variables — Transformation</h3>
+                    <p class="muted">If X~N(10,4), find distribution of Y = 3X + 2.</p>
+                    <button class="reveal" onclick="toggleReveal('ans138')">Reveal Solution</button>
+                    <pre id="ans138" class="solution code" style="display:none">Y ~ N(3*10+2, (3²)*4) = N(32,36).</pre>
+                </div>
+
+                <!-- 139 -->
+                <div class="qa">
+                    <h3>139. (M) Work Efficiency</h3>
+                    <p class="muted">A completes work in 6 days, B in 9. How many days if B works twice as efficiently
+                        as before?</p>
+                    <button class="reveal" onclick="toggleReveal('ans139')">Reveal Solution</button>
+                    <pre id="ans139" class="solution code"
+                        style="display:none">Rates: 1/6 + 2*(1/9)=1/6+2/9= (3+4)/18 =7/18. Time=18/7.</pre>
+                </div>
+
+                <!-- 140 -->
+                <div class="qa">
+                    <h3>140. (A) Optimization — L1 vs L2</h3>
+                    <p class="muted">Why does L1 create sparsity while L2 doesn’t?</p>
+                    <button class="reveal" onclick="toggleReveal('ans140')">Reveal Solution</button>
+                    <pre id="ans140" class="solution code"
+                        style="display:none">L1 penalty has sharp corner at zero → pushes weights exactly to zero.</pre>
+                </div>
+
+                <!-- 141 -->
+                <div class="qa">
+                    <h3>141. (B) Simple Interest</h3>
+                    <p class="muted">Find SI on ₹3000 at 4% for 5 years.</p>
+                    <button class="reveal" onclick="toggleReveal('ans141')">Reveal Solution</button>
+                    <pre id="ans141" class="solution code" style="display:none">SI = 3000×4×5/100=600.</pre>
+                </div>
+
+                <!-- 142 -->
+                <div class="qa">
+                    <h3>142. (A) Linear Algebra — Rank</h3>
+                    <p class="muted">What does rank of a matrix represent?</p>
+                    <button class="reveal" onclick="toggleReveal('ans142')">Reveal Solution</button>
+                    <pre id="ans142" class="solution code"
+                        style="display:none">Number of linearly independent rows or columns.</pre>
+                </div>
+
+                <!-- 143 -->
+                <div class="qa">
+                    <h3>143. (M) Compound Interest</h3>
+                    <p class="muted">₹4000 at 5% compounded annually for 3 years. Find amount.</p>
+                    <button class="reveal" onclick="toggleReveal('ans143')">Reveal Solution</button>
+                    <pre id="ans143" class="solution code"
+                        style="display:none">A=4000(1.05)³=4000×1.157625=4630.5.</pre>
+                </div>
+
+                <!-- 144 -->
+                <div class="qa">
+                    <h3>144. (A) Gradient Meaning</h3>
+                    <p class="muted">What does gradient represent in optimization?</p>
+                    <button class="reveal" onclick="toggleReveal('ans144')">Reveal Solution</button>
+                    <pre id="ans144" class="solution code"
+                        style="display:none">Direction of steepest ascent of function.</pre>
+                </div>
+
+                <!-- 145 -->
+                <div class="qa">
+                    <h3>145. (M) Functional Equation</h3>
+                    <p class="muted">Solve f(x)=2x+3 for f(7).</p>
+                    <button class="reveal" onclick="toggleReveal('ans145')">Reveal Solution</button>
+                    <pre id="ans145" class="solution code" style="display:none">2*7+3=17.</pre>
+                </div>
+
+                <!-- 146 -->
+                <div class="qa">
+                    <h3>146. (A) Logistic Regression Limit</h3>
+                    <p class="muted">Why logistic regression cannot model non-linear boundaries?</p>
+                    <button class="reveal" onclick="toggleReveal('ans146')">Reveal Solution</button>
+                    <pre id="ans146" class="solution code"
+                        style="display:none">Decision boundary is linear unless features are transformed.</pre>
+                </div>
+
+                <!-- 147 -->
+                <div class="qa">
+                    <h3>147. (M) Trains — Relative Speed</h3>
+                    <p class="muted">Two trains 120m and 180m long pass each other in 12 sec at speeds 40 and 50 km/h.
+                        Check correctness.</p>
+                    <button class="reveal" onclick="toggleReveal('ans147')">Reveal Solution</button>
+                    <pre id="ans147" class="solution code"
+                        style="display:none">Relative speed=90 km/h=25 m/s. Time=300/25=12s ✔️.</pre>
+                </div>
+
+                <!-- 148 -->
+                <div class="qa">
+                    <h3>148. (A) Bias-Variance</h3>
+                    <p class="muted">What happens when model complexity increases?</p>
+                    <button class="reveal" onclick="toggleReveal('ans148')">Reveal Solution</button>
+                    <pre id="ans148" class="solution code"
+                        style="display:none">Bias decreases, variance increases.</pre>
+                </div>
+
+                <!-- 149 -->
+                <div class="qa">
+                    <h3>149. (B) Mensuration</h3>
+                    <p class="muted">Area of circle radius 7.</p>
+                    <button class="reveal" onclick="toggleReveal('ans149')">Reveal Solution</button>
+                    <pre id="ans149" class="solution code" style="display:none">= π*49.</pre>
+                </div>
+
+                <!-- 150 -->
+                <div class="qa">
+                    <h3>150. (A) t-test Use</h3>
+                    <p class="muted">When is a t-test preferable to z-test?</p>
+                    <button class="reveal" onclick="toggleReveal('ans150')">Reveal Solution</button>
+                    <pre id="ans150" class="solution code"
+                        style="display:none">Small samples, unknown population SD.</pre>
+                </div>
+
+                <!-- 151 -->
+                <div class="qa">
+                    <h3>151. (M) Discount & Marked Price</h3>
+                    <p class="muted">After 10% discount, selling price is 900. Find MP.</p>
+                    <button class="reveal" onclick="toggleReveal('ans151')">Reveal Solution</button>
+                    <pre id="ans151" class="solution code" style="display:none">MP = 900/0.9 = 1000.</pre>
+                </div>
+
+                <!-- 152 -->
+                <div class="qa">
+                    <h3>152. (A) KL Divergence Meaning</h3>
+                    <p class="muted">What does KL divergence measure?</p>
+                    <button class="reveal" onclick="toggleReveal('ans152')">Reveal Solution</button>
+                    <pre id="ans152" class="solution code"
+                        style="display:none">Information loss when approximating P by Q.</pre>
+                </div>
+
+                <!-- 153 -->
+                <div class="qa">
+                    <h3>153. (M) Ratio Difference</h3>
+                    <p class="muted">Divide 600 in ratio 5:7.</p>
+                    <button class="reveal" onclick="toggleReveal('ans153')">Reveal Solution</button>
+                    <pre id="ans153" class="solution code"
+                        style="display:none">Sum=12 → parts=600/12=50 → shares 250 & 350.</pre>
+                </div>
+
+                <!-- 154 -->
+                <div class="qa">
+                    <h3>154. (A) Confidence Level</h3>
+                    <p class="muted">Higher confidence → CI becomes wider or narrower?</p>
+                    <button class="reveal" onclick="toggleReveal('ans154')">Reveal Solution</button>
+                    <pre id="ans154" class="solution code" style="display:none">Wider.</pre>
+                </div>
+
+                <!-- 155 -->
+                <div class="qa">
+                    <h3>155. (M) Clocks Problem</h3>
+                    <p class="muted">At what time between 3 and 4 do hour and minute hands coincide?</p>
+                    <button class="reveal" onclick="toggleReveal('ans155')">Reveal Solution</button>
+                    <pre id="ans155" class="solution code"
+                        style="display:none">At (3*5.5)/5.5+5.5? Easier: (3*30)/(5.5)= approx 16.36 minutes → 3:16:21.</pre>
+                </div>
+
+                <!-- 156 -->
+                <div class="qa">
+                    <h3>156. (A) Lasso vs Ridge</h3>
+                    <p class="muted">Which technique is used for feature selection?</p>
+                    <button class="reveal" onclick="toggleReveal('ans156')">Reveal Solution</button>
+                    <pre id="ans156" class="solution code" style="display:none">Lasso (L1).</pre>
+                </div>
+
+                <!-- 157 -->
+                <div class="qa">
+                    <h3>157. (M) Profit Split</h3>
+                    <p class="muted">A:B invest in ratio 2:3. Profit 5000. Find A’s share.</p>
+                    <button class="reveal" onclick="toggleReveal('ans157')">Reveal Solution</button>
+                    <pre id="ans157" class="solution code" style="display:none">=2/5×5000=2000.</pre>
+                </div>
+
+                <!-- 158 -->
+                <div class="qa">
+                    <h3>158. (A) ROC Curve Meaning</h3>
+                    <p class="muted">What is a ROC curve used for?</p>
+                    <button class="reveal" onclick="toggleReveal('ans158')">Reveal Solution</button>
+                    <pre id="ans158" class="solution code"
+                        style="display:none">Visualizing classifier TPR vs FPR tradeoffs.</pre>
+                </div>
+
+                <!-- 159 -->
+                <div class="qa">
+                    <h3>159. (M) Linear Equation Pair</h3>
+                    <p class="muted">Solve: x + y = 10, x - y = 4.</p>
+                    <button class="reveal" onclick="toggleReveal('ans159')">Reveal Solution</button>
+                    <pre id="ans159" class="solution code" style="display:none">Add: 2x=14 → x=7, y=3.</pre>
+                </div>
+
+                <!-- 160 -->
+                <div class="qa">
+                    <h3>160. (A) Type I Error</h3>
+                    <p class="muted">What is Type I error?</p>
+                    <button class="reveal" onclick="toggleReveal('ans160')">Reveal Solution</button>
+                    <pre id="ans160" class="solution code" style="display:none">Rejecting true null.</pre>
+                </div>
+
+                <!-- 161 -->
+                <div class="qa">
+                    <h3>161. (M) Boats & Streams</h3>
+                    <p class="muted">Boat speed 12, stream 3. Find upstream speed.</p>
+                    <button class="reveal" onclick="toggleReveal('ans161')">Reveal Solution</button>
+                    <pre id="ans161" class="solution code" style="display:none">12−3=9.</pre>
+                </div>
+
+                <!-- 162 -->
+                <div class="qa">
+                    <h3>162. (A) Correlation Interpretation</h3>
+                    <p class="muted">If r = −0.5, what does it imply?</p>
+                    <button class="reveal" onclick="toggleReveal('ans162')">Reveal Solution</button>
+                    <pre id="ans162" class="solution code"
+                        style="display:none">Moderate negative linear relationship.</pre>
+                </div>
+
+                <!-- 163 -->
+                <div class="qa">
+                    <h3>163. (M) Percentage Mixture</h3>
+                    <p class="muted">A solution is 20% salt. If 10 L water added to 40 L solution, final %?</p>
+                    <button class="reveal" onclick="toggleReveal('ans163')">Reveal Solution</button>
+                    <pre id="ans163" class="solution code" style="display:none">Salt=8 L. New vol=50 → 8/50=16%.</pre>
+                </div>
+
+                <!-- 164 -->
+                <div class="qa">
+                    <h3>164. (A) Entropy Property</h3>
+                    <p class="muted">Entropy is maximum when?</p>
+                    <button class="reveal" onclick="toggleReveal('ans164')">Reveal Solution</button>
+                    <pre id="ans164" class="solution code" style="display:none">Probabilities are uniform.</pre>
+                </div>
+
+                <!-- 165 -->
+                <div class="qa">
+                    <h3>165. (M) Discount Successive</h3>
+                    <p class="muted">Two discounts of 10% and 20%. Equivalent?</p>
+                    <button class="reveal" onclick="toggleReveal('ans165')">Reveal Solution</button>
+                    <pre id="ans165" class="solution code" style="display:none">=0.9×0.8=0.72 → 28% discount.</pre>
+                </div>
+
+                <!-- 166 -->
+                <div class="qa">
+                    <h3>166. (A) p-value Interpretation</h3>
+                    <p class="muted">What does small p-value imply?</p>
+                    <button class="reveal" onclick="toggleReveal('ans166')">Reveal Solution</button>
+                    <pre id="ans166" class="solution code" style="display:none">Data unlikely under H0.</pre>
+                </div>
+
+                <!-- 167 -->
+                <div class="qa">
+                    <h3>167. (M) Ratio Increase</h3>
+                    <p class="muted">Ratio becomes 4:5 after adding 5 to both numbers. Original ratio was 3:4. Find
+                        numbers.</p>
+                    <button class="reveal" onclick="toggleReveal('ans167')">Reveal Solution</button>
+                    <pre id="ans167" class="solution code"
+                        style="display:none">Let 3x+5 : 4x+5 = 4:5 → 5(3x+5)=4(4x+5) → 15x+25=16x+20 → x=5 → numbers 15,20.</pre>
+                </div>
+
+                <!-- 168 -->
+                <div class="qa">
+                    <h3>168. (A) Overfitting Sign</h3>
+                    <p class="muted">Large train accuracy, low test accuracy means?</p>
+                    <button class="reveal" onclick="toggleReveal('ans168')">Reveal Solution</button>
+                    <pre id="ans168" class="solution code" style="display:none">Overfitting.</pre>
+                </div>
+
+                <!-- 169 -->
+                <div class="qa">
+                    <h3>169. (M) Clock Angle</h3>
+                    <p class="muted">Angle between hands at 2:20?</p>
+                    <button class="reveal" onclick="toggleReveal('ans169')">Reveal Solution</button>
+                    <pre id="ans169" class="solution code" style="display:none">Hour=70°, minute=120° → diff=50°.</pre>
+                </div>
+
+                <!-- 170 -->
+                <div class="qa">
+                    <h3>170. (A) Decision Trees — Overfitting</h3>
+                    <p class="muted">How to reduce overfitting in trees?</p>
+                    <button class="reveal" onclick="toggleReveal('ans170')">Reveal Solution</button>
+                    <pre id="ans170" class="solution code"
+                        style="display:none">Pruning, depth limit, min samples per leaf.</pre>
+                </div>
+
+                <!-- 171 -->
+                <div class="qa">
+                    <h3>171. (M) Age Problem</h3>
+                    <p class="muted">Sum of ages of A and B is 60. A is twice B. Find ages.</p>
+                    <button class="reveal" onclick="toggleReveal('ans171')">Reveal Solution</button>
+                    <pre id="ans171" class="solution code" style="display:none">A=40,B=20.</pre>
+                </div>
+
+                <!-- 172 -->
+                <div class="qa">
+                    <h3>172. (A) Feature Scaling</h3>
+                    <p class="muted">Why is scaling important for gradient descent?</p>
+                    <button class="reveal" onclick="toggleReveal('ans172')">Reveal Solution</button>
+                    <pre id="ans172" class="solution code"
+                        style="display:none">Prevents slow convergence from uneven feature scales.</pre>
+                </div>
+
+                <!-- 173 -->
+                <div class="qa">
+                    <h3>173. (M) Area — Composite Shapes</h3>
+                    <p class="muted">Find area of rectangle 10×6 plus semicircle radius 3.</p>
+                    <button class="reveal" onclick="toggleReveal('ans173')">Reveal Solution</button>
+                    <pre id="ans173" class="solution code"
+                        style="display:none">Rect=60; semi=½π9=4.5π → total=60+4.5π.</pre>
+                </div>
+
+                <!-- 174 -->
+                <div class="qa">
+                    <h3>174. (A) Bias Meaning</h3>
+                    <p class="muted">What is bias in ML?</p>
+                    <button class="reveal" onclick="toggleReveal('ans174')">Reveal Solution</button>
+                    <pre id="ans174" class="solution code"
+                        style="display:none">Error from simplifying assumptions.</pre>
+                </div>
+
+                <!-- 175 -->
+                <div class="qa">
+                    <h3>175. (M) Simplify Expression</h3>
+                    <p class="muted">Simplify (x² − 9)/(x − 3).</p>
+                    <button class="reveal" onclick="toggleReveal('ans175')">Reveal Solution</button>
+                    <pre id="ans175" class="solution code" style="display:none">= x+3 (for x≠3).</pre>
+                </div>
+
+                <!-- 176 -->
+                <div class="qa">
+                    <h3>176. (A) Variance of Bernoulli</h3>
+                    <p class="muted">Find Var(X) for Bernoulli(p).</p>
+                    <button class="reveal" onclick="toggleReveal('ans176')">Reveal Solution</button>
+                    <pre id="ans176" class="solution code" style="display:none">p(1-p).</pre>
+                </div>
+
+                <!-- 177 -->
+                <div class="qa">
+                    <h3>177. (M) Average Speed</h3>
+                    <p class="muted">Bike travels 50 km at 25 km/h and 50 km at 50 km/h. Average?</p>
+                    <button class="reveal" onclick="toggleReveal('ans177')">Reveal Solution</button>
+                    <pre id="ans177" class="solution code" style="display:none">Time=2+1=3 → avg=100/3=33.33.</pre>
+                </div>
+
+                <!-- 178 -->
+                <div class="qa">
+                    <h3>178. (A) Regression Residual</h3>
+                    <p class="muted">What is a residual?</p>
+                    <button class="reveal" onclick="toggleReveal('ans178')">Reveal Solution</button>
+                    <pre id="ans178" class="solution code" style="display:none">Observed minus predicted value.</pre>
+                </div>
+
+                <!-- 179 -->
+                <div class="qa">
+                    <h3>179. (M) Pipes — Percentage Work</h3>
+                    <p class="muted">A completes 40% in 4 days. How long for full work?</p>
+                    <button class="reveal" onclick="toggleReveal('ans179')">Reveal Solution</button>
+                    <pre id="ans179" class="solution code"
+                        style="display:none">40% in 4 → 10%/day → 100% in 10 days.</pre>
+                </div>
+
+                <!-- 180 -->
+                <div class="qa">
+                    <h3>180. (A) Logistic Curve</h3>
+                    <p class="muted">Why logistic curve is S-shaped?</p>
+                    <button class="reveal" onclick="toggleReveal('ans180')">Reveal Solution</button>
+                    <pre id="ans180" class="solution code"
+                        style="display:none">Derivative increases then decreases due to saturation.</pre>
+                </div>
+
+                <!-- 181 -->
+                <div class="qa">
+                    <h3>181. (M) Partnership Time</h3>
+                    <p class="muted">A invests 3000 for whole year; B invests 4000 for 6 months. Profit 3600. Find B’s
+                        share.</p>
+                    <button class="reveal" onclick="toggleReveal('ans181')">Reveal Solution</button>
+                    <pre id="ans181" class="solution code"
+                        style="display:none">A:3000*12=36000; B:4000*6=24000 → ratio 3:2 → B=2/5×3600=1440.</pre>
+                </div>
+
+                <!-- 182 -->
+                <div class="qa">
+                    <h3>182. (A) Central Limit Theorem Importance</h3>
+                    <p class="muted">Why does CLT matter in A/B tests?</p>
+                    <button class="reveal" onclick="toggleReveal('ans182')">Reveal Solution</button>
+                    <pre id="ans182" class="solution code"
+                        style="display:none">Allows normal approximation of sample means for inference.</pre>
+                </div>
+
+                <!-- 183 -->
+                <div class="qa">
+                    <h3>183. (M) Quadratic Maxima</h3>
+                    <p class="muted">Find max of f(x)=−x²+6x.</p>
+                    <button class="reveal" onclick="toggleReveal('ans183')">Reveal Solution</button>
+                    <pre id="ans183" class="solution code"
+                        style="display:none">Vertex at x = −b/(2a)= −6/(−2)=3 → f(3)=9.</pre>
+                </div>
+
+                <!-- 184 -->
+                <div class="qa">
+                    <h3>184. (A) Overfitting Fix</h3>
+                    <p class="muted">Name 3 ways to reduce overfitting.</p>
+                    <button class="reveal" onclick="toggleReveal('ans184')">Reveal Solution</button>
+                    <pre id="ans184" class="solution code"
+                        style="display:none">Regularization, dropout, more data.</pre>
+                </div>
+
+                <!-- 185 -->
+                <div class="qa">
+                    <h3>185. (M) Ratio Internal Division</h3>
+                    <p class="muted">Divide 70 into two parts in ratio 2:5.</p>
+                    <button class="reveal" onclick="toggleReveal('ans185')">Reveal Solution</button>
+                    <pre id="ans185" class="solution code" style="display:none">Sum=7 → 70/7=10 → parts 20,50.</pre>
+                </div>
+
+                <!-- 186 -->
+                <div class="qa">
+                    <h3>186. (A) Significance Level Meaning</h3>
+                    <p class="muted">What does α=0.05 mean?</p>
+                    <button class="reveal" onclick="toggleReveal('ans186')">Reveal Solution</button>
+                    <pre id="ans186" class="solution code" style="display:none">5% chance of Type I error.</pre>
+                </div>
+
+                <!-- 187 -->
+                <div class="qa">
+                    <h3>187. (M) Equation Roots</h3>
+                    <p class="muted">Solve x² = 49.</p>
+                    <button class="reveal" onclick="toggleReveal('ans187')">Reveal Solution</button>
+                    <pre id="ans187" class="solution code" style="display:none">x=±7.</pre>
+                </div>
+
+                <!-- 188 -->
+                <div class="qa">
+                    <h3>188. (A) Sampling Bias</h3>
+                    <p class="muted">Name one cause of sampling bias.</p>
+                    <button class="reveal" onclick="toggleReveal('ans188')">Reveal Solution</button>
+                    <pre id="ans188" class="solution code" style="display:none">Non-random sample selection.</pre>
+                </div>
+
+                <!-- 189 -->
+                <div class="qa">
+                    <h3>189. (M) Speed Conversion</h3>
+                    <p class="muted">Convert 54 km/h to m/s.</p>
+                    <button class="reveal" onclick="toggleReveal('ans189')">Reveal Solution</button>
+                    <pre id="ans189" class="solution code" style="display:none">54×(1000/3600)=15 m/s.</pre>
+                </div>
+
+                <!-- 190 -->
+                <div class="qa">
+                    <h3>190. (A) Variance Interpretation</h3>
+                    <p class="muted">High variance in model means?</p>
+                    <button class="reveal" onclick="toggleReveal('ans190')">Reveal Solution</button>
+                    <pre id="ans190" class="solution code"
+                        style="display:none">Model is sensitive to training data.</pre>
+                </div>
+
+                <!-- 191 -->
+                <div class="qa">
+                    <h3>191. (M) Linear Expression</h3>
+                    <p class="muted">Find x if 7x+14=49.</p>
+                    <button class="reveal" onclick="toggleReveal('ans191')">Reveal Solution</button>
+                    <pre id="ans191" class="solution code" style="display:none">7x=35 → x=5.</pre>
+                </div>
+
+                <!-- 192 -->
+                <div class="qa">
+                    <h3>192. (A) t-statistic Meaning</h3>
+                    <p class="muted">What does a larger t-statistic indicate?</p>
+                    <button class="reveal" onclick="toggleReveal('ans192')">Reveal Solution</button>
+                    <pre id="ans192" class="solution code" style="display:none">More evidence against null.</pre>
+                </div>
+
+                <!-- 193 -->
+                <div class="qa">
+                    <h3>193. (M) Profit % Increase</h3>
+                    <p class="muted">CP=500, SP=650. Profit%?</p>
+                    <button class="reveal" onclick="toggleReveal('ans193')">Reveal Solution</button>
+                    <pre id="ans193" class="solution code" style="display:none">150/500×100=30%.</pre>
+                </div>
+
+                <!-- 194 -->
+                <div class="qa">
+                    <h3>194. (A) Z-score Meaning</h3>
+                    <p class="muted">Z-score of +2 means?</p>
+                    <button class="reveal" onclick="toggleReveal('ans194')">Reveal Solution</button>
+                    <pre id="ans194" class="solution code" style="display:none">Value is 2 SD above mean.</pre>
+                </div>
+
+                <!-- 195 -->
+                <div class="qa">
+                    <h3>195. (M) Time & Distance Reverse</h3>
+                    <p class="muted">If trip takes 2 hours at 60 km/h, find distance.</p>
+                    <button class="reveal" onclick="toggleReveal('ans195')">Reveal Solution</button>
+                    <pre id="ans195" class="solution code" style="display:none">=120 km.</pre>
+                </div>
+
+                <!-- 196 -->
+                <div class="qa">
+                    <h3>196. (A) A/B Test Lift</h3>
+                    <p class="muted">If control CTR=4% and variant CTR=5%, lift?</p>
+                    <button class="reveal" onclick="toggleReveal('ans196')">Reveal Solution</button>
+                    <pre id="ans196" class="solution code" style="display:none">=(5−4)/4=25% lift.</pre>
+                </div>
+
+                <!-- 197 -->
+                <div class="qa">
+                    <h3>197. (M) Reverse Average</h3>
+                    <p class="muted">Average of 20 numbers is 15. Sum?</p>
+                    <button class="reveal" onclick="toggleReveal('ans197')">Reveal Solution</button>
+                    <pre id="ans197" class="solution code" style="display:none">=300.</pre>
+                </div>
+
+                <!-- 198 -->
+                <div class="qa">
+                    <h3>198. (A) Regularization Purpose</h3>
+                    <p class="muted">Why use regularization?</p>
+                    <button class="reveal" onclick="toggleReveal('ans198')">Reveal Solution</button>
+                    <pre id="ans198" class="solution code" style="display:none">To prevent overfitting.</pre>
+                </div>
+
+                <!-- 199 -->
+                <div class="qa">
+                    <h3>199. (M) Mixture Ratio</h3>
+                    <p class="muted">Mix 2 solutions: 30% and 50%, equal amounts. Final %?</p>
+                    <button class="reveal" onclick="toggleReveal('ans199')">Reveal Solution</button>
+                    <pre id="ans199" class="solution code" style="display:none">=(30+50)/2=40%.</pre>
+                </div>
+
+                <!-- 200 -->
+                <div class="qa">
+                    <h3>200. (A) Hypothesis Testing</h3>
+                    <p class="muted">Why do we never “accept” H0?</p>
+                    <button class="reveal" onclick="toggleReveal('ans200')">Reveal Solution</button>
+                    <pre id="ans200" class="solution code"
+                        style="display:none">We can only fail to reject; insufficient evidence is not proof.</pre>
+                </div>
+                <!-- ====================== -->
+                <!--       Q201 – Q300      -->
+                <!-- ====================== -->
+
+                <!-- 201 -->
+                <div class="qa">
+                    <h3>201. (B) Simple Ratio</h3>
+                    <p class="muted">Divide 90 in ratio 2:3.</p>
+                    <button class="reveal" onclick="toggleReveal('ans201')">Reveal Solution</button>
+                    <pre id="ans201" class="solution code" style="display:none">Sum=5 → shares=36,54.</pre>
+                </div>
+
+                <!-- 202 -->
+                <div class="qa">
+                    <h3>202. (M) Compound Percentage</h3>
+                    <p class="muted">Value increases 10% one year, 20% next. Net change?</p>
+                    <button class="reveal" onclick="toggleReveal('ans202')">Reveal Solution</button>
+                    <pre id="ans202" class="solution code" style="display:none">1.1×1.2=1.32 → 32% increase.</pre>
+                </div>
+
+                <!-- 203 -->
+                <div class="qa">
+                    <h3>203. (A) Time–Work Efficiency</h3>
+                    <p class="muted">A is 50% more efficient than B. Together finish in 12 days. Find A alone.</p>
+                    <button class="reveal" onclick="toggleReveal('ans203')">Reveal Solution</button>
+                    <pre id="ans203" class="solution code"
+                        style="display:none">Let B=1, A=1.5. Combined=2.5 units/day. Work=2.5×12=30. A alone=30/1.5=20 days.</pre>
+                </div>
+
+                <!-- 204 -->
+                <div class="qa">
+                    <h3>204. (M) Mixture Adjustment</h3>
+                    <p class="muted">A 40 L mixture is 30% alcohol. How much pure alcohol to add to make it 40%?</p>
+                    <button class="reveal" onclick="toggleReveal('ans204')">Reveal Solution</button>
+                    <pre id="ans204" class="solution code"
+                        style="display:none">Alcohol=12 L. (12+x)/(40+x)=0.4 → x=6.67 L.</pre>
+                </div>
+
+                <!-- 205 -->
+                <div class="qa">
+                    <h3>205. (B) Simple Interest</h3>
+                    <p class="muted">Find SI on ₹4000 for 2 years at 5%.</p>
+                    <button class="reveal" onclick="toggleReveal('ans205')">Reveal Solution</button>
+                    <pre id="ans205" class="solution code" style="display:none">SI=4000×5×2/100=400.</pre>
+                </div>
+
+                <!-- 206 -->
+                <div class="qa">
+                    <h3>206. (A) Permutation Count</h3>
+                    <p class="muted">How many permutations of 8 letters if 3 are identical?</p>
+                    <button class="reveal" onclick="toggleReveal('ans206')">Reveal Solution</button>
+                    <pre id="ans206" class="solution code" style="display:none">8!/3!=6720.</pre>
+                </div>
+
+                <!-- 207 -->
+                <div class="qa">
+                    <h3>207. (M) Profit–Loss Marked Price</h3>
+                    <p class="muted">MP=1200, SP after discount=960. Find discount%.</p>
+                    <button class="reveal" onclick="toggleReveal('ans207')">Reveal Solution</button>
+                    <pre id="ans207" class="solution code" style="display:none">Discount=240 → 20%.</pre>
+                </div>
+
+                <!-- 208 -->
+                <div class="qa">
+                    <h3>208. (A) Quadratic Problem</h3>
+                    <p class="muted">Find roots of x² − 5x + 6.</p>
+                    <button class="reveal" onclick="toggleReveal('ans208')">Reveal Solution</button>
+                    <pre id="ans208" class="solution code" style="display:none">= (x−2)(x−3) → roots 2,3.</pre>
+                </div>
+
+                <!-- 209 -->
+                <div class="qa">
+                    <h3>209. (M) Speed Difference</h3>
+                    <p class="muted">Car travels 120 km at 60 km/h. Then at what speed must it return to average 80 km/h
+                        overall?</p>
+                    <button class="reveal" onclick="toggleReveal('ans209')">Reveal Solution</button>
+                    <pre id="ans209" class="solution code"
+                        style="display:none">Impossible: return time would need to be negative.</pre>
+                </div>
+
+                <!-- 210 -->
+                <div class="qa">
+                    <h3>210. (B) Number System</h3>
+                    <p class="muted">Find unit digit of 7⁸.</p>
+                    <button class="reveal" onclick="toggleReveal('ans210')">Reveal Solution</button>
+                    <pre id="ans210" class="solution code" style="display:none">Cycle 7,9,3,1 → 8 mod 4=0 → 1.</pre>
+                </div>
+
+                <!-- 211 -->
+                <div class="qa">
+                    <h3>211. (A) Logarithmic Equation</h3>
+                    <p class="muted">Solve log₂(x) + log₂(4) = 5.</p>
+                    <button class="reveal" onclick="toggleReveal('ans211')">Reveal Solution</button>
+                    <pre id="ans211" class="solution code" style="display:none">log₂(4x)=5 → 4x=32 → x=8.</pre>
+                </div>
+
+                <!-- 212 -->
+                <div class="qa">
+                    <h3>212. (M) Pipes & Cisterns</h3>
+                    <p class="muted">A fills in 12 h, B empties in 24 h. Both together, time?</p>
+                    <button class="reveal" onclick="toggleReveal('ans212')">Reveal Solution</button>
+                    <pre id="ans212" class="solution code" style="display:none">Net=1/12−1/24=1/24 → time=24 h.</pre>
+                </div>
+
+                <!-- 213 -->
+                <div class="qa">
+                    <h3>213. (A) AP Sum</h3>
+                    <p class="muted">AP: a=5, d=3, n=20. Find Sₙ.</p>
+                    <button class="reveal" onclick="toggleReveal('ans213')">Reveal Solution</button>
+                    <pre id="ans213" class="solution code" style="display:none">S=20/2(2*5+19*3)=10(10+57)=670.</pre>
+                </div>
+
+                <!-- 214 -->
+                <div class="qa">
+                    <h3>214. (B) Geometry</h3>
+                    <p class="muted">Area of right triangle legs 6 & 8.</p>
+                    <button class="reveal" onclick="toggleReveal('ans214')">Reveal Solution</button>
+                    <pre id="ans214" class="solution code" style="display:none">Area=24.</pre>
+                </div>
+
+                <!-- 215 -->
+                <div class="qa">
+                    <h3>215. (M) Percentage Decrease</h3>
+                    <p class="muted">Value drops from 500 to 350. % decrease?</p>
+                    <button class="reveal" onclick="toggleReveal('ans215')">Reveal Solution</button>
+                    <pre id="ans215" class="solution code" style="display:none">150/500=30%.</pre>
+                </div>
+
+                <!-- 216 -->
+                <div class="qa">
+                    <h3>216. (A) Divisibility</h3>
+                    <p class="muted">Largest 5-digit number divisible by 72?</p>
+                    <button class="reveal" onclick="toggleReveal('ans216')">Reveal Solution</button>
+                    <pre id="ans216" class="solution code" style="display:none">99999/72≈1388 → 1388×72=99936.</pre>
+                </div>
+
+                <!-- 217 -->
+                <div class="qa">
+                    <h3>217. (M) Profit Ratio</h3>
+                    <p class="muted">A & B invest 6000 and 8000. Profit=7000. A’s share?</p>
+                    <button class="reveal" onclick="toggleReveal('ans217')">Reveal Solution</button>
+                    <pre id="ans217" class="solution code" style="display:none">Ratio=6:8=3:4 → A=3/7×7000=3000.</pre>
+                </div>
+
+                <!-- 218 -->
+                <div class="qa">
+                    <h3>218. (A) Time Zones</h3>
+                    <p class="muted">Call logged at 16:00 UTC; IST offset +5:30. Local time?</p>
+                    <button class="reveal" onclick="toggleReveal('ans218')">Reveal Solution</button>
+                    <pre id="ans218" class="solution code" style="display:none">21:30 IST.</pre>
+                </div>
+
+                <!-- 219 -->
+                <div class="qa">
+                    <h3>219. (M) Divisor Count</h3>
+                    <p class="muted">How many divisors does 360 have?</p>
+                    <button class="reveal" onclick="toggleReveal('ans219')">Reveal Solution</button>
+                    <pre id="ans219" class="solution code"
+                        style="display:none">360=2³×3²×5¹ → divisors=(3+1)(2+1)(1+1)=4×3×2=24.</pre>
+                </div>
+
+                <!-- 220 -->
+                <div class="qa">
+                    <h3>220. (B) Temperature Conversion</h3>
+                    <p class="muted">Convert 0°C to Fahrenheit.</p>
+                    <button class="reveal" onclick="toggleReveal('ans220')">Reveal Solution</button>
+                    <pre id="ans220" class="solution code" style="display:none">32°F.</pre>
+                </div>
+
+                <!-- 221 -->
+                <div class="qa">
+                    <h3>221. (A) Combinatorics</h3>
+                    <p class="muted">Number of subsets of a set of size 7?</p>
+                    <button class="reveal" onclick="toggleReveal('ans221')">Reveal Solution</button>
+                    <pre id="ans221" class="solution code" style="display:none">2⁷=128.</pre>
+                </div>
+
+                <!-- 222 -->
+                <div class="qa">
+                    <h3>222. (M) Train Speed</h3>
+                    <p class="muted">Train 150m passes pole in 6 sec. Speed?</p>
+                    <button class="reveal" onclick="toggleReveal('ans222')">Reveal Solution</button>
+                    <pre id="ans222" class="solution code" style="display:none">150/6=25 m/s=90 km/h.</pre>
+                </div>
+
+                <!-- 223 -->
+                <div class="qa">
+                    <h3>223. (A) GP Sum</h3>
+                    <p class="muted">GP: a=3, r=2, n=6. Find sum.</p>
+                    <button class="reveal" onclick="toggleReveal('ans223')">Reveal Solution</button>
+                    <pre id="ans223" class="solution code" style="display:none">S=3(2⁶−1)/(2−1)=3(63)=189.</pre>
+                </div>
+
+                <!-- 224 -->
+                <div class="qa">
+                    <h3>224. (M) Pipes</h3>
+                    <p class="muted">Two pipes fill in 10 & 15 h. Time together?</p>
+                    <button class="reveal" onclick="toggleReveal('ans224')">Reveal Solution</button>
+                    <pre id="ans224" class="solution code" style="display:none">1/10+1/15=1/6 → 6 h.</pre>
+                </div>
+
+                <!-- 225 -->
+                <div class="qa">
+                    <h3>225. (B) Basic Algebra</h3>
+                    <p class="muted">Solve x/5=7.</p>
+                    <button class="reveal" onclick="toggleReveal('ans225')">Reveal Solution</button>
+                    <pre id="ans225" class="solution code" style="display:none">x=35.</pre>
+                </div>
+
+                <!-- 226 -->
+                <div class="qa">
+                    <h3>226. (A) Coordinate Geometry</h3>
+                    <p class="muted">Distance between (3,4) and (7,1)?</p>
+                    <button class="reveal" onclick="toggleReveal('ans226')">Reveal Solution</button>
+                    <pre id="ans226" class="solution code" style="display:none">√((4)²+(−3)²)=5.</pre>
+                </div>
+
+                <!-- 227 -->
+                <div class="qa">
+                    <h3>227. (M) Profit %</h3>
+                    <p class="muted">CP=400, SP=480. Profit%?</p>
+                    <button class="reveal" onclick="toggleReveal('ans227')">Reveal Solution</button>
+                    <pre id="ans227" class="solution code" style="display:none">80/400=20%.</pre>
+                </div>
+
+                <!-- 228 -->
+                <div class="qa">
+                    <h3>228. (A) Number Theory</h3>
+                    <p class="muted">Find remainder 5¹⁰⁰ mod 7.</p>
+                    <button class="reveal" onclick="toggleReveal('ans228')">Reveal Solution</button>
+                    <pre id="ans228" class="solution code" style="display:none">φ(7)=6 → 100 mod 6=4 → 5⁴=625≡2.</pre>
+                </div>
+
+                <!-- 229 -->
+                <div class="qa">
+                    <h3>229. (M) Time–Distance</h3>
+                    <p class="muted">Travel 150 km at 50. Time?</p>
+                    <button class="reveal" onclick="toggleReveal('ans229')">Reveal Solution</button>
+                    <pre id="ans229" class="solution code" style="display:none">3 hours.</pre>
+                </div>
+
+                <!-- 230 -->
+                <div class="qa">
+                    <h3>230. (A) AP General</h3>
+                    <p class="muted">Find 25th term of AP: a=4, d=6.</p>
+                    <button class="reveal" onclick="toggleReveal('ans230')">Reveal Solution</button>
+                    <pre id="ans230" class="solution code" style="display:none">a₂₅=4+24*6=148.</pre>
+                </div>
+
+                <!-- 231 -->
+                <div class="qa">
+                    <h3>231. (B) Simple Percentage</h3>
+                    <p class="muted">Find 15% of 360.</p>
+                    <button class="reveal" onclick="toggleReveal('ans231')">Reveal Solution</button>
+                    <pre id="ans231" class="solution code" style="display:none">54.</pre>
+                </div>
+
+                <!-- 232 -->
+                <div class="qa">
+                    <h3>232. (A) Modulo Operation</h3>
+                    <p class="muted">Find 123456 mod 9.</p>
+                    <button class="reveal" onclick="toggleReveal('ans232')">Reveal Solution</button>
+                    <pre id="ans232" class="solution code"
+                        style="display:none">Sum digits=1+2+3+4+5+6=21 → 21 mod 9=3.</pre>
+                </div>
+
+                <!-- 233 -->
+                <div class="qa">
+                    <h3>233. (M) DI — Average</h3>
+                    <p class="muted">Values: 20, 30, 50, 100. Find average.</p>
+                    <button class="reveal" onclick="toggleReveal('ans233')">Reveal Solution</button>
+                    <pre id="ans233" class="solution code" style="display:none">200/4=50.</pre>
+                </div>
+
+                <!-- 234 -->
+                <div class="qa">
+                    <h3>234. (A) Boats & Streams</h3>
+                    <p class="muted">Downstream=15, upstream=5. Stream speed?</p>
+                    <button class="reveal" onclick="toggleReveal('ans234')">Reveal Solution</button>
+                    <pre id="ans234" class="solution code" style="display:none">s=(15−5)/2=5.</pre>
+                </div>
+
+                <!-- 235 -->
+                <div class="qa">
+                    <h3>235. (M) Ratio Adjustment</h3>
+                    <p class="muted">Ratio 4:9 becomes 1:2 when adding x to both. Find x.</p>
+                    <button class="reveal" onclick="toggleReveal('ans235')">Reveal Solution</button>
+                    <pre id="ans235" class="solution code"
+                        style="display:none">4+x : 9+x = 1:2 → 2(4+x)=9+x → 8+2x=9+x → x=1.</pre>
+                </div>
+
+                <!-- 236 -->
+                <div class="qa">
+                    <h3>236. (A) Divisor Sum</h3>
+                    <p class="muted">Find σ(n) for n=28.</p>
+                    <button class="reveal" onclick="toggleReveal('ans236')">Reveal Solution</button>
+                    <pre id="ans236" class="solution code" style="display:none">1+2+4+7+14+28=56.</pre>
+                </div>
+
+                <!-- 237 -->
+                <div class="qa">
+                    <h3>237. (M) Mixture</h3>
+                    <p class="muted">2 solutions: 20% and 60%. Make 40%. Ratio?</p>
+                    <button class="reveal" onclick="toggleReveal('ans237')">Reveal Solution</button>
+                    <pre id="ans237" class="solution code" style="display:none">(40−20):(60−40)=20:20=1:1.</pre>
+                </div>
+
+                <!-- 238 -->
+                <div class="qa">
+                    <h3>238. (A) Time</h3>
+                    <p class="muted">Convert 2.75 hours into minutes.</p>
+                    <button class="reveal" onclick="toggleReveal('ans238')">Reveal Solution</button>
+                    <pre id="ans238" class="solution code" style="display:none">2 hr 45 min → 165 minutes.</pre>
+                </div>
+
+                <!-- 239 -->
+                <div class="qa">
+                    <h3>239. (M) Cylinder Volume</h3>
+                    <p class="muted">Cylinder r=4, h=10. Volume?</p>
+                    <button class="reveal" onclick="toggleReveal('ans239')">Reveal Solution</button>
+                    <pre id="ans239" class="solution code" style="display:none">πr²h=16π×10=160π.</pre>
+                </div>
+
+                <!-- 240 -->
+                <div class="qa">
+                    <h3>240. (A) Inequality</h3>
+                    <p class="muted">Solve 3x − 7 ≥ 2.</p>
+                    <button class="reveal" onclick="toggleReveal('ans240')">Reveal Solution</button>
+                    <pre id="ans240" class="solution code" style="display:none">3x≥9 → x≥3.</pre>
+                </div>
+
+                <!-- 241 -->
+                <div class="qa">
+                    <h3>241. (M) Reverse Profit</h3>
+                    <p class="muted">Profit=20%, SP=720. Find CP.</p>
+                    <button class="reveal" onclick="toggleReveal('ans241')">Reveal Solution</button>
+                    <pre id="ans241" class="solution code" style="display:none">CP=720/1.2=600.</pre>
+                </div>
+
+                <!-- 242 -->
+                <div class="qa">
+                    <h3>242. (A) Factorial Mod</h3>
+                    <p class="muted">Find 10! mod 9.</p>
+                    <button class="reveal" onclick="toggleReveal('ans242')">Reveal Solution</button>
+                    <pre id="ans242" class="solution code"
+                        style="display:none">10! contains 9 as factor → 0 mod 9.</pre>
+                </div>
+
+                <!-- 243 -->
+                <div class="qa">
+                    <h3>243. (M) Simple Age</h3>
+                    <p class="muted">Father 3× son's age. Sum=60. Find ages.</p>
+                    <button class="reveal" onclick="toggleReveal('ans243')">Reveal Solution</button>
+                    <pre id="ans243" class="solution code" style="display:none">3s + s =60 → s=15, father=45.</pre>
+                </div>
+
+                <!-- 244 -->
+                <div class="qa">
+                    <h3>244. (A) Roots</h3>
+                    <p class="muted">Solve 2x − 3 = 17.</p>
+                    <button class="reveal" onclick="toggleReveal('ans244')">Reveal Solution</button>
+                    <pre id="ans244" class="solution code" style="display:none">2x=20 → x=10.</pre>
+                </div>
+
+                <!-- 245 -->
+                <div class="qa">
+                    <h3>245. (M) Work Completion</h3>
+                    <p class="muted">A does 30% in 3 days. Full job time?</p>
+                    <button class="reveal" onclick="toggleReveal('ans245')">Reveal Solution</button>
+                    <pre id="ans245" class="solution code" style="display:none">10 days.</pre>
+                </div>
+
+                <!-- 246 -->
+                <div class="qa">
+                    <h3>246. (A) Simple Logic</h3>
+                    <p class="muted">If all A are B, and all B are C, then all A are?</p>
+                    <button class="reveal" onclick="toggleReveal('ans246')">Reveal Solution</button>
+                    <pre id="ans246" class="solution code" style="display:none">C.</pre>
+                </div>
+
+                <!-- 247 -->
+                <div class="qa">
+                    <h3>247. (M) Time–Distance</h3>
+                    <p class="muted">Speed 72 km/h. Time to travel 50 km?</p>
+                    <button class="reveal" onclick="toggleReveal('ans247')">Reveal Solution</button>
+                    <pre id="ans247" class="solution code" style="display:none">50/72≈0.694 hr.</pre>
+                </div>
+
+                <!-- 248 -->
+                <div class="qa">
+                    <h3>248. (A) Coordinate Midpoint</h3>
+                    <p class="muted">Midpoint of (2,5) and (6,9)?</p>
+                    <button class="reveal" onclick="toggleReveal('ans248')">Reveal Solution</button>
+                    <pre id="ans248" class="solution code" style="display:none">(4,7).</pre>
+                </div>
+
+                <!-- 249 -->
+                <div class="qa">
+                    <h3>249. (M) Square Root Estimate</h3>
+                    <p class="muted">Approximate √50.</p>
+                    <button class="reveal" onclick="toggleReveal('ans249')">Reveal Solution</button>
+                    <pre id="ans249" class="solution code" style="display:none">≈7.07.</pre>
+                </div>
+
+                <!-- 250 -->
+                <div class="qa">
+                    <h3>250. (A) Triangle</h3>
+                    <p class="muted">Sides 5,12,13. Type?</p>
+                    <button class="reveal" onclick="toggleReveal('ans250')">Reveal Solution</button>
+                    <pre id="ans250" class="solution code" style="display:none">Right triangle.</pre>
+                </div>
+
+                <!-- ======================= -->
+                <!--  ANALYTICS SECTION      -->
+                <!-- ======================= -->
+
+                <!-- 251 -->
+                <div class="qa">
+                    <h3>251. (A) Standardization</h3>
+                    <p class="muted">Formula for z-score?</p>
+                    <button class="reveal" onclick="toggleReveal('ans251')">Reveal Solution</button>
+                    <pre id="ans251" class="solution code" style="display:none">(x−μ)/σ.</pre>
+                </div>
+
+                <!-- 252 -->
+                <div class="qa">
+                    <h3>252. (M) Probability Conditional</h3>
+                    <p class="muted">P(A)=0.3, P(B)=0.5, P(A∩B)=0.2. Find P(A|B).</p>
+                    <button class="reveal" onclick="toggleReveal('ans252')">Reveal Solution</button>
+                    <pre id="ans252" class="solution code" style="display:none">=0.2/0.5=0.4.</pre>
+                </div>
+
+                <!-- 253 -->
+                <div class="qa">
+                    <h3>253. (A) Central Limit</h3>
+                    <p class="muted">CLT applies to what?</p>
+                    <button class="reveal" onclick="toggleReveal('ans253')">Reveal Solution</button>
+                    <pre id="ans253" class="solution code"
+                        style="display:none">Means of large samples → approx normal.</pre>
+                </div>
+
+                <!-- 254 -->
+                <div class="qa">
+                    <h3>254. (B) Mean–Median–Mode</h3>
+                    <p class="muted">For symmetric distribution, relation?</p>
+                    <button class="reveal" onclick="toggleReveal('ans254')">Reveal Solution</button>
+                    <pre id="ans254" class="solution code" style="display:none">Mean=Median=Mode.</pre>
+                </div>
+
+                <!-- 255 -->
+                <div class="qa">
+                    <h3>255. (A) Type II Error</h3>
+                    <p class="muted">Define β error.</p>
+                    <button class="reveal" onclick="toggleReveal('ans255')">Reveal Solution</button>
+                    <pre id="ans255" class="solution code" style="display:none">Failing to reject false null.</pre>
+                </div>
+
+                <!-- 256 -->
+                <div class="qa">
+                    <h3>256. (M) A/B Test</h3>
+                    <p class="muted">If difference is statistically significant, what does it imply?</p>
+                    <button class="reveal" onclick="toggleReveal('ans256')">Reveal Solution</button>
+                    <pre id="ans256" class="solution code"
+                        style="display:none">Observed effect unlikely due to random chance.</pre>
+                </div>
+
+                <!-- 257 -->
+                <div class="qa">
+                    <h3>257. (A) Variance Formula</h3>
+                    <p class="muted">Population variance formula?</p>
+                    <button class="reveal" onclick="toggleReveal('ans257')">Reveal Solution</button>
+                    <pre id="ans257" class="solution code" style="display:none">Σ(x−μ)²/N.</pre>
+                </div>
+
+                <!-- 258 -->
+                <div class="qa">
+                    <h3>258. (M) Expected Value</h3>
+                    <p class="muted">Flip a coin: win ₹5 on Head, lose ₹2 on Tail. EV?</p>
+                    <button class="reveal" onclick="toggleReveal('ans258')">Reveal Solution</button>
+                    <pre id="ans258" class="solution code" style="display:none">0.5(5)+0.5(−2)=1.5.</pre>
+                </div>
+
+                <!-- 259 -->
+                <div class="qa">
+                    <h3>259. (A) Confidence Interval Width</h3>
+                    <p class="muted">What decreases CI width?</p>
+                    <button class="reveal" onclick="toggleReveal('ans259')">Reveal Solution</button>
+                    <pre id="ans259" class="solution code" style="display:none">Larger sample size.</pre>
+                </div>
+
+                <!-- 260 -->
+                <div class="qa">
+                    <h3>260. (M) Covariance Meaning</h3>
+                    <p class="muted">If cov(X,Y) > 0 → ?</p>
+                    <button class="reveal" onclick="toggleReveal('ans260')">Reveal Solution</button>
+                    <pre id="ans260" class="solution code" style="display:none">Variables move together.</pre>
+                </div>
+
+                <!-- 261 -->
+                <div class="qa">
+                    <h3>261. (A) Logistic Function</h3>
+                    <p class="muted">Range of logistic output?</p>
+                    <button class="reveal" onclick="toggleReveal('ans261')">Reveal Solution</button>
+                    <pre id="ans261" class="solution code" style="display:none">0 to 1.</pre>
+                </div>
+
+                <!-- 262 -->
+                <div class="qa">
+                    <h3>262. (M) Correlation</h3>
+                    <p class="muted">r=0 means?</p>
+                    <button class="reveal" onclick="toggleReveal('ans262')">Reveal Solution</button>
+                    <pre id="ans262" class="solution code" style="display:none">No linear relation.</pre>
+                </div>
+
+                <!-- 263 -->
+                <div class="qa">
+                    <h3>263. (A) Regression Coefficient</h3>
+                    <p class="muted">Interpret β in linear regression.</p>
+                    <button class="reveal" onclick="toggleReveal('ans263')">Reveal Solution</button>
+                    <pre id="ans263" class="solution code" style="display:none">Change in Y for unit change in X.</pre>
+                </div>
+
+                <!-- 264 -->
+                <div class="qa">
+                    <h3>264. (M) Poisson</h3>
+                    <p class="muted">λ=3. Find P(X=0).</p>
+                    <button class="reveal" onclick="toggleReveal('ans264')">Reveal Solution</button>
+                    <pre id="ans264" class="solution code" style="display:none">e⁻³.</pre>
+                </div>
+
+                <!-- 265 -->
+                <div class="qa">
+                    <h3>265. (A) Overfitting Sign</h3>
+                    <p class="muted">Train high accuracy, test low accuracy?</p>
+                    <button class="reveal" onclick="toggleReveal('ans265')">Reveal Solution</button>
+                    <pre id="ans265" class="solution code" style="display:none">Overfitting.</pre>
+                </div>
+
+                <!-- 266 -->
+                <div class="qa">
+                    <h3>266. (M) Sampling</h3>
+                    <p class="muted">Simple random sampling ensures?</p>
+                    <button class="reveal" onclick="toggleReveal('ans266')">Reveal Solution</button>
+                    <pre id="ans266" class="solution code" style="display:none">Equal chance for all units.</pre>
+                </div>
+
+                <!-- 267 -->
+                <div class="qa">
+                    <h3>267. (A) Hypothesis Terms</h3>
+                    <p class="muted">Null hypothesis symbolizes?</p>
+                    <button class="reveal" onclick="toggleReveal('ans267')">Reveal Solution</button>
+                    <pre id="ans267" class="solution code" style="display:none">No effect / no difference.</pre>
+                </div>
+
+                <!-- 268 -->
+                <div class="qa">
+                    <h3>268. (M) Entropy Zero</h3>
+                    <p class="muted">When is entropy zero?</p>
+                    <button class="reveal" onclick="toggleReveal('ans268')">Reveal Solution</button>
+                    <pre id="ans268" class="solution code"
+                        style="display:none">When probability is 1 for one class.</pre>
+                </div>
+
+                <!-- 269 -->
+                <div class="qa">
+                    <h3>269. (A) KL Divergence</h3>
+                    <p class="muted">KL(P‖Q) equals zero when?</p>
+                    <button class="reveal" onclick="toggleReveal('ans269')">Reveal Solution</button>
+                    <pre id="ans269" class="solution code" style="display:none">P = Q.</pre>
+                </div>
+
+                <!-- 270 -->
+                <div class="qa">
+                    <h3>270. (M) Mean of Means</h3>
+                    <p class="muted">Two groups: mean 50 (n=10), mean 70 (n=20). Combined?</p>
+                    <button class="reveal" onclick="toggleReveal('ans270')">Reveal Solution</button>
+                    <pre id="ans270" class="solution code" style="display:none">=(500+1400)/30=63.33.</pre>
+                </div>
+
+                <!-- 271 -->
+                <div class="qa">
+                    <h3>271. (A) L1 vs L2</h3>
+                    <p class="muted">Which creates sparsity?</p>
+                    <button class="reveal" onclick="toggleReveal('ans271')">Reveal Solution</button>
+                    <pre id="ans271" class="solution code" style="display:none">L1.</pre>
+                </div>
+
+                <!-- 272 -->
+                <div class="qa">
+                    <h3>272. (M) Probability Deck</h3>
+                    <p class="muted">Probability of drawing Ace?</p>
+                    <button class="reveal" onclick="toggleReveal('ans272')">Reveal Solution</button>
+                    <pre id="ans272" class="solution code" style="display:none">4/52=1/13.</pre>
+                </div>
+
+                <!-- 273 -->
+                <div class="qa">
+                    <h3>273. (A) z-value</h3>
+                    <p class="muted">Find P(Z<0).< /p>
+                            <button class="reveal" onclick="toggleReveal('ans273')">Reveal Solution</button>
+                            <pre id="ans273" class="solution code" style="display:none">0.5.</pre>
+                </div>
+
+                <!-- 274 -->
+                <div class="qa">
+                    <h3>274. (M) Variance Scaling</h3>
+                    <p class="muted">Var(5X)=?</p>
+                    <button class="reveal" onclick="toggleReveal('ans274')">Reveal Solution</button>
+                    <pre id="ans274" class="solution code" style="display:none">25 Var(X).</pre>
+                </div>
+
+                <!-- 275 -->
+                <div class="qa">
+                    <h3>275. (A) Business Metrics</h3>
+                    <p class="muted">DAU/MAU ratio measures?</p>
+                    <button class="reveal" onclick="toggleReveal('ans275')">Reveal Solution</button>
+                    <pre id="ans275" class="solution code" style="display:none">Stickiness.</pre>
+                </div>
+
+                <!-- 276 -->
+                <div class="qa">
+                    <h3>276. (M) Histogram</h3>
+                    <p class="muted">Histogram represents?</p>
+                    <button class="reveal" onclick="toggleReveal('ans276')">Reveal Solution</button>
+                    <pre id="ans276" class="solution code" style="display:none">Frequency distribution.</pre>
+                </div>
+
+                <!-- 277 -->
+                <div class="qa">
+                    <h3>277. (A) Multicollinearity</h3>
+                    <p class="muted">High multicollinearity effect?</p>
+                    <button class="reveal" onclick="toggleReveal('ans277')">Reveal Solution</button>
+                    <pre id="ans277" class="solution code" style="display:none">Unstable coefficients.</pre>
+                </div>
+
+                <!-- 278 -->
+                <div class="qa">
+                    <h3>278. (M) Permutation Prob</h3>
+                    <p class="muted">Probability first card is red?</p>
+                    <button class="reveal" onclick="toggleReveal('ans278')">Reveal Solution</button>
+                    <pre id="ans278" class="solution code" style="display:none">26/52=1/2.</pre>
+                </div>
+
+                <!-- 279 -->
+                <div class="qa">
+                    <h3>279. (A) Logistic Regression</h3>
+                    <p class="muted">Output represents?</p>
+                    <button class="reveal" onclick="toggleReveal('ans279')">Reveal Solution</button>
+                    <pre id="ans279" class="solution code" style="display:none">Probability of class 1.</pre>
+                </div>
+
+                <!-- 280 -->
+                <div class="qa">
+                    <h3>280. (M) Dataset Scaling</h3>
+                    <p class="muted">Min–max scaling formula?</p>
+                    <button class="reveal" onclick="toggleReveal('ans280')">Reveal Solution</button>
+                    <pre id="ans280" class="solution code" style="display:none">(x−min)/(max−min).</pre>
+                </div>
+
+                <!-- 281 -->
+                <div class="qa">
+                    <h3>281. (A) Random Variable</h3>
+                    <p class="muted">Define continuous RV.</p>
+                    <button class="reveal" onclick="toggleReveal('ans281')">Reveal Solution</button>
+                    <pre id="ans281" class="solution code" style="display:none">Takes values over interval.</pre>
+                </div>
+
+                <!-- 282 -->
+                <div class="qa">
+                    <h3>282. (M) Expected Value</h3>
+                    <p class="muted">EV of uniform [0,1]?</p>
+                    <button class="reveal" onclick="toggleReveal('ans282')">Reveal Solution</button>
+                    <pre id="ans282" class="solution code" style="display:none">0.5.</pre>
+                </div>
+
+                <!-- 283 -->
+                <div class="qa">
+                    <h3>283. (A) Overfitting Example</h3>
+                    <p class="muted">Using too many trees in decision tree leads to?</p>
+                    <button class="reveal" onclick="toggleReveal('ans283')">Reveal Solution</button>
+                    <pre id="ans283" class="solution code" style="display:none">Overfitting.</pre>
+                </div>
+
+                <!-- 284 -->
+                <div class="qa">
+                    <h3>284. (M) Confidence</h3>
+                    <p class="muted">For 95% CI, z-score?</p>
+                    <button class="reveal" onclick="toggleReveal('ans284')">Reveal Solution</button>
+                    <pre id="ans284" class="solution code" style="display:none">1.96.</pre>
+                </div>
+
+                <!-- 285 -->
+                <div class="qa">
+                    <h3>285. (A) SVM Kernel</h3>
+                    <p class="muted">Why use kernel?</p>
+                    <button class="reveal" onclick="toggleReveal('ans285')">Reveal Solution</button>
+                    <pre id="ans285" class="solution code"
+                        style="display:none">Map data to higher dim for separation.</pre>
+                </div>
+
+                <!-- 286 -->
+                <div class="qa">
+                    <h3>286. (M) Variance</h3>
+                    <p class="muted">If variance=0, what is true?</p>
+                    <button class="reveal" onclick="toggleReveal('ans286')">Reveal Solution</button>
+                    <pre id="ans286" class="solution code" style="display:none">All values equal.</pre>
+                </div>
+
+                <!-- 287 -->
+                <div class="qa">
+                    <h3>287. (A) Bernoulli EV</h3>
+                    <p class="muted">EV of Bernoulli(p)?</p>
+                    <button class="reveal" onclick="toggleReveal('ans287')">Reveal Solution</button>
+                    <pre id="ans287" class="solution code" style="display:none">p.</pre>
+                </div>
+
+                <!-- 288 -->
+                <div class="qa">
+                    <h3>288. (M) p-value Meaning</h3>
+                    <p class="muted">Small p-value (<0.05) suggests?</p>
+                            <button class="reveal" onclick="toggleReveal('ans288')">Reveal Solution</button>
+                            <pre id="ans288" class="solution code" style="display:none">Reject H0.</pre>
+                </div>
+
+                <!-- 289 -->
+                <div class="qa">
+                    <h3>289. (A) Chi-square Usage</h3>
+                    <p class="muted">Used for?</p>
+                    <button class="reveal" onclick="toggleReveal('ans289')">Reveal Solution</button>
+                    <pre id="ans289" class="solution code"
+                        style="display:none">Independence test for categorical data.</pre>
+                </div>
+
+                <!-- 290 -->
+                <div class="qa">
+                    <h3>290. (M) Probability Dice</h3>
+                    <p class="muted">P(sum=7) on two dice?</p>
+                    <button class="reveal" onclick="toggleReveal('ans290')">Reveal Solution</button>
+                    <pre id="ans290" class="solution code" style="display:none">6/36=1/6.</pre>
+                </div>
+
+                <!-- 291 -->
+                <div class="qa">
+                    <h3>291. (A) ML Evaluation</h3>
+                    <p class="muted">F1-score useful when?</p>
+                    <button class="reveal" onclick="toggleReveal('ans291')">Reveal Solution</button>
+                    <pre id="ans291" class="solution code" style="display:none">Class imbalance.</pre>
+                </div>
+
+                <!-- 292 -->
+                <div class="qa">
+                    <h3>292. (M) Random Sampling</h3>
+                    <p class="muted">Sampling with equal probability is?</p>
+                    <button class="reveal" onclick="toggleReveal('ans292')">Reveal Solution</button>
+                    <pre id="ans292" class="solution code" style="display:none">Simple random sampling.</pre>
+                </div>
+
+                <!-- 293 -->
+                <div class="qa">
+                    <h3>293. (A) Standard Error Meaning</h3>
+                    <p class="muted">SE measures?</p>
+                    <button class="reveal" onclick="toggleReveal('ans293')">Reveal Solution</button>
+                    <pre id="ans293" class="solution code" style="display:none">Variability of sample mean.</pre>
+                </div>
+
+                <!-- 294 -->
+                <div class="qa">
+                    <h3>294. (M) Normal Distribution</h3>
+                    <p class="muted">Mean=50, SD=10. Z for X=60?</p>
+                    <button class="reveal" onclick="toggleReveal('ans294')">Reveal Solution</button>
+                    <pre id="ans294" class="solution code" style="display:none">(60−50)/10=1.</pre>
+                </div>
+
+                <!-- 295 -->
+                <div class="qa">
+                    <h3>295. (A) PCA Goal</h3>
+                    <p class="muted">PCA reduces?</p>
+                    <button class="reveal" onclick="toggleReveal('ans295')">Reveal Solution</button>
+                    <pre id="ans295" class="solution code" style="display:none">Dimensionality.</pre>
+                </div>
+
+                <!-- 296 -->
+                <div class="qa">
+                    <h3>296. (M) Independence</h3>
+                    <p class="muted">If A & B independent: P(A∩B)=?</p>
+                    <button class="reveal" onclick="toggleReveal('ans296')">Reveal Solution</button>
+                    <pre id="ans296" class="solution code" style="display:none">P(A)P(B).</pre>
+                </div>
+
+                <!-- 297 -->
+                <div class="qa">
+                    <h3>297. (A) Regression Residual Sum</h3>
+                    <p class="muted">OLS ensures mean residual?</p>
+                    <button class="reveal" onclick="toggleReveal('ans297')">Reveal Solution</button>
+                    <pre id="ans297" class="solution code" style="display:none">Zero.</pre>
+                </div>
+
+                <!-- 298 -->
+                <div class="qa">
+                    <h3>298. (M) Random Variable</h3>
+                    <p class="muted">Uniform RV variance on [0,1]?</p>
+                    <button class="reveal" onclick="toggleReveal('ans298')">Reveal Solution</button>
+                    <pre id="ans298" class="solution code" style="display:none">1/12≈0.0833.</pre>
+                </div>
+
+                <!-- 299 -->
+                <div class="qa">
+                    <h3>299. (A) Gradient Descent</h3>
+                    <p class="muted">Too small learning rate causes?</p>
+                    <button class="reveal" onclick="toggleReveal('ans299')">Reveal Solution</button>
+                    <pre id="ans299" class="solution code" style="display:none">Slow convergence.</pre>
+                </div>
+
+                <!-- 300 -->
+                <div class="qa">
+                    <h3>300. (A) Lift in A/B Test</h3>
+                    <p class="muted">CTR jumps from 5% → 6%. What is lift?</p>
+                    <button class="reveal" onclick="toggleReveal('ans300')">Reveal Solution</button>
+                    <pre id="ans300" class="solution code" style="display:none">=(6−5)/5=20% lift.</pre>
+                </div>
+
+
+            </section>
+
+            <section id="cheatsheet" class="panel">
+                <h2>Cheat Sheet & Quick Tricks</h2>
+                <pre class="code" id="code-cheat-an">
+# GCD (Euclid)
+def gcd(a,b): while b: a,b = b, a%b; return a
+
+# LCM = a*b/gcd(a,b)
+
+# Compound interest: A = P(1 + r/n)^(n*t)
+# Continuous: A = P * exp(r*t)
+
+# Bayes: P(A|B) = P(B|A)P(A)/P(B)
+
+# Work/Rate: T = 1 / (Σ rates)
+# Harmonic mean for avg speed (equal distances): HM = n / Σ(1/v_i)
+
+# AMAT (cache-like mentality): AMAT = HitTime + MissRate * MissPenalty
+
+# CLT: sample mean ~ Normal(μ, σ/√n)
+
+# Quick z-scores: z = (x - μ) / σ
+# CI for mean (known σ): μ ± z * σ/√n
+        </pre>
+            </section>
+
+            <section id="studyplan" class="panel">
+                <h2>Study Plan & Resources</h2>
+                <p class="muted">30-day study plan:</p>
+                <ol class="muted bullets">
+                    <li>Week 1: Number systems, LCM/GCD, divisibility, modular arithmetic.</li>
+                    <li>Week 2: Percent, ratio, averages, work-rate, trains, DI practice.</li>
+                    <li>Week 3: Probability, P&C, Bayes, sampling, hypothesis tests.</li>
+                    <li>Week 4: Statistics, A/B testing, time-series basics, mocks + DI cases.</li>
+                </ol>
+                <p class="muted">Suggested reading: Khan Academy (basics), MIT OCW probability/statistics, Hands-on:
+                    Kaggle micro-projects and LeetCode/Learn for math puzzles.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+    </footer>
+
+    <script>
+        /* Client-side UI: search, reveal, copy, export, print */
+        function searchContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const panels = document.querySelectorAll('.panel');
+            const tocLinks = document.querySelectorAll('.toc a');
+            let visibleCount = 0;
+            panels.forEach(panel => {
+                const txt = panel.textContent.toLowerCase();
+                const isVisible = !query || txt.includes(query);
+                panel.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) visibleCount++;
+            });
+            tocLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target && target.style.display !== 'none') {
+                    link.style.background = 'rgba(0, 255, 136, 0.07)';
+                    link.style.fontWeight = '600';
+                } else {
+                    link.style.background = '';
+                    link.style.fontWeight = '';
+                }
+            });
+            const searchMsgId = 'searchMsgAN';
+            let searchMsg = document.getElementById(searchMsgId);
+            if (!searchMsg) {
+                searchMsg = document.createElement('div'); searchMsg.id = searchMsgId;
+                searchMsg.style.cssText = 'position:fixed;top:10px;right:10px;background:#00ff88;color:#000;padding:8px;border-radius:6px;z-index:9999;display:none';
+                document.body.appendChild(searchMsg);
+            }
+            if (query && visibleCount === 0) {
+                searchMsg.textContent = `No results for "${query}". Try a simpler term.`;
+                searchMsg.style.display = 'block';
+            } else {
+                searchMsg.style.display = 'none';
+            }
+        }
+
+        function toggleReveal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+            if (el.style.display === 'block') el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function copyCode(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const txt = el.textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                // quick visual feedback
+                const btn = document.createElement('div');
+                btn.textContent = 'Copied';
+                btn.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#0ea5a0;color:#001f1f;padding:8px;border-radius:8px;z-index:9999';
+                document.body.appendChild(btn);
+                setTimeout(() => btn.remove(), 900);
+            });
+        }
+
+        // Export current page as downloadable HTML (client-side)
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const html = '<!doctype html>\\n' + document.documentElement.outerHTML;
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'analytics.html';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        });
+
+        // Print / Save as PDF
+        document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+        // Keyboard shortcut: Escape clears search
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('searchInput').value = '';
+                searchContent();
+            }
+        });
+
+        // Accessibility: make reveal buttons reachable by keyboard (simple)
+        document.querySelectorAll('.reveal').forEach(b => b.setAttribute('tabindex', '0'));
+    </script>
+</body>
+
+</html>

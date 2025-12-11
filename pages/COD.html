@@ -1,0 +1,344 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Computer Architecture (COD) — Placement-Ready Guide</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="logo">⚙️</div>
+            <div>
+                <h1>Computer Architecture — COD</h1>
+                <div class="subtitle">Pipelines, Cache Hierarchies, ISAs, Parallelism & Interview Problems — 2025</div>
+            </div>
+        </div>
+        <nav class="top-actions">
+            <a class="btn" href="../index.html">Home</a>
+            <a class="btn ghost" href="cod.html">Computer Arch</a>
+        </nav>
+    </header>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="toc-title">Table of Contents</div>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+            </div>
+            <ul class="toc" id="tocListCOD">
+                <li><a href="#intro">Introduction & Why Architecture Matters</a></li>
+                <li><a href="#isa">Instruction Set Architectures (RISC vs CISC)</a></li>
+                <li><a href="#performance">Performance Metrics & Amdahl's Law</a></li>
+                <li><a href="#pipelining">Pipelining & Hazards</a></li>
+                <li><a href="#superscalar">Superscalar, ILP & Out-of-Order Execution</a></li>
+                <li><a href="#memory">Memory Hierarchy & Caches</a></li>
+                <li><a href="#branch">Branch Prediction & Speculation</a></li>
+                <li><a href="#parallel">Parallelism: Multicore, SIMD, GPUs</a></li>
+                <li><a href="#storage-cpu">CPU-Memory-Storage Interaction & NUMA</a></li>
+                <li><a href="#benchmarks">Benchmarks & Profiling</a></li>
+                <li><a href="#design">Microarchitecture Design Trade-offs</a></li>
+                <li><a href="#interview-cod">Placement Problems (with reveal)</a></li>
+                <li><a href="#cheatsheet-cod">Cheat Sheet & Quick Formulas</a></li>
+                <li><a href="#summary-cod">Summary & Next Steps</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+
+            <section id="intro" class="panel">
+                <h2>Introduction — Why Computer Architecture Matters</h2>
+                <p class="muted">Computer architecture bridges hardware and software: it determines how instruction
+                    streams map to physical execution, how memory access latency affects performance, and how
+                    parallelism is exposed to programmers. Understanding architecture lets you write faster code,
+                    optimize hot paths, and design scalable systems.</p>
+                <p class="muted">This guide covers core concepts interviewers expect: pipelining, caches, branch
+                    prediction, parallelism, and performance reasoning — with problems and revealable solutions.</p>
+            </section>
+
+            <section id="isa" class="panel">
+                <h2>Instruction Set Architectures (ISA) — RISC vs CISC</h2>
+                <p class="muted">ISA is the programmer-visible contract: registers, instructions, addressing modes. Two
+                    historical camps:</p>
+                <ul class="muted bullets">
+                    <li><strong>CISC (Complex Instruction Set Computer):</strong> many complex instructions (x86). Dense
+                        instruction encodings; microcode often translates complex ops to micro-ops.</li>
+                    <li><strong>RISC (Reduced Instruction Set Computer):</strong> small, fixed-length instructions (ARM,
+                        RISC-V). Simpler decode, easier pipelining and parallelism.</li>
+                </ul>
+                <p class="muted">Modern x86 internally translates into micro-ops; RISC-V is gaining adoption for its
+                    simplicity and extensibility.</p>
+            </section>
+
+            <section id="performance" class="panel">
+                <h2>Performance Metrics & Amdahl's Law</h2>
+                <p class="muted">Key metrics: latency (time to complete a task), throughput (work per unit time), CPI
+                    (cycles per instruction), IPC (instructions per cycle), and clock frequency. Use Amdahl's law to
+                    reason about speedup:</p>
+                <pre class="code" id="code-amdahl">
+Speedup = 1 / ((1 - f) + f / S)
+# f = fraction of execution time improved, S = speedup of that part
+</pre>
+                <p class="muted">Example: if 40% of runtime can be sped up by 2x, overall speedup = 1 / (0.6 + 0.4/2) =
+                    1 / (0.6 + 0.2) = 1.25x.</p>
+            </section>
+
+            <section id="pipelining" class="panel">
+                <h2>Pipelining & Hazards</h2>
+                <p class="muted">Pipelining splits instruction execution into stages (fetch, decode, execute, memory,
+                    writeback) to increase throughput. Ideal pipeline throughput approaches one instruction per cycle,
+                    but hazards limit performance.</p>
+
+                <h3>Hazards</h3>
+                <ul class="muted bullets">
+                    <li><strong>Structural hazards:</strong> resource conflicts (e.g., single memory port).</li>
+                    <li><strong>Data hazards:</strong> RAW, WAR, WAW dependencies — solved with forwarding or stalls.
+                    </li>
+                    <li><strong>Control hazards:</strong> branches that change PC — cause pipeline flushes.</li>
+                </ul>
+
+                <h3>Example: Stall Calculation</h3>
+                <pre class="code" id="code-stall">
+// Load-use hazard: load takes extra cycle before value available
+I1: LOAD R1, [R2]
+I2: ADD R3, R1, R4  // dependent
+// If load latency causes 1-cycle stall, pipeline inserts bubble between I1 and I2
+</pre>
+            </section>
+
+            <section id="superscalar" class="panel">
+                <h2>Superscalar, ILP & Out-of-Order Execution</h2>
+                <p class="muted">Superscalar processors issue multiple instructions per cycle using multiple execution
+                    units. Instruction-level parallelism (ILP) is exploited via out-of-order execution, where
+                    instructions are executed as operands become available and later committed in-order to preserve
+                    semantics.</p>
+                <p class="muted">Register renaming avoids false dependencies (WAR, WAW). Reorder buffer (ROB) and
+                    reservation stations are used to track instruction status.</p>
+            </section>
+
+            <section id="memory" class="panel">
+                <h2>Memory Hierarchy & Caches — The Real Bottleneck</h2>
+                <p class="muted">Memory latency is many CPU cycles; caches bridge CPU and DRAM. Typical hierarchy:
+                    registers → L1 (I/D) → L2 → L3 (shared) → DRAM → SSD/HDD. Cache hit rates dominate performance.</p>
+
+                <h3>Cache Metrics</h3>
+                <ul class="muted bullets">
+                    <li>Hit rate, miss rate, miss penalty, and average memory access time (AMAT).</li>
+                    <li>AMAT = HitTime + MissRate * MissPenalty.</li>
+                </ul>
+
+                <h3>Cache Organization</h3>
+                <ul class="muted bullets">
+                    <li>Direct-mapped, set-associative, fully-associative.</li>
+                    <li>Block/line size affects spatial locality.</li>
+                    <li>Write-through vs write-back policies.</li>
+                </ul>
+
+                <pre class="code" id="code-amat">
+// Example: HitTime=1 cycle, MissRate=2%, MissPenalty=100 cycles
+AMAT = 1 + 0.02 * 100 = 3 cycles
+</pre>
+            </section>
+
+            <section id="branch" class="panel">
+                <h2>Branch Prediction & Speculation</h2>
+                <p class="muted">Branches disrupt pipelines—predicting their outcome reduces stalls. Simple predictors:
+                    static predict-not-taken, 1-bit/2-bit saturating counters, two-level adaptive predictors, and more
+                    complex neural predictors in high-end CPUs. Misprediction penalty includes flushing speculative
+                    work.</p>
+
+                <h3>Branch Predictor Example</h3>
+                <pre class="code" id="code-2bit">
+// 2-bit saturating counter state machine
+00 (strong not-taken) -> on taken -> 01 -> 10 -> 11 (strong taken)
+// requires two mispredictions to flip from strongly taken to strongly not-taken
+</pre>
+            </section>
+
+            <section id="parallel" class="panel">
+                <h2>Parallelism: Multicore, SIMD & GPUs</h2>
+                <p class="muted">Parallelism occurs at many levels: instruction-level (ILP), data-level (SIMD),
+                    thread-level (multicore), and task-level (distributed systems). GPUs provide massive SIMD
+                    parallelism for data-parallel workloads.</p>
+
+                <h3>SIMD</h3>
+                <p class="muted">Single Instruction Multiple Data (SSE, AVX) processes multiple data elements per
+                    instruction. Use for vectorizable loops—align data and avoid branching inside vectors.</p>
+
+                <h3>NUMA</h3>
+                <p class="muted">Non-uniform memory access means memory latency depends on which socket holds the
+                    memory. Optimize thread placement and memory allocation to prefer local nodes.</p>
+            </section>
+
+            <section id="storage-cpu" class="panel">
+                <h2>CPU-Memory-Storage Interaction & NUMA</h2>
+                <p class="muted">Storage performance (SSD/HDD) impacts IO-bound workloads. Use NVMe for low-latency
+                    storage. OS and architecture interact: DMA, interrupts, and memory-mapped IO affect CPU utilization
+                    and latency.</p>
+
+                <h3>DMA & Device Offload</h3>
+                <p class="muted">Direct Memory Access moves data between devices and memory without CPU intervention.
+                    Offload operations to NIC (RDMA) or GPUs to reduce CPU cycles for data movement.</p>
+            </section>
+
+            <section id="benchmarks" class="panel">
+                <h2>Benchmarks & Profiling</h2>
+                <p class="muted">Common benchmarks: SPEC CPU for single-threaded CPU performance, STREAM for memory
+                    bandwidth, LINPACK for floating point, and microbenchmarks for cache and branch behavior. Profilers
+                    like perf sample hotspots and call stacks to guide optimization.</p>
+            </section>
+
+            <section id="design" class="panel">
+                <h2>Microarchitecture Design Trade-offs</h2>
+                <p class="muted">Design involves balancing frequency vs IPC, power vs performance, and complexity vs
+                    predictability. Increasing pipeline depth may increase frequency but exacerbate branch penalties;
+                    larger caches reduce miss rate but increase latency and power.</p>
+            </section>
+
+            <section id="interview-cod" class="panel">
+                <h2>Placement Problems — Practice & Reveal</h2>
+                <p class="muted">Solve these architecture problems; reveal solutions when ready. These mirror questions
+                    asked in interviews at systems-focused teams.</p>
+
+                <div class="qa">
+                    <h3>Q1 — AMAT & Cache Improvements (Easy)</h3>
+                    <p class="muted">A program has memory accesses with HitTime=1ns, MissRate=5%, MissPenalty=100ns. You
+                        can improve cache to reduce MissRate to 2% but increase HitTime to 1.2ns. Compute AMAT before
+                        and after. Is it worth it?</p>
+                    <button class="reveal" onclick="toggleReveal('codsol1')">Reveal Solution</button>
+                    <pre id="codsol1" class="solution code"
+                        style="display:none">Before: AMAT = 1 + 0.05*100 = 6 ns. After: AMAT = 1.2 + 0.02*100 = 3.2 ns. Yes — significant improvement (6 -> 3.2 ns).</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q2 — Pipeline Hazards (Medium)</h3>
+                    <p class="muted">Consider a 5-stage pipeline with forwarding except load-use hazards which cause
+                        one-cycle stall. Given instruction sequence: LOAD R1, 0(R2); ADD R3, R1, R4; SUB R5, R6, R7. How
+                        many cycles for these three instructions?</p>
+                    <button class="reveal" onclick="toggleReveal('codsol2')">Reveal Solution</button>
+                    <pre id="codsol2" class="solution code"
+                        style="display:none">Ideal pipeline without stalls: 5 + (n-1) = 7 cycles. Load-use causes 1 stall between LOAD and ADD -> total cycles = 8. The SUB can be overlapped; so 8 cycles.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q3 — Amdahl for Parallel Speedup (Medium)</h3>
+                    <p class="muted">A task has 30% inherently sequential work and 70% perfectly parallelizable. On 8
+                        cores, what's the speedup? What's theoretical max as cores -> infinity?</p>
+                    <button class="reveal" onclick="toggleReveal('codsol3')">Reveal Solution</button>
+                    <pre id="codsol3" class="solution code"
+                        style="display:none">Speedup = 1 / (0.3 + 0.7/8) = 1 / (0.3 + 0.0875) = 1 / 0.3875 = 2.58x approx. Max as cores->inf = 1 / 0.3 = 3.33x.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q4 — Cache Miss Types (Classic)</h3>
+                    <p class="muted">Define compulsory, capacity, and conflict misses. Give an example access pattern
+                        that causes conflict misses in a direct-mapped cache but not in a 4-way associative cache.</p>
+                    <button class="reveal" onclick="toggleReveal('codsol4')">Reveal Solution</button>
+                    <pre id="codsol4" class="solution code"
+                        style="display:none">Compulsory: first-time references. Capacity: cache too small to hold working set. Conflict: mapping collisions. Example: accessing addresses that are spaced by cache size so they map to same line (e.g., stride equal to cache size) causes conflict in direct-mapped but 4-way set-assoc can place them in different ways.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q5 — Branch Prediction (Advanced)</h3>
+                    <p class="muted">A loop branches taken 9 out of 10 times. A 2-bit predictor starts strongly
+                        not-taken (00). After first 20 iterations, what's steady-state prediction accuracy and why?</p>
+                    <button class="reveal" onclick="toggleReveal('codsol5')">Reveal Solution</button>
+                    <pre id="codsol5" class="solution code"
+                        style="display:none">2-bit predictor adapts to pattern: after a few updates it moves to strong-taken state and will predict taken. With occasional not-taken (1/10), the predictor may drop to weak-taken but quickly recover. Accuracy close to branch taken frequency (90%) minus transient mispredictions during state changes.</pre>
+                </div>
+
+            </section>
+
+            <section id="cheatsheet-cod" class="panel">
+                <h2>Cheat Sheet & Quick Formulas</h2>
+                <pre class="code" id="code-cheat-cod">
+# AMAT: AMAT = HitTime + MissRate * MissPenalty
+# IPC: IPC = Instructions / Cycles
+# CPI: CPI = 1 / IPC (approx for single-issue)
+# Effective CPI = sum_i (CPI_i * InstrFrac_i)
+# Speedup by frequency: Speedup = F2 / F1 (if IPC constant)
+# Amdahl: S = 1 / ((1-f) + f/Sf)
+</pre>
+            </section>
+
+            <section id="summary-cod" class="panel">
+                <h2>Summary & Next Steps</h2>
+                <p class="muted">Computer architecture knowledge lets you reason quantitatively about performance.
+                    Practice solving pipeline, cache, and parallelism problems, profile real code, and connect software
+                    patterns to hardware behaviors. Next: Probability & Analytics page will provide formula-tweak
+                    problems and revealable solutions for placement prep.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+    </footer>
+
+    <script src="../assets/scripts.js"></script>
+    <script>
+        function searchContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const panels = document.querySelectorAll('.panel');
+            const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+            let visibleCount = 0;
+
+            panels.forEach(panel => {
+                const text = panel.textContent.toLowerCase();
+                const isVisible = text.includes(query);
+                panel.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            tocLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target && target.style.display !== 'none') {
+                    link.style.background = 'rgba(0, 255, 136, 0.2)';
+                    link.style.fontWeight = 'bold';
+                } else {
+                    link.style.background = '';
+                    link.style.fontWeight = '';
+                }
+            });
+
+            const searchMsg = document.getElementById('searchMsgCOD') || document.createElement('div');
+            searchMsg.id = 'searchMsgCOD';
+            searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+            if (query && visibleCount === 0) {
+                searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+                searchMsg.style.display = 'block';
+                document.body.appendChild(searchMsg);
+            } else if (searchMsg.parentNode) {
+                searchMsg.parentNode.removeChild(searchMsg);
+            }
+
+            if (query && visibleCount > 0) {
+                const firstVisible = document.querySelector('.panel[style*="block"]');
+                if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function toggleReveal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function copyCode(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const txt = el.textContent;
+            navigator.clipboard.writeText(txt).then(() => { });
+        }
+    </script>
+
+</body>
+
+</html>

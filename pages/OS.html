@@ -1,0 +1,498 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Operating Systems — Complete Placement-Ready Guide (2025)</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="logo">🖥️</div>
+            <div>
+                <h1>__________Operating System Guide</h1>
+            </div>
+        </div>
+        <nav class="top-actions">
+            <a class="btn" href="../index.html">Home</a>
+            <a class="btn ghost" href="os.html">OS</a>
+        </nav>
+    </header>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="toc-title">Table of Contents</div>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+            </div>
+            <ul class="toc" id="tocListOS">
+                <li><a href="#intro">Introduction & Role of an Operating System</a></li>
+                <li><a href="#processes">Processes, Threads & Context Switching</a></li>
+                <li><a href="#scheduling">CPU Scheduling Algorithms</a></li>
+                <li><a href="#sync">Synchronization: Locks, Semaphores, Monitors</a></li>
+                <li><a href="#deadlocks">Deadlocks: Detection, Prevention, Avoidance</a></li>
+                <li><a href="#vm">Virtual Memory & Paging</a></li>
+                <li><a href="#io">I/O Management & Device Drivers</a></li>
+                <li><a href="#filesys">File Systems & Storage Management</a></li>
+                <li><a href="#kernel">Kernel Architecture: Monolithic vs Microkernel</a></li>
+                <li><a href="#containers">Virtualization, Containers & Namespaces</a></li>
+                <li><a href="#security-os">Security, Permissions & Hardening</a></li>
+                <li><a href="#troubleshoot-os">Troubleshooting & Tools</a></li>
+                <li><a href="#interview-os">Placement Questions (with reveal)</a></li>
+                <li><a href="#cheatsheet-os">Cheat Sheet & Commands</a></li>
+                <li><a href="#summary-os">Summary & Next Steps</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+
+            <section id="intro" class="panel">
+                <h2>Introduction — What an OS Provides</h2>
+                <p class="muted">An operating system manages hardware resources and provides abstractions (processes,
+                    threads, files, devices) so applications can run safely and efficiently. It enforces isolation,
+                    schedules CPU time, manages memory, handles I/O, and mediates access to devices and storage.</p>
+                <p class="muted">Think of the OS as a resource manager and a contract between applications and hardware.
+                    Placement interviews often probe your understanding of trade-offs, common bugs, and real-world
+                    implications of OS design.</p>
+            </section>
+
+            <section id="processes" class="panel">
+                <h2>Processes, Threads & Context Switching</h2>
+
+                <h3>Process vs Thread</h3>
+                <p class="muted">Process: isolated execution with its own address space and resources. Thread:
+                    lightweight unit of execution within a process that shares memory and file descriptors with sibling
+                    threads.</p>
+
+                <h3>Process Lifecycle</h3>
+                <ul class="muted bullets">
+                    <li>New (created)</li>
+                    <li>Ready (waiting for CPU)</li>
+                    <li>Running</li>
+                    <li>Waiting (I/O)</li>
+                    <li>Terminated</li>
+                </ul>
+
+                <h3>Context Switch</h3>
+                <p class="muted">Switching between processes/threads requires saving/restoring register state, switching
+                    page tables if address space changes, and updating kernel data structures. Context switches add
+                    overhead—minimize with proper scheduling.</p>
+
+                <h3>Lightweight vs Heavyweight Processes</h3>
+                <p class="muted">Creating processes is heavier (fork + exec), while threads or green threads are
+                    lighter. Linux clone flags allow fine-grained control over what is shared.</p>
+
+                <pre class="code" id="code-fork">
+// fork-exec pattern (conceptual)
+pid_t pid = fork();
+if (pid == 0) {
+  // child
+  execl("/bin/ls", "ls", "-l", NULL);
+}
+// parent continues
+</pre>
+            </section>
+
+            <section id="scheduling" class="panel">
+                <h2>CPU Scheduling Algorithms</h2>
+                <p class="muted">Schedulers decide which process/thread runs next. Important for fairness, throughput,
+                    latency, and responsiveness.</p>
+
+                <h3>Common Algorithms</h3>
+                <ul class="muted bullets">
+                    <li><strong>First-Come First-Serve (FCFS):</strong> Simple, can cause convoy effects.</li>
+                    <li><strong>Shortest Job First (SJF):</strong> Optimal average wait but needs prior knowledge.</li>
+                    <li><strong>Round Robin (RR):</strong> Time quantum based, good for responsiveness.</li>
+                    <li><strong>Priority Scheduling:</strong> Preemptive or non-preemptive; watch for starvation.</li>
+                    <li><strong>Multilevel Feedback Queue:</strong> Adaptive — mixes priorities and aging.</li>
+                </ul>
+
+                <h3>Linux CFS (Completely Fair Scheduler)</h3>
+                <p class="muted">CFS models fairness using virtual runtimes and uses a red-black tree to select the next
+                    task with smallest vruntime. It balances latency and throughput for desktop and server workloads.
+                </p>
+
+                <pre class="code" id="code-rr">
+// Round robin conceptual pseudocode
+queue = ready_queue
+while (true) {
+  task = dequeue(queue)
+  run(task, time_quantum)
+  if (task not finished) enqueue(queue, task)
+}
+</pre>
+            </section>
+
+            <section id="sync" class="panel">
+                <h2>Synchronization — Locks, Semaphores, Monitors, Futex</h2>
+                <p class="muted">Concurrency requires synchronization to avoid races. Understand basic primitives and
+                    their trade-offs.</p>
+
+                <h3>Mutex / Spinlock</h3>
+                <p class="muted">Mutex: blocks the thread if lock isn't available (context switch). Spinlock:
+                    busy-waits—useful when hold time is short and context switch cost is high.</p>
+
+                <h3>Semaphore</h3>
+                <p class="muted">Counting semaphore controls access to N identical resources. Binary semaphore is
+                    similar to mutex but without ownership semantics.</p>
+
+                <h3>Monitors & Condition Variables</h3>
+                <p class="muted">Monitor = mutex + condition variables. Condition variables let threads sleep and be
+                    signaled when conditions change.</p>
+
+                <h3>Futex (Fast Userspace Mutex)</h3>
+                <p class="muted">Futex allows uncontended lock acquisition in user space and only falls back to kernel
+                    help (syscall) on contention—efficient for low-contention locks.</p>
+
+                <pre class="code" id="code-sema">
+// Pseudocode: producer-consumer using semaphore
+semaphore empty = N, full = 0
+mutex m
+
+producer() {
+  produce item
+  wait(empty)
+  lock(m)
+  enqueue(item)
+  unlock(m)
+  signal(full)
+}
+
+consumer() {
+  wait(full)
+  lock(m)
+  item = dequeue()
+  unlock(m)
+  signal(empty)
+  consume item
+}
+</pre>
+            </section>
+
+            <section id="deadlocks" class="panel">
+                <h2>Deadlocks: Detection, Prevention & Avoidance</h2>
+                <p class="muted">Deadlock conditions: mutual exclusion, hold and wait, no preemption, circular wait.
+                    Break one condition to avoid deadlocks.</p>
+
+                <h3>Banker's Algorithm (Avoidance)</h3>
+                <p class="muted">Banker's algorithm simulates allocation to ensure system remains in safe state. Useful
+                    conceptually but rarely used in large OS due to complexity.</p>
+
+                <h3>Detection & Recovery</h3>
+                <p class="muted">Deadlock detection builds a wait-for graph; on cycle detection, abort one or more
+                    transactions/processes to break the cycle.</p>
+
+                <pre class="code" id="code-wfg">
+// Wait-for graph simple depiction
+P1 -> P2 (waiting for resource held by P2)
+P2 -> P3
+P3 -> P1 -> cycle -> deadlock
+</pre>
+            </section>
+
+            <section id="vm" class="panel">
+                <h2>Virtual Memory, Paging & TLB</h2>
+                <p class="muted">Virtual memory gives each process its own address space. Paging maps virtual pages to
+                    physical frames via page tables. TLB caches page table entries for fast translation.</p>
+
+                <h3>Page Faults</h3>
+                <p class="muted">On page fault, OS checks whether page is valid (load from disk if needed) or raise
+                    segmentation fault for invalid access. Major fault = needs disk I/O; minor fault = already in memory
+                    but not mapped.</p>
+
+                <h3>Page Replacement Algorithms</h3>
+                <ul class="muted bullets">
+                    <li>LRU (Least Recently Used): good but expensive to implement exactly.</li>
+                    <li>Clock (approx LRU): uses a second chance bit—practical in OSes.</li>
+                    <li>FIFO, Optimal (Belady's algorithm) — optimal but needs future knowledge.</li>
+                </ul>
+
+                <pre class="code" id="code-clock">
+// Clock algorithm conceptual
+hand = 0
+while (true) {
+  if (frame[hand].referenced == 0) replace frame[hand]
+  else frame[hand].referenced = 0; hand = (hand+1) % N
+}
+</pre>
+
+                <h3>Address Translation Example</h3>
+                <pre class="code" id="code-addr">
+Virtual Address (32-bit): [VPN | offset]
+VPN -> look up in page table -> PPN
+Physical Address = [PPN | offset]
+</pre>
+            </section>
+
+            <section id="io" class="panel">
+                <h2>I/O Management & Device Drivers</h2>
+                <p class="muted">OS abstracts devices via drivers and provides buffered/unbuffered I/O APIs. Drivers run
+                    in kernel space and must be robust—bugs crash the system.</p>
+
+                <h3>Block vs Character Devices</h3>
+                <p class="muted">Block devices (disks) support random access to fixed-size blocks. Character devices
+                    (serial ports) are stream-oriented.</p>
+
+                <h3>Interrupts & Polling</h3>
+                <p class="muted">Interrupts notify CPU of events asynchronously; polling checks status periodically.
+                    Combine with DMA for efficient transfers.</p>
+
+                <h3>Driver Model</h3>
+                <p class="muted">Drivers register interrupt handlers, implement read/write/ioctl, and must coordinate
+                    concurrency and DMA buffers.</p>
+            </section>
+
+            <section id="filesys" class="panel">
+                <h2>File Systems & Storage Management</h2>
+                <p class="muted">File systems manage files/directories, metadata (inodes), and map file blocks to disk
+                    blocks. Journaling file systems (ext4, XFS) reduce recovery time after crashes.</p>
+
+                <h3>Inode & Directory Structure</h3>
+                <p class="muted">Inode stores metadata and pointers to blocks. Directories map names to inode numbers.
+                </p>
+
+                <h3>Journaling</h3>
+                <p class="muted">Write intention to journal before applying to main structures. Modes: writeback,
+                    ordered, and data journaling—trade-offs of performance vs durability.</p>
+
+                <h3>Example: ext4 workflow</h3>
+                <p class="muted">ext4 uses journaling for metadata and optional data journaling. Use fsck and mount
+                    options (noatime) to tune performance.</p>
+            </section>
+
+            <section id="kernel" class="panel">
+                <h2>Kernel Architecture — Monolithic vs Microkernel</h2>
+                <p class="muted">Monolithic kernels include device drivers and subsystems in kernel space (Linux).
+                    Microkernels keep minimal services in kernel and run drivers in user space (e.g., Minix).
+                    Trade-offs: performance vs isolation and reliability.</p>
+
+                <h3>Hybrid & Modules</h3>
+                <p class="muted">Modern kernels support loadable modules for drivers to balance performance and
+                    modularity.</p>
+            </section>
+
+            <section id="containers" class="panel">
+                <h2>Virtualization, Containers & Namespaces</h2>
+                <p class="muted">Virtual machines emulate hardware and run full OS instances (hypervisors: KVM, Xen).
+                    Containers share the host kernel with isolated namespaces (pid, net, mnt, ipc, uts) and cgroups for
+                    resource limits.</p>
+
+                <h3>Containers vs VMs</h3>
+                <ul class="muted bullets">
+                    <li>VMs: heavier, stronger isolation, full OS per VM.</li>
+                    <li>Containers: lightweight, fast startup, share kernel, use namespaces for isolation.</li>
+                </ul>
+
+                <h3>cgroups</h3>
+                <p class="muted">Control groups limit CPU, memory, and IO to prevent noisy neighbor problems in
+                    multi-tenant environments.</p>
+            </section>
+
+            <section id="security-os" class="panel">
+                <h2>Security, Permissions & Hardening</h2>
+                <p class="muted">OS security includes user/group permissions, capability-based security,
+                    SELinux/AppArmor, secure boot, and kernel hardening.</p>
+
+                <h3>Least Privilege</h3>
+                <p class="muted">Run services with minimal privileges, use capability bounding, and avoid running
+                    everything as root.</p>
+
+                <h3>Audit & Logs</h3>
+                <p class="muted">Centralize logs, watch for anomalous activity (failed logins, privilege escalations),
+                    and use immutable audit trails for forensics.</p>
+            </section>
+
+            <section id="troubleshoot-os" class="panel">
+                <h2>Troubleshooting & Tools</h2>
+                <p class="muted">OS-level debugging uses logs, system traces, and profiling tools to find bottlenecks or
+                    crashes.</p>
+
+                <h3>Common Tools</h3>
+                <ul class="muted bullets">
+                    <li><strong>top / htop</strong> — live process CPU/memory usage.</li>
+                    <li><strong>ps</strong> — process listing.</li>
+                    <li><strong>strace</strong> — system call tracing for a process.</li>
+                    <li><strong>ltrace</strong> — library call tracing.</li>
+                    <li><strong>perf</strong> — profiling CPU hotspots and sampling stack traces.</li>
+                    <li><strong>dmesg</strong> — kernel ring buffer for boot and driver messages.</li>
+                </ul>
+
+                <pre class="code" id="code-strace">
+# Trace syscalls of a process
+strace -f -tt -o trace.log -p <pid>
+
+# Trace exec of a command
+strace -o out.log -f ls -l /
+</pre>
+            </section>
+
+            <section id="interview-os" class="panel">
+                <h2>Placement-Ready OS Questions — Practice & Reveal</h2>
+                <p class="muted">Solve these problems; use the reveal button to check answers. These are classic OS
+                    interview problems used by tech companies.</p>
+
+                <div class="qa">
+                    <h3>Q1 — Scheduling (Medium)</h3>
+                    <p class="muted">Given processes with burst times: P1=10, P2=1, P3=2, P4=1. Compute average waiting
+                        time for (a) FCFS in order P1,P2,P3,P4 and (b) SJF (shortest job first).</p>
+                    <button class="reveal" onclick="toggleReveal('ossol1')">Reveal Solution</button>
+                    <pre id="ossol1" class="solution code" style="display:none">(a) FCFS: completion times: P1:10 wait=0; P2:11 wait=10; P3:13 wait=11; P4:14 wait=13. Average wait=(0+10+11+13)/4=34/4=8.5
+(b) SJF order P2(1),P4(1),P3(2),P1(10): waits: P2:0,P4:1,P3:2,P1:4 => avg=(0+1+2+4)/4=7/4=1.75</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q2 — Deadlock (Medium)</h3>
+                    <p class="muted">Four processes P1..P4 and resources R1..R4 each with single instance. Given
+                        allocation matrix and request matrix, detect if system in deadlock using wait-for graph. (We'll
+                        provide small matrices.)</p>
+                    <button class="reveal" onclick="toggleReveal('ossol2')">Reveal Solution</button>
+                    <pre id="ossol2" class="solution code"
+                        style="display:none">Construct wait-for graph from request/allocation; find cycles. If there's a cycle, deadlock present. (Detailed matrix calculation omitted for brevity—interview expects you to build graph and reason.)</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q3 — Virtual Memory (Advanced)</h3>
+                    <p class="muted">Consider a system with 3 frames and reference string: 7,0,1,2,0,3,0,4,2,3,0,3.
+                        Compute number of page faults using FIFO and LRU.</p>
+                    <button class="reveal" onclick="toggleReveal('ossol3')">Reveal Solution</button>
+                    <pre id="ossol3" class="solution code"
+                        style="display:none">FIFO faults: simulate -> faults = 9 (example). LRU faults: simulate -> faults = 8 (example). Interviewers expect you to simulate step-by-step and explain differences.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q4 — Concurrency (Classic)</h3>
+                    <p class="muted">Explain why using "check-then-act" without locks causes race conditions. Provide a
+                        minimal example and correct it with mutex.</p>
+                    <button class="reveal" onclick="toggleReveal('ossol4')">Reveal Solution</button>
+                    <pre id="ossol4" class="solution code"
+                        style="display:none">Check-then-act: if (!exists) create(); between check and create another thread might create leading to duplicate work or corrupt state. Fix: acquire mutex before check and release after create. Example in pseudocode provided in interviews.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q5 — File System (Design)</h3>
+                    <p class="muted">Design a simple file system metadata layout for fast file lookup and explain how
+                        you'd handle large directories with millions of files.</p>
+                    <button class="reveal" onclick="toggleReveal('ossol5')">Reveal Solution</button>
+                    <pre id="ossol5" class="solution code"
+                        style="display:none">Use inode structure with indirect pointers for file blocks; for directories, use hashed B-tree or prefix tree (trie) to avoid linear scans. For millions of files, use distributed metadata service (e.g., metadata server with sharding) and directory hashing or bucketed namespaces.</pre>
+                </div>
+
+            </section>
+
+            <section id="cheatsheet-os" class="panel">
+                <h2>Cheat Sheet & Common Commands</h2>
+                <pre class="code" id="code-cheat-os">
+# Show processes
+ps aux | less
+
+# Top CPU usage
+top or htop
+
+# Trace syscalls
+strace -f -p <pid>
+
+# Show kernel ring buffer
+dmesg | tail
+
+# Check disk usage
+df -h
+
+# Check inodes
+df -i
+
+# Show mounts
+mount | column -t
+
+# Check memory
+free -h
+
+# Show open files by process
+lsof -p <pid>
+</pre>
+            </section>
+
+            <section id="summary-os" class="panel">
+                <h2>Summary & Next Steps</h2>
+                <p class="muted">Operating systems form the backbone of software infrastructure. For placements:
+                    understand core concepts, be able to simulate scheduling, page replacement, and reason about
+                    concurrency issues. Practice explaining trade-offs, and use tools (strace, perf, vmstat) to
+                    investigate real problems.</p>
+                <p class="muted">Next: Computer Architecture will follow with cache hierarchies, pipelining, ISA, and
+                    interview problems at the same depth.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+    </footer>
+
+    <script src="../assets/scripts.js"></script>
+    <script>
+        function searchContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const panels = document.querySelectorAll('.panel');
+            const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+            let visibleCount = 0;
+
+            panels.forEach(panel => {
+                const text = panel.textContent.toLowerCase();
+                const isVisible = text.includes(query);
+                panel.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            tocLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target && target.style.display !== 'none') {
+                    link.style.background = 'rgba(0, 255, 136, 0.2)';
+                    link.style.fontWeight = 'bold';
+                } else {
+                    link.style.background = '';
+                    link.style.fontWeight = '';
+                }
+            });
+
+            const searchMsg = document.getElementById('searchMsgOS') || document.createElement('div');
+            searchMsg.id = 'searchMsgOS';
+            searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+            if (query && visibleCount === 0) {
+                searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+                searchMsg.style.display = 'block';
+                document.body.appendChild(searchMsg);
+            } else if (searchMsg.parentNode) {
+                searchMsg.parentNode.removeChild(searchMsg);
+            }
+
+            if (query && visibleCount > 0) {
+                const firstVisible = document.querySelector('.panel[style*="block"]');
+                if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function copyCode(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const txt = el.textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                // silent success
+            });
+        }
+
+        function toggleReveal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+
+</body>
+
+</html>

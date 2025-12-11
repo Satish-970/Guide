@@ -1,0 +1,509 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Networking — Complete Placement-Ready Guide (Conceptual + Practical, 2025)</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="logo">🌐</div>
+            <div>
+                <h1>________Networking — Guide</h1>
+            </div>
+        </div>
+        <nav class="top-actions">
+            <a class="btn" href="../index.html">Home</a>
+            <a class="btn ghost" href="networking.html">Networking</a>
+        </nav>
+    </header>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="toc-title">Table of Contents</div>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+            </div>
+            <ul class="toc" id="tocListNet">
+                <li><a href="#intro">Introduction & Why Networking Matters</a></li>
+                <li><a href="#real">Real-World Examples & Architectures</a></li>
+                <li><a href="#layers">OSI vs TCP/IP Layers</a></li>
+                <li><a href="#physical">Physical & Data Link (Ethernet, Wi-Fi)</a></li>
+                <li><a href="#mac-switch">Switching, MAC & VLANs</a></li>
+                <li><a href="#ip">IP Addressing & Subnetting (IPv4 & IPv6)</a></li>
+                <li><a href="#routing">Routing — Static, OSPF, BGP</a></li>
+                <li><a href="#transport">Transport Layer — TCP vs UDP</a></li>
+                <li><a href="#app">Application Layer — HTTP, DNS, TLS, SMTP</a></li>
+                <li><a href="#nat-vpn">NAT, DHCP, VPNs & Cloud Networking</a></li>
+                <li><a href="#lb-cdn">Load Balancers, CDNs & Caching</a></li>
+                <li><a href="#security">Security: Firewalls, TLS, DDoS</a></li>
+                <li><a href="#troubleshoot">Troubleshooting: Tools & Techniques</a></li>
+                <li><a href="#interview">Placement-Ready Questions (with reveal)</a></li>
+                <li><a href="#cheatsheet">Cheat Sheet & Commands</a></li>
+                <li><a href="#summary">Summary & Next Steps</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+
+            <section id="intro" class="panel">
+                <h2>Introduction — Why Networking Is Foundational</h2>
+                <p class="muted">Networking is how computers talk. From a single HTTP request to a global distributed
+                    database replication, networks transport data reliably, quickly, and securely. For software
+                    engineers, clear networking understanding helps you design scalable systems, debug production
+                    issues, and answer placement interviews with confidence.</p>
+                <p class="muted">This guide blends conceptual clarity with real-world patterns used by companies in
+                    production — plus interview problems that companies ask.</p>
+            </section>
+
+            <section id="real" class="panel">
+                <h2>Real-World Examples & Architecture Patterns</h2>
+                <p class="muted">Real systems combine many networking components. Below are common patterns with
+                    concrete examples.</p>
+
+                <h3>Web Service (typical)</h3>
+                <p class="muted">Client → CDN → Load Balancer → Fleet of App Servers → Database. Each arrow is a network
+                    hop: CDN at edge reduces latency and bandwidth; load balancer distributes connections; backend
+                    services talk over internal network/VPC to databases and caches.</p>
+
+                <h3>Microservices + Service Mesh</h3>
+                <p class="muted">Service-to-service communication is often over HTTP/2 or gRPC. A service mesh (e.g.,
+                    Istio, Linkerd) handles mTLS, retries, circuit breaking, and observability at the network layer,
+                    decoupling concerns from application code.</p>
+
+                <h3>Real-time Streaming</h3>
+                <p class="muted">Systems like Kafka and WebSocket services rely on long-lived TCP connections and
+                    careful backpressure handling. Ingest nodes receive high QPS and often use partitioning +
+                    replication to scale.</p>
+
+                <h3>CDN & Edge Caching</h3>
+                <p class="muted">Companies use CDNs (Cloudflare, Akamai) to cache static assets close to users. Dynamic
+                    personalization is handled by edge logic + origin fetches.</p>
+            </section>
+
+            <section id="layers" class="panel">
+                <h2>OSI vs TCP/IP — Layered Thinking</h2>
+                <p class="muted">Layers help you reason: each layer provides services to the layer above and uses
+                    services from the layer below.</p>
+                <ol class="muted bullets">
+                    <li><strong>Layer 1 — Physical:</strong> Bits on wire, cables, Ethernet PHY, fiber.</li>
+                    <li><strong>Layer 2 — Data Link:</strong> MAC addresses, switches, Ethernet frames, ARP, VLANs.</li>
+                    <li><strong>Layer 3 — Network:</strong> IP addresses, routing, fragmentation.</li>
+                    <li><strong>Layer 4 — Transport:</strong> TCP (reliable), UDP (unreliable).</li>
+                    <li><strong>Layer 5-7 — Session/Presentation/Application:</strong> TLS, HTTP, DNS, SMTP, application
+                        protocols.</li>
+                </ol>
+                <p class="muted">Think: if a ping fails, start bottom-up — physical/cable, link/switch, IP, transport,
+                    then app layer.</p>
+            </section>
+
+            <section id="physical" class="panel">
+                <h2>Physical & Data Link — Ethernet, Wi‑Fi, Frames</h2>
+
+                <h3>Ethernet Basics</h3>
+                <p class="muted">Ethernet frames wrap IP packets. Key fields: destination MAC, source MAC, EtherType,
+                    payload, FCS (CRC). Standard speeds: 1Gbps, 10Gbps, 40/100Gbps in data centers.</p>
+
+                <h3>Wireless (Wi‑Fi)</h3>
+                <p class="muted">Wi‑Fi adds variable latency, interference, and lower reliability. Protocols
+                    (802.11ac/ax) support MIMO, channel bonding. Important for mobile services and capacity planning.
+                </p>
+
+                <h3>ARP — Address Resolution Protocol</h3>
+                <pre class="code" id="code-arp">
+-- ARP example (conceptual)
+Host A wants IP 10.0.0.5 -> sends ARP broadcast "Who has 10.0.0.5?"
+Host B replies with MAC -> A caches mapping
+</pre>
+
+                <p class="muted">ARP poisoning is a common attack vector — use static ARP entries only where appropriate
+                    and use secure network controls.</p>
+            </section>
+
+            <section id="mac-switch" class="panel">
+                <h2>Switching, MAC Tables & VLANs</h2>
+                <p class="muted">Layer 2 switches learn MAC addresses and forward frames to correct ports. VLANs
+                    partition broadcast domains using 802.1Q tags — common for separating production, management, and
+                    tenant networks.</p>
+
+                <h3>Switching Table Example</h3>
+                <p class="muted">When a switch learns that MAC X is on port 3, it records it and forwards frames to that
+                    port — avoids flooding.</p>
+
+                <h3>Trunking & Access Ports</h3>
+                <p class="muted">Trunk ports carry multiple VLANs between switches; access ports belong to a single VLAN
+                    for endpoint hosts.</p>
+            </section>
+
+            <section id="ip" class="panel">
+                <h2>IP Addressing & Subnetting — IPv4 & IPv6 (Placement Essentials)</h2>
+                <p class="muted">IP is the layer-3 addressing scheme. IPv4 uses 32-bit addresses (e.g., 192.168.1.1);
+                    IPv6 uses 128-bit addresses for scalability.</p>
+
+                <h3>Subnetting (IPv4) — Example</h3>
+                <p class="muted">CIDR notation: 192.168.10.0/24 means IPs from 192.168.10.0 to 192.168.10.255 (256
+                    addresses, usable host count 254).</p>
+                <pre class="code" id="code-subnet">
+-- Example: split 192.168.10.0/24 into two /25 subnets
+192.168.10.0/25  -> 192.168.10.0 - 192.168.10.127
+192.168.10.128/25 -> 192.168.10.128 - 192.168.10.255
+</pre>
+
+                <h3>Subnetting Trick (Placement tip)</h3>
+                <p class="muted">To find host count: hosts = 2^(32 - prefix) - 2 (exclude network & broadcast for IPv4).
+                    For quick mental math: /24=254, /26=62, /27=30.</p>
+
+                <h3>IPv6 Basics</h3>
+                <p class="muted">Compressed notation (2001:db8::1). No broadcast—uses multicast. Auto-configuration via
+                    SLAAC and DHCPv6.</p>
+            </section>
+
+            <section id="routing" class="panel">
+                <h2>Routing — Static, OSPF, BGP & How the Internet Forwards</h2>
+
+                <h3>Static Routing</h3>
+                <p class="muted">Manual route entries for small networks. Simple but not scalable.</p>
+
+                <h3>Interior Gateway Protocols — OSPF</h3>
+                <p class="muted">OSPF is link-state: routers share topology, compute shortest paths via Dijkstra. Good
+                    for intra-AS routing with fast convergence.</p>
+
+                <h3>Exterior Gateway Protocol — BGP</h3>
+                <p class="muted">BGP advertises prefixes between autonomous systems (AS). It's path-vector-based and
+                    policy-driven (not shortest-path). BGP handles route selection by policy, AS_PATH, local_pref, MED,
+                    and communities.</p>
+
+                <h3>BGP Practical Example</h3>
+                <p class="muted">A multi-homed organization advertises its IP prefixes to two ISPs. Use local_pref to
+                    prefer one ISP for outbound traffic and AS_PATH prepending to influence inbound paths.</p>
+
+                <pre class="code" id="code-bgp">
+# BGP concept snippet (not real config)
+neighbor 203.0.113.1 remote-as 65001
+network 198.51.100.0/24
+set local-preference 200 for routes received from ISP-A to prefer them
+</pre>
+
+                <p class="muted">BGP safety: route filtering, max-prefix limits, TTL/security and RPKI origin validation
+                    to avoid hijacks.</p>
+            </section>
+
+            <section id="transport" class="panel">
+                <h2>Transport Layer — TCP vs UDP, 3‑way Handshake, Congestion Control</h2>
+
+                <h3>TCP — Reliable, Ordered Stream</h3>
+                <p class="muted">TCP provides reliable, in-order delivery with flow control and congestion control. Key
+                    fields: sequence number, ack number, flags (SYN, ACK, FIN), window size.</p>
+
+                <h3>Three-Way Handshake</h3>
+                <pre class="code" id="code-3whs">
+Client -> Server: SYN (seq=x)
+Server -> Client: SYN-ACK (seq=y, ack=x+1)
+Client -> Server: ACK (ack=y+1)
+Connection established
+</pre>
+
+                <h3>Connection Teardown</h3>
+                <p class="muted">FIN/ACK exchange; TIME_WAIT state prevents delayed segments from conflicting with new
+                    connections.</p>
+
+                <h3>Congestion Control (TCP Reno/CUBIC)</h3>
+                <p class="muted">TCP increases congestion window (cwnd) by additive-increase, multiplicative-decrease on
+                    loss. Modern Linux uses CUBIC for better performance on high-bandwidth links.</p>
+
+                <h3>UDP — Lightweight, Best Effort</h3>
+                <p class="muted">Use UDP for low-latency apps (DNS, VoIP, gaming) or when the app implements its own
+                    reliability (QUIC builds on UDP).</p>
+            </section>
+
+            <section id="app" class="panel">
+                <h2>Application Layer — HTTP, DNS, TLS, SMTP, gRPC</h2>
+
+                <h3>HTTP & HTTPS</h3>
+                <p class="muted">HTTP is stateless and text-based (HTTP/1.1). HTTP/2 and HTTP/3 (QUIC) improve
+                    multiplexing and reduce head-of-line blocking. HTTPS = HTTP over TLS for encryption and server
+                    authentication.</p>
+
+                <h3>DNS — The Internet Phonebook</h3>
+                <p class="muted">DNS resolves names to records: A (IPv4), AAAA (IPv6), CNAME (alias), MX (mail), TXT
+                    (SPF/DMARC). Authoritative servers answer for zones; recursive resolvers cache results for speed.
+                </p>
+
+                <h3>TLS Basics</h3>
+                <p class="muted">TLS handshake negotiates cipher suite and establishes shared keys via public-key
+                    cryptography. Use TLS 1.3 where possible (faster handshakes, improved security).</p>
+
+                <h3>Example: DNS over HTTPS (DoH)</h3>
+                <p class="muted">Privacy-aware resolvers use DoH or DoT (DNS over TLS) to encrypt DNS queries to
+                    resolvers.</p>
+            </section>
+
+            <section id="nat-vpn" class="panel">
+                <h2>NAT, DHCP, VPNs & Cloud Networking</h2>
+
+                <h3>NAT — Network Address Translation</h3>
+                <p class="muted">NAT maps private addresses to a public IP for Internet access. Port Address Translation
+                    (PAT) multiplexes many private hosts through one public IP using port numbers.</p>
+
+                <h3>DHCP — Dynamic Host Configuration</h3>
+                <p class="muted">DHCP assigns IP addresses and network configuration (gateway, DNS) dynamically. Use
+                    reservations for predictable endpoint addressing.</p>
+
+                <h3>VPN — Secure Private Connectivity</h3>
+                <p class="muted">VPNs (IPsec, OpenVPN, WireGuard) create encrypted tunnels between networks or
+                    endpoints. WireGuard is modern and lightweight with simpler key management.</p>
+
+                <h3>Cloud VPC Patterns</h3>
+                <p class="muted">Cloud providers offer Virtual Private Clouds (VPC) with subnets, route tables, security
+                    groups (firewall-like), and NAT gateways. Architect with private subnets for databases and public
+                    subnets only for frontends.</p>
+            </section>
+
+            <section id="lb-cdn" class="panel">
+                <h2>Load Balancers, CDNs & Caching Strategies</h2>
+
+                <h3>Load Balancers</h3>
+                <p class="muted">Layer 4 (TCP) vs Layer 7 (HTTP) load balancers. L7 can do content-based routing, sticky
+                    sessions, and TLS termination. Use health checks to route around unhealthy instances.</p>
+
+                <h3>CDNs & Edge</h3>
+                <p class="muted">CDNs cache content at edge PoPs. Cache-control headers control freshness. CDNs reduce
+                    origin load, lower latency, and mitigate DDoS to some degree.</p>
+
+                <h3>Caching Patterns</h3>
+                <ul class="muted bullets">
+                    <li>Cache-aside: application populates cache on miss.</li>
+                    <li>Read-through: cache handles loading and writes through to DB.</li>
+                    <li>Write-through: writes go to cache then storage (simplifies consistency).</li>
+                </ul>
+            </section>
+
+            <section id="security" class="panel">
+                <h2>Security: Firewalls, TLS, DDoS & Practical Hardening</h2>
+                <p class="muted">Security spans multiple layers: network ACLs, host firewalls, application
+                    authentication, and encryption.</p>
+
+                <h3>Firewalls & ACLs</h3>
+                <p class="muted">Stateful firewalls track connections and allow return traffic. Network ACLs (stateless)
+                    filter based on IP/port rules. Use least-privilege rules and avoid wide open security groups.</p>
+
+                <h3>DDoS Mitigation</h3>
+                <p class="muted">Mitigation combines edge filtering (CDN/WAF), autoscaling, rate limiting, and upstream
+                    scrubbing services. Plan for capacity and failover.</p>
+
+                <h3>TLS Practical Tips</h3>
+                <ul class="muted bullets">
+                    <li>Use strong cipher suites and TLS 1.2+ (prefer 1.3).</li>
+                    <li>Enable certificate rotation and automated renewal (Let's Encrypt or managed CA).</li>
+                    <li>HSTS to prevent downgrade attacks for web services.</li>
+                </ul>
+            </section>
+
+            <section id="troubleshoot" class="panel">
+                <h2>Troubleshooting: Tools & Techniques</h2>
+                <p class="muted">When networks misbehave, use methodical steps to isolate the layer and component
+                    causing issues.</p>
+
+                <h3>Common Tools</h3>
+                <ul class="muted bullets">
+                    <li><strong>ping</strong> — ICMP reachability and RTT measurement.</li>
+                    <li><strong>traceroute / tracepath</strong> — path discovery and per-hop latency.</li>
+                    <li><strong>tcpdump / tshark</strong> — packet capture for in-depth analysis.</li>
+                    <li><strong>ss / netstat</strong> — socket and connection states.</li>
+                    <li><strong>dig / nslookup</strong> — DNS resolution debugging.</li>
+                </ul>
+
+                <h3>Example Debug Flow</h3>
+                <ol class="muted bullets">
+                    <li>Reproduce the issue and capture a timestamp.</li>
+                    <li>Ping the remote host to check basic reachability.</li>
+                    <li>Traceroute to find where latency spikes or packets drop.</li>
+                    <li>Capture packets on client/server to correlate timestamps and reset flags, retransmissions.</li>
+                    <li>Inspect application logs and system metrics for overload or resource bottlenecks.</li>
+                </ol>
+
+                <pre class="code" id="code-tcpdump">
+# Capture TCP handshake to/from host
+sudo tcpdump -i eth0 tcp and host 198.51.100.5 and port 443 -w capture.pcap
+</pre>
+            </section>
+
+            <section id="interview" class="panel">
+                <h2>Placement-Ready Interview Questions — Practice & Reveal Solutions</h2>
+                <p class="muted">Below are common interview-style problems. Try to solve them first; click "Reveal
+                    Solution" to check. These are the types of questions asked by tech companies during interviews and
+                    screenings.</p>
+
+                <div class="qa">
+                    <h3>Q1 — Subnetting Puzzle (Easy)</h3>
+                    <p class="muted">You have network 10.0.0.0/22. You need at least 4 subnets with equal sizes. What
+                        CIDR prefix should you use for each subnet? List the first subnet ranges.</p>
+                    <button class="reveal" onclick="toggleReveal('sol1')">Reveal Solution</button>
+                    <pre id="sol1" class="solution code"
+                        style="display:none">/22 has 1024 addresses? Wait — that's wrong — calculate: /22 -> 2^(32-22)=2^10=1024 addresses. To split into 4 equal subnets, need /24 (2 extra bits): /24 -> 256 addresses. Subnets: 10.0.0.0/24, 10.0.1.0/24, 10.0.2.0/24, 10.0.3.0/24.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q2 — TCP Sequence / Retransmission (Medium)</h3>
+                    <p class="muted">Client sends SYN (seq=100). Server replies SYN-ACK (seq=300, ack=101). Client sends
+                        ACK (ack=301). Now client sends data with seq=101 length=1000 bytes. Server never ACKs (packet
+                        loss). Explain what happens, and how TCP retransmission/backoff behaves.</p>
+                    <button class="reveal" onclick="toggleReveal('sol2')">Reveal Solution</button>
+                    <pre id="sol2" class="solution code"
+                        style="display:none">Client will retransmit after RTO (retransmission timeout) based on RTT estimators (SRTT, RTTVAR). Each retransmission doubles RTO (exponential backoff) until a limit. If ACK arrives, congestion window reduces (multiplicative decrease) and slow-start or congestion avoidance applies. If repeated failures, connection may be reset.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q3 — BGP Path Selection (Advanced)</h3>
+                    <p class="muted">AS 65010 receives a prefix from two neighbors: path A via AS path [65020, 65030],
+                        local_pref=100; path B via AS path [65040], local_pref=200. Which path is preferred and why?
+                        What if AS_PATH is prepended on path B?</p>
+                    <button class="reveal" onclick="toggleReveal('sol3')">Reveal Solution</button>
+                    <pre id="sol3" class="solution code"
+                        style="display:none">BGP selects highest LOCAL_PREF first — path B (local_pref 200) is preferred regardless of AS_PATH length. If AS_PATH on B is prepended to be longer, LOCAL_PREF still wins. Only when LOCAL_PREFs equal does AS_PATH length get considered.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q4 — Design: High-Availability Load Balancer (Design)</h3>
+                    <p class="muted">Design a highly available global load balancing solution for a web app across two
+                        regions with active-active deployment. Include health checks, session stickiness, and failover
+                        considerations.</p>
+                    <button class="reveal" onclick="toggleReveal('sol4')">Reveal Solution</button>
+                    <pre id="sol4" class="solution code"
+                        style="display:none">Use DNS-based global load balancing with health-checked endpoints (low TTL). Use anycast or GeoDNS to route clients to nearest region. Each region has local LBs with active-active app servers. For stickiness, use cookie-based affinity stored in signed cookies or use centralized session store (Redis) replicated cross-region. Implement health checks and automated failover; use data replication (multi-master or active-passive DB plus conflict resolution). Consider consistency implications and failover drills.</pre>
+                </div>
+
+                <div class="qa">
+                    <h3>Q5 — Practical: Why is traceroute showing an asterisk (*) at some hop?</h3>
+                    <p class="muted">Explain the possible reasons and how you'd investigate.</p>
+                    <button class="reveal" onclick="toggleReveal('sol5')">Reveal Solution</button>
+                    <pre id="sol5" class="solution code"
+                        style="display:none">Asterisk means no ICMP Time Exceeded reply from that hop — reasons: router rate-limits ICMP, firewall blocks TTL-expired messages, or the device is configured not to respond. Investigation: use TCP traceroute to port 80/443, check firewalls, run packet capture at source to see if ICMP replies arrive and are filtered locally, or try from another vantage point.</pre>
+                </div>
+
+            </section>
+
+            <section id="cheatsheet" class="panel">
+                <h2>Cheat Sheet & Common Commands</h2>
+                <pre class="code" id="code-cheat">
+# Ping
+ping -c 5 example.com
+
+# Traceroute
+traceroute example.com
+# on Linux: traceroute -T -p 443 example.com (TCP traceroute)
+
+# DNS lookups
+dig A example.com
+dig +short NS example.com
+
+# Capture traffic
+sudo tcpdump -i any host 198.51.100.5 -w out.pcap
+
+# Check open TCP sockets
+ss -tulpn
+
+# Check routing table
+ip route show
+
+# Show ARP cache
+ip neigh show
+</pre>
+            </section>
+
+            <section id="summary" class="panel">
+                <h2>Summary & Next Steps</h2>
+                <p class="muted">Networking knowledge helps you reason about real system design and debug production
+                    issues. Practice subnetting, read RFCs for protocols you use, capture packets to build intuition,
+                    and work through the interview problems above until you can explain them clearly and quickly.</p>
+                <p class="muted">Next pages: Operating Systems, Computer Architecture, and Probability & Analytics will
+                    follow with the same level of depth and placement-focused questions.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+    </footer>
+
+    <div id="modal" class="modal" style="display:none;">
+        <div class="modal-inner">
+            <button class="modal-close" onclick="closeModal()">Close</button>
+            <pre id="modal-code" class="code"></pre>
+        </div>
+    </div>
+
+    <script src="../assets/scripts.js"></script>
+    <script>
+        function searchContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const panels = document.querySelectorAll('.panel');
+            const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+            let visibleCount = 0;
+
+            panels.forEach(panel => {
+                const text = panel.textContent.toLowerCase();
+                const isVisible = text.includes(query);
+                panel.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            tocLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target && target.style.display !== 'none') {
+                    link.style.background = 'rgba(0, 255, 136, 0.2)';
+                    link.style.fontWeight = 'bold';
+                } else {
+                    link.style.background = '';
+                    link.style.fontWeight = '';
+                }
+            });
+
+            const searchMsg = document.getElementById('searchMsgNet') || document.createElement('div');
+            searchMsg.id = 'searchMsgNet';
+            searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+            if (query && visibleCount === 0) {
+                searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+                searchMsg.style.display = 'block';
+                document.body.appendChild(searchMsg);
+            } else if (searchMsg.parentNode) {
+                searchMsg.parentNode.removeChild(searchMsg);
+            }
+
+            if (query && visibleCount > 0) {
+                const firstVisible = document.querySelector('.panel[style*="block"]');
+                if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function copyCode(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const txt = el.textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                // silent
+            });
+        }
+
+        function toggleReveal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
+
+</body>
+
+</html>
