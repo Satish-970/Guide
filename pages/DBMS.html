@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DBMS — Deep Conceptual Guide (Real-World Examples, 2025)</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="logo">🗄️</div>
+            <div>
+                <h1>DBMS — Deep Conceptual Guide</h1>
+                <div class="subtitle">Clear concepts, practical examples, storage & distributed systems — built for
+                    engineers</div>
+            </div>
+        </div>
+        <nav class="top-actions">
+            <a class="btn" href="../index.html">Home</a>
+            <a class="btn ghost" href="DBMS.html">DBMS Guide</a>
+            <a class="btn ghost" href="SQL.html">SQL Guide</a>
+        </nav>
+    </header>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="toc-title">Table of Contents</div>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+            </div>
+            <ul class="toc" id="tocList">
+                <li><a href="#intro">Introduction & Roles of a DBMS</a></li>
+                <li><a href="#real">Concrete Real-World Case Studies</a></li>
+                <li><a href="#types">Full Types of Databases</a></li>
+                <li><a href="#modeling">Data Modeling & ER Design</a></li>
+                <li><a href="#normalization">Normalization vs Denormalization</a></li>
+                <li><a href="#storage">Storage Engines, Pages & Layout</a></li>
+                <li><a href="#bptree">B+Tree, Hashes & Index Internals</a></li>
+                <li><a href="#queryproc">Query Processing & Optimizer</a></li>
+                <li><a href="#transactions">Transactions, Isolation & MVCC</a></li>
+                <li><a href="#concurrency">Concurrency Control & Deadlocks</a></li>
+                <li><a href="#logging">WAL, ARIES & Recovery</a></li>
+                <li><a href="#replication">Replication, Sharding & Distributed Design</a></li>
+                <li><a href="#serialization">Serialization & File Formats</a></li>
+                <li><a href="#security">Security, Backups & Compliance</a></li>
+                <li><a href="#monitoring">Monitoring, Metrics & Production Checklist</a></li>
+                <li><a href="#best">Best Practices & Common Mistakes</a></li>
+                <li><a href="#cheatsheet">Cheat Sheet & Quick Commands</a></li>
+                <li><a href="#summary">Summary / Next Steps</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+
+            <section id="intro" class="panel">
+                <h2>Introduction — What a DBMS Does and Why It Matters</h2>
+                <p class="muted">At its core, a Database Management System (DBMS) provides reliable storage, efficient
+                    retrieval, transactional guarantees, concurrency control, durability, and tools for querying and
+                    maintaining data. Production-grade DBMSs also supply backup/restore, security, replication and
+                    performance tuning. Think of it as:</p>
+                <ul class="muted bullets">
+                    <li><strong>Librarian:</strong> Validates schema, enforces constraints, provides fast lookup
+                        indices.</li>
+                    <li><strong>Warehouse:</strong> Optimizes physical layout, compaction, and retrieval.</li>
+                    <li><strong>Traffic Controller:</strong> Coordinates concurrent clients and ensures atomicity.</li>
+                </ul>
+                <p class="muted">This guide focuses on concepts you will use during design, debugging, and
+                    scaling—backed by real product examples and practical snippets.</p>
+            </section>
+
+            <section id="real" class="panel">
+                <h2>Concrete Real-World Case Studies (Patterns & Choices)</h2>
+
+                <h3>1) Social Media Platform (Reddit-like)</h3>
+                <p class="muted">Requirements: fast reads for feeds, nested comments, full-text search, user accounts,
+                    notifications, analytics.</p>
+                <p class="muted">Typical architecture:</p>
+                <ul class="muted bullets">
+                    <li><strong>User Accounts & Payments:</strong> Relational DB (Postgres) for strong consistency and
+                        transactional updates.</li>
+                    <li><strong>Posts & Comments:</strong> Document store (MongoDB/Cassandra) or relational tables with
+                        denormalized JSON columns for content. Nested comments sometimes stored with parent pointers or
+                        using materialized path for efficient traversal.</li>
+                    <li><strong>Votes & Counters:</strong> Counters often handled through in-memory cache (Redis) with
+                        periodic aggregation persisted to DB (to avoid write hot-spots).</li>
+                    <li><strong>Search:</strong> Elasticsearch for inverted index full-text search and ranking.</li>
+                    <li><strong>Graph Features:</strong> Graph DB for social graphs and recommendations (Neo4j /
+                        JanusGraph/TigerGraph).</li>
+                </ul>
+                <p class="muted">Why hybrid? Different data access patterns and consistency needs: accounts require
+                    strict ACID; feeds require low latency and high throughput.</p>
+
+                <h3>2) Banking System</h3>
+                <p class="muted">Requirements: absolute correctness, auditability, regulatory compliance, strong
+                    durability.</p>
+                <ul class="muted bullets">
+                    <li><strong>Core ledger:</strong> RDBMS with synchronous replication (or specialized ledger DB).
+                        Every transaction is auditable and immutable.</li>
+                    <li><strong>Event sourcing:</strong> Some banks use append-only event logs (Kafka) plus materialized
+                        views for balances.</li>
+                    <li><strong>High assurance:</strong> WAL with frequent checkpoints, immutable audit trails, key
+                        management for encryption.</li>
+                </ul>
+
+                <h3>3) E‑commerce Catalog & Orders</h3>
+                <p class="muted">Requirements: schema evolution in catalog, transactions for orders, analytics for
+                    business metrics.</p>
+                <ul class="muted bullets">
+                    <li><strong>Catalog:</strong> Document DB for flexible schema and fast product reads.</li>
+                    <li><strong>Orders:</strong> Relational DB for transactional integrity.</li>
+                    <li><strong>Search & Recommendations:</strong> Elasticsearch + offline feature store for
+                        recommendations.</li>
+                </ul>
+
+                <h3>4) IoT / Monitoring (Time Series)</h3>
+                <p class="muted">High write throughput, retention policies, downsampling</p>
+                <ul class="muted bullets">
+                    <li><strong>TSDB:</strong> InfluxDB or TimescaleDB for efficient time-based queries and compression.
+                    </li>
+                    <li><strong>Cold storage:</strong> Parquet files on object storage for long-term analytics.</li>
+                </ul>
+
+                <p class="muted">These case studies show why one size doesn't fit all—pick tools by access patterns,
+                    SLAs, and operational complexity.</p>
+            </section>
+
+            <section id="types" class="panel">
+                <h2>Types of Databases — Complete Taxonomy</h2>
+                <p class="muted">Below are the common types you will encounter and their core trade-offs.</p>
+
+                <h3>Relational (RDBMS)</h3>
+                <p class="muted">Strong schema, joins, transactions (ACID). Examples: PostgreSQL, MySQL, Oracle.</p>
+
+                <h3>Key-Value</h3>
+                <p class="muted">Simple map-like store. Examples: Redis, DynamoDB (KV mode), RocksDB. Use for caches,
+                    sessions, and fast lookups.</p>
+
+                <h3>Document Store</h3>
+                <p class="muted">JSON/BSON documents, schema-flexible. Examples: MongoDB, Couchbase.</p>
+
+                <h3>Column-Family</h3>
+                <p class="muted">Wide-column for sparse, high-scale workloads. Examples: Cassandra, HBase.</p>
+
+                <h3>Graph</h3>
+                <p class="muted">Models relationships as first-class citizens. Examples: Neo4j, JanusGraph.</p>
+
+                <h3>Time-Series</h3>
+                <p class="muted">Optimized for temporal writes and retention. Examples: InfluxDB, Prometheus,
+                    TimescaleDB.</p>
+
+                <h3>NewSQL / Distributed SQL</h3>
+                <p class="muted">SQL and ACID at scale across nodes. Examples: Google Spanner, CockroachDB, Yugabyte.
+                </p>
+
+                <h3>Multi-model</h3>
+                <p class="muted">Support multiple paradigms (document+graph etc.). Examples: ArangoDB, CosmosDB.</p>
+
+                <p class="muted">Remember: the classification helps you think about the read/write pattern, latency,
+                    consistency, and operational complexity.</p>
+            </section>
+
+            <section id="modeling" class="panel">
+                <h2>Data Modeling & ER Design</h2>
+                <p class="muted">Good modeling starts with queries—design for how data will be accessed, not just how it
+                    is logically related.</p>
+
+                <h3>Example: E‑commerce ER</h3>
+                <pre class="code" id="code-er">
+/* Entities */
+Customers(id PK, name, email, created_at)
+Products(id PK, sku, name, price, attributes JSON)
+Orders(id PK, customer_id FK->Customers.id, order_date, total)
+OrderItems(order_id FK->Orders.id, product_id FK->Products.id, qty, price)
+Reviews(id PK, product_id FK->Products.id, user_id FK->Customers.id, rating, body)
+</pre>
+                <button class="copy" onclick="copyCode('code-er')">Copy</button>
+
+                <h3>Design patterns</h3>
+                <ul class="muted bullets">
+                    <li><strong>Reference by id:</strong> normalized, small rows, good for updates.</li>
+                    <li><strong>Embed documents:</strong> denormalize for read-heavy paths (e.g., embed product snapshot
+                        in orderitem).</li>
+                    <li><strong>Materialized views:</strong> precompute expensive joins/aggregations.</li>
+                </ul>
+
+                <p class="muted">Always model for queries—ask: what is the primary key? how often will this be updated?
+                    are joins acceptable at query time?</p>
+            </section>
+
+            <section id="normalization" class="panel">
+                <h2>Normalization vs Denormalization</h2>
+                <p class="muted">Normalization reduces redundancy and anomalies. Denormalization improves read latency
+                    at the cost of increased write complexity.</p>
+                <ul class="muted bullets">
+                    <li>1NF: atomic values</li>
+                    <li>2NF: no partial dependency on composite key</li>
+                    <li>3NF: no transitive dependencies</li>
+                    <li>BCNF: stricter version of 3NF for certain anomalies</li>
+                </ul>
+                <p class="muted">When to denormalize: read-heavy APIs, caches, CQRS with read models, OLAP tables.</p>
+            </section>
+
+            <section id="storage" class="panel">
+                <h2>Storage Engines, Pages & Buffer Manager</h2>
+                <p class="muted">Understanding the physical layout is key to performance debugging.</p>
+
+                <h3>Pages & Blocks</h3>
+                <p class="muted">Disk IO operates on pages/blocks (e.g., 4KB, 8KB). DBMS reads/writes pages via buffer
+                    pool (in-memory). Modifying a row usually modifies the page in buffer pool; dirty pages are flushed
+                    asynchronously.</p>
+
+                <h3>Row vs Column Store</h3>
+                <ul class="muted bullets">
+                    <li><strong>Row-oriented:</strong> Good for OLTP and single-row access.</li>
+                    <li><strong>Column-oriented:</strong> Good for analytics and compression.</li>
+                </ul>
+
+                <h3>Example: InnoDB (MySQL)</h3>
+                <p class="muted">InnoDB stores clustered index (primary key) where table rows are stored inside B+Tree
+                    leaf pages. Secondary indexes store primary key pointers back to clustered index.</p>
+
+                <h3>Buffer Management</h3>
+                <p class="muted">Buffer pool caches pages to reduce IO. Monitor hit ratio; low hit ratio indicates
+                    insufficient memory or bad access pattern.</p>
+            </section>
+
+            <section id="bptree" class="panel">
+                <h2>B+Tree, Hash, Bitmap — Index Internals</h2>
+
+                <h3>B+Tree</h3>
+                <p class="muted">B+Tree is the standard for disk-based ordered indexes. Leaves contain record pointers;
+                    internal nodes guide traversal. Balanced and shallow for fast IO.</p>
+                <pre class="code" id="code-bptree">
+/* Minimal B+Tree illustration (conceptual) */
+[Root]
+ /    \
+[I1]  [I2]
+/ \    / \
+L1 L2 L3 L4  -- leaf pages (sorted keys)
+
+Search algorithm: traverse internal nodes -> read leaf page -> binary search inside leaf.
+</pre>
+                <button class="copy" onclick="copyCode('code-bptree')">Copy</button>
+
+                <h3>Hash Indexes</h3>
+                <p class="muted">Fast for exact match lookups, not for range queries. Some engines use in-memory hash
+                    indexes for primary key lookups.</p>
+
+                <h3>Bitmap Indexes</h3>
+                <p class="muted">Use bitmaps per distinct value; great for low-cardinality columns in data warehouses.
+                </p>
+
+                <h3>Inverted Index</h3>
+                <p class="muted">Used by search engines to map term -> posting list. Optimized for full-text search.</p>
+            </section>
+
+            <section id="queryproc" class="panel">
+                <h2>Query Processing & Optimizer</h2>
+                <p class="muted">Pipeline: Parser -> Query Rewriter -> Logical Planner -> Optimizer -> Physical Plan ->
+                    Executor. The optimizer uses statistics to estimate cardinalities and choose join strategies.</p>
+
+                <h3>Join Algorithms</h3>
+                <ul class="muted bullets">
+                    <li><strong>Nested loop join:</strong> Good for small outer tables or indexed inner.</li>
+                    <li><strong>Hash join:</strong> Good for large, unsorted tables (needs memory for hash table).</li>
+                    <li><strong>Merge join:</strong> Good for sorted inputs — efficient for range queries.</li>
+                </ul>
+
+                <h3>Common issues</h3>
+                <ul class="muted bullets">
+                    <li>Missing statistics lead to bad plans.</li>
+                    <li>Parameter sniffing can cause plan instability.</li>
+                    <li>Cardinality estimation errors trigger nested loop usage for huge tables.</li>
+                </ul>
+
+                <pre class="code" id="code-explain">
+-- Inspect plan (Postgres)
+EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
+SELECT o.id, c.name
+FROM orders o JOIN customers c ON o.customer_id = c.id
+WHERE o.order_date > '2025-01-01';
+</pre>
+                <button class="copy" onclick="copyCode('code-explain')">Copy</button>
+            </section>
+
+            <section id="transactions" class="panel">
+                <h2>Transactions & MVCC (Multi-Version Concurrency Control)</h2>
+                <p class="muted">Transactions provide atomicity and durability. Isolation controls visibility of
+                    concurrent transactions.</p>
+
+                <h3>MVCC Overview</h3>
+                <p class="muted">MVCC keeps multiple versions of rows so readers don't block writers. Each transaction
+                    sees the DB at a consistent snapshot timestamp. Writers create new versions and eventually old
+                    versions are cleaned (vacuum/compaction).</p>
+
+                <pre class="code" id="code-mvcc">
+/* Simplified MVCC sequence */
+T1 starts (snapshot ts=100)
+T2 starts (snapshot ts=101)
+T2 updates row R (creates R_v101)
+T2 commits (commit ts=102)
+T1 reads R -> sees version <=100 (R_v100)
+
+/* T1 won't see T2's update until it restarts or after T1 ends */
+</pre>
+                <button class="copy" onclick="copyCode('code-mvcc')">Copy</button>
+
+                <h3>Isolation Levels & Anomalies</h3>
+                <ul class="muted bullets">
+                    <li><strong>Read Uncommitted:</strong> Dirty reads allowed.</li>
+                    <li><strong>Read Committed:</strong> Avoid dirty reads but may have non-repeatable reads.</li>
+                    <li><strong>Repeatable Read:</strong> Repeatable reads within transaction but may allow phantom
+                        reads in some DBs.</li>
+                    <li><strong>Serializable:</strong> Equivalent to serial execution — strongest isolation.</li>
+                </ul>
+            </section>
+
+            <section id="concurrency" class="panel">
+                <h2>Concurrency Control & Deadlock Handling</h2>
+                <p class="muted">Two main families: locking (pessimistic) and optimistic (validate at commit). Deadlocks
+                    occur when cyclic locks exist.</p>
+
+                <h3>Two-Phase Locking (2PL)</h3>
+                <p class="muted">Acquire locks during transaction and release at commit. Ensures serializability but can
+                    deadlock.</p>
+
+                <h3>Deadlock Detection vs Timeout</h3>
+                <ul class="muted bullets">
+                    <li>Detection: DB builds wait-for graph and aborts victim transaction.</li>
+                    <li>Timeout: abort after a wait threshold (simpler but may abort long-running legitimate
+                        transactions).</li>
+                </ul>
+
+                <h3>Example: Deadlock scenario (SQL)</h3>
+                <pre class="code" id="code-deadlock">
+-- T1
+BEGIN; UPDATE accounts SET balance = balance - 10 WHERE id = 1; -- locks row id=1
+-- T2
+BEGIN; UPDATE accounts SET balance = balance - 10 WHERE id = 2; -- locks row id=2
+-- T1 tries to update id=2 -> waits
+-- T2 tries to update id=1 -> waits -> deadlock
+</pre>
+                <button class="copy" onclick="copyCode('code-deadlock')">Copy</button>
+            </section>
+
+            <section id="logging" class="panel">
+                <h2>Logging, WAL, ARIES & Crash Recovery</h2>
+                <p class="muted">Durability typically uses a Write-Ahead Log (WAL): before changing pages on disk, write
+                    intent to the log and flush. On crash, replay the WAL to bring DB to a consistent state. Advanced
+                    recovery uses ARIES (Analysis, Redo, Undo).</p>
+
+                <h3>WAL sequence</h3>
+                <pre class="code" id="code-wal">
+1. BEGIN TRANSACTION
+2. Append update record to WAL and fsync
+3. Apply update to in-memory page
+4. At CHECKPOINT, flush dirty pages to disk and record checkpoint
+5. On crash, replay WAL after last checkpoint to redo committed transactions and undo uncommitted ones
+</pre>
+                <button class="copy" onclick="copyCode('code-wal')">Copy</button>
+
+                <h3>ARIES overview</h3>
+                <p class="muted">ARIES: Analysis (find dirty pages and transactions), Redo (reapply logged updates),
+                    Undo (rollback uncommitted changes). Popular in enterprise DBs.</p>
+            </section>
+
+            <section id="replication" class="panel">
+                <h2>Replication, Sharding, Consensus & CAP Theorem</h2>
+
+                <h3>Replication patterns</h3>
+                <ul class="muted bullets">
+                    <li><strong>Primary-Replica (master-slave):</strong> Writes to primary, reads from replicas.</li>
+                    <li><strong>Multi-primary (multi-master):</strong> Writes allowed on multiple nodes (requires
+                        conflict resolution).</li>
+                    <li><strong>Asynchronous vs Synchronous:</strong> Async replication is faster but allows replica
+                        lag; sync provides stronger guarantees at higher latency.</li>
+                </ul>
+
+                <h3>Sharding</h3>
+                <p class="muted">Partition data across nodes by a shard key. Two main types: range-based and hash-based.
+                    Sharding scales writes and storage, but complicates cross-shard joins and transactions.</p>
+
+                <h3>Two-Phase Commit (2PC) — Distributed Transactions</h3>
+                <pre class="code" id="code-2pc">
+/* Coordinator */
+1. Prepare: ask all participants to ready/prepare; each writes prepare record to local WAL and replies YES/NO.
+2. If all YES -> Commit: send commit to participants and they apply commit and release locks.
+3. If any NO -> Abort: send abort.
+
+/* 2PC is blocking if coordinator crashes; XA/3PC, Paxos, or compensation patterns can be used instead. */
+</pre>
+                <button class="copy" onclick="copyCode('code-2pc')">Copy</button>
+
+                <h3>Consensus (Paxos/Raft)</h3>
+                <p class="muted">Use consensus for leader election and consistent configuration (e.g., in
+                    Spanner/Cockroach meta-layer). Raft is easier to implement and widely used.</p>
+
+                <h3>CAP Theorem</h3>
+                <p class="muted">In the presence of network partitions, you can choose between Consistency or
+                    Availability. Practical systems pick trade-offs based on SLA: CP systems sacrifice availability
+                    during partitions (e.g., HBase), AP systems remain available but may return stale data (e.g.,
+                    Cassandra).</p>
+            </section>
+
+            <section id="serialization" class="panel">
+                <h2>Serialization & Storage Formats (Practical Examples)</h2>
+
+                <h3>JSON vs Binary Formats</h3>
+                <p class="muted">JSON is human-readable and flexible. Binary formats (Avro, Protobuf, MessagePack) are
+                    compact and faster to parse. Use schema-managed formats for cross-service evolution.</p>
+
+                <h3>Schema example (Protobuf)</h3>
+                <pre class="code" id="code-proto">
+syntax = "proto3";
+message OrderItem {
+  int64 product_id = 1;
+  int32 quantity = 2;
+  double price = 3;
+}
+message Order {
+  int64 id = 1;
+  int64 customer_id = 2;
+  repeated OrderItem items = 3;
+  string created_at = 4;
+}
+</pre>
+                <button class="copy" onclick="copyCode('code-proto')">Copy</button>
+
+                <h3>Columnar file formats (Parquet)</h3>
+                <p class="muted">Parquet stores columns separately enabling better compression and predicate pushdown in
+                    analytics workloads. Ideal for data lakes and OLAP.</p>
+
+                <h3>Object-Relational Mappers (ORMs) & Impedance Mismatch</h3>
+                <p class="muted">ORMs simplify development but can hide inefficient queries (N+1). Use explicit queries
+                    or DTOs for critical paths.</p>
+            </section>
+
+            <section id="security" class="panel">
+                <h2>Security, Backups & Compliance</h2>
+                <ul class="muted bullets">
+                    <li><strong>Encrypt in transit:</strong> TLS for client-server and replication channels.</li>
+                    <li><strong>Encrypt at rest:</strong> Disk-level TDE or file-level encryption.</li>
+                    <li><strong>Principle of least privilege:</strong> separate roles for app, reporting, admin.</li>
+                    <li><strong>Auditing & immutable logs:</strong> store audit events append-only and protect with
+                        strict retention policies.</li>
+                    <li><strong>Backups:</strong> Full, incremental, PITR (Point-in-time recovery). Regularly test
+                        restores.
+                    </li>
+                </ul>
+
+                <h3>Backup Recipe</h3>
+                <ol class="muted bullets">
+                    <li>Full backup weekly (offline or snapshot)</li>
+                    <li>Incremental/differential daily</li>
+                    <li>Continuous WAL shipping for PITR</li>
+                    <li>Store copies in separate region/cloud and validate restores monthly</li>
+                </ol>
+            </section>
+
+            <section id="monitoring" class="panel">
+                <h2>Monitoring, Metrics & Production Checklist</h2>
+                <p class="muted">Essential metrics to track:</p>
+                <ul class="muted bullets">
+                    <li>Latency percentiles (P50, P95, P99, P999)</li>
+                    <li>Throughput (TPS, QPS)</li>
+                    <li>Buffer pool / cache hit ratio</li>
+                    <li>Replication lag</li>
+                    <li>WAL/redo throughput and queue depth</li>
+                    <li>Locks and long-running transactions</li>
+                </ul>
+
+                <h3>Runbook snippets</h3>
+                <pre class="code" id="code-runbook">
+-- If replication lag spikes:
+1. Check replica IO and CPU
+2. Check network (packet loss)
+3. Pause analytic jobs / heavy scans
+4. Consider adding replicas or tuning async apply
+
+-- If high P99 latency:
+1. Check EXPLAIN plans for slow queries
+2. Look for missing indexes
+3. Check I/O saturation and buffer pool
+</pre>
+                <button class="copy" onclick="copyCode('code-runbook')">Copy</button>
+            </section>
+
+            <section id="best" class="panel">
+                <h2>Best Practices & Common Mistakes</h2>
+                <ul class="muted bullets">
+                    <li>Design for queries, not just entities.</li>
+                    <li>Don't index everything; measure impact on writes.</li>
+                    <li>Avoid long-running transactions; they increase GC/cleanup and block resources.</li>
+                    <li>Test failure modes: node loss, partition, and disk failure.</li>
+                    <li>Automate backups and validate restores.</li>
+                    <li>Prefer idempotent operations for retries in distributed contexts.</li>
+                </ul>
+            </section>
+
+            <section id="cheatsheet" class="panel">
+                <h2>Cheat Sheet & Quick Commands</h2>
+                <pre class="code" id="code-cheats">
+-- Postgres: check long transactions
+SELECT pid, now() - xact_start AS duration, query FROM pg_stat_activity WHERE state='active' AND xact_start IS NOT NULL ORDER BY duration DESC LIMIT 10;
+
+-- Show indexes
+\d+ tablename -- (psql)
+
+-- Check replication lag (Postgres)
+SELECT now() - pg_last_xact_replay_timestamp() AS replica_lag;
+</pre>
+                <button class="copy" onclick="copyCode('code-cheats')">Copy</button>
+            </section>
+
+            <section id="summary" class="panel">
+                <h2>Summary & Next Steps</h2>
+                <p class="muted">DBMS design is about trade-offs: consistency, availability, latency, and complexity.
+                    Start by modeling for queries, choose the right storage and index strategies, tune with metrics, and
+                    design for failure. Real-world systems combine multiple specialized databases to satisfy different
+                    parts of the application.</p>
+                <p class="muted">Next: Open the companion <a href="sql.html">SQL Guide</a> to learn practical query
+                    patterns and examples that implement many of the patterns described here.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+    </footer>
+
+    <script src="../assets/scripts.js"></script>
+    <script>
+        function searchContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const panels = document.querySelectorAll('.panel');
+            const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+            let visibleCount = 0;
+
+            panels.forEach(panel => {
+                const text = panel.textContent.toLowerCase();
+                const isVisible = text.includes(query);
+                panel.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            tocLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target && target.style.display !== 'none') {
+                    link.style.background = 'rgba(0, 255, 136, 0.2)';
+                    link.style.fontWeight = 'bold';
+                } else {
+                    link.style.background = '';
+                    link.style.fontWeight = '';
+                }
+            });
+
+            const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+            searchMsg.id = 'searchMsg';
+            searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+            if (query && visibleCount === 0) {
+                searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+                searchMsg.style.display = 'block';
+                document.body.appendChild(searchMsg);
+            } else if (searchMsg.parentNode) {
+                searchMsg.parentNode.removeChild(searchMsg);
+            }
+
+            if (query && visibleCount > 0) {
+                const firstVisible = document.querySelector('.panel[style*="block"]');
+                if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('searchInput').value = '';
+                searchContent();
+                document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+                document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+            }
+        });
+
+        function copyCode(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const txt = el.textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                // silent success
+            });
+        }
+    </script>
+
+</body>
+
+</html>

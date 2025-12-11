@@ -1,0 +1,572 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SQL — Complete Practical & Conceptual Guide (2025)</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<style>
+    .search-container {
+        margin: 0 20px 20px;
+        position: relative;
+    }
+
+    #searchInputSQL {
+        width: 100%;
+        padding: 10px 40px 10px 15px;
+        background: #1a1a1a;
+        border: 1px solid #00ff88;
+        border-radius: 6px;
+        color: #e0e0e0;
+        font-size: 14px;
+        transition: border-color 0.3s;
+    }
+
+    #searchInputSQL:focus {
+        outline: none;
+        border-color: #00ccff;
+        box-shadow: 0 0 5px rgba(0, 204, 255, 0.3);
+    }
+
+    #searchInputSQL::placeholder {
+        color: #808080;
+    }
+
+    .toc {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .toc li {
+        margin: 0;
+    }
+
+    .toc a {
+        color: #a0a0a0;
+        text-decoration: none;
+        display: block;
+        padding: 12px 20px;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+        font-size: 14px;
+    }
+</style>
+
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="logo">🧾</div>
+            <div>
+                <h1>___________SQL - Complete Practical & Conceptual Guide___</h1>
+                <div class="subtitle">From Fundamentals to Advanced Tuning, Window Functions, JSON & Distributed SQL —
+                    2025 Edition</div>
+            </div>
+        </div>
+        <nav class="top-actions">
+            <a class="btn" href="../index.html">Home</a>
+            <a class="btn ghost" href="DBMS.html">DBMS Guide</a>
+            <a class="btn ghost" href="https://onecompiler.com/sqlserver">SQL Practice</a>
+        </nav>
+    </header>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="toc-title">Table of Contents</div>
+            <div class="search-container">
+                <input type="text" id="searchInputSQL" placeholder="🔍 Search topics..." onkeyup="searchContentSQL()">
+            </div>
+            <ul class="toc" id="tocListSQL">
+                <li><a href="#intro">Introduction — Declarative Thinking</a></li>
+                <li><a href="#ddl">DDL: Schema Design & Migrations</a></li>
+                <li><a href="#dml">DML: Practical SELECTs, INSERT/UPDATE/DELETE</a></li>
+                <li><a href="#joins">Joins — Patterns & Performance</a></li>
+                <li><a href="#ctes">CTEs, Recursive Queries & Window Functions</a></li>
+                <li><a href="#json">JSON/JSONB, Semi-Structured Data</a></li>
+                <li><a href="#indexes">Indexes — Types, Strategies & Maintenance</a></li>
+                <li><a href="#plans">Execution Plans & EXPLAIN</a></li>
+                <li><a href="#partitioning">Partitioning & Table Design for Scale</a></li>
+                <li><a href="#transactions-sql">Transactions, Locks & Isolation</a></li>
+                <li><a href="#stored-proc">Stored Procedures, Triggers & Functions</a></li>
+                <li><a href="#tuning-sql">Performance Tuning & Anti-Patterns</a></li>
+                <li><a href="#security-sql">Security, Roles & Injection</a></li>
+                <li><a href="#backup">Backups, Restore & PITR</a></li>
+                <li><a href="#distributed-sql">Distributed SQL & Cloud Considerations</a></li>
+                <li><a href="#examples">Worked Examples & Cheats</a></li>
+                <li><a href="#summary">Summary & Next Steps</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+
+            <section id="intro" class="panel">
+                <h2>Introduction — Think Declaratively</h2>
+                <p class="muted">SQL is a declarative language: you describe the result you want, not how to compute it.
+                    This frees the DBMS to pick the best execution plan. Good SQL design relies on expressing intent
+                    clearly and understanding the cost model (IO, CPU, memory).</p>
+                <p class="muted">In practice: write clear, composable queries, profile with EXPLAIN, and iterate based
+                    on actual performance metrics.</p>
+            </section>
+
+            <section id="ddl" class="panel">
+                <h2>DDL — Schema Design, Types & Migrations</h2>
+                <p class="muted">Schema is a contract. Think about constraints, types, nullability, default values, and
+                    indexing at design time.</p>
+
+                <h3>Column Types & Practical Choices</h3>
+                <ul class="muted bullets">
+                    <li><strong>Integer types:</strong> use smallest type big enough for range (SMALLINT, INT, BIGINT).
+                    </li>
+                    <li><strong>Numeric/Decimal:</strong> use DECIMAL/NUMERIC for money to avoid floating point issues.
+                    </li>
+                    <li><strong>Text:</strong> VARCHAR with a reasonable limit or TEXT for unconstrained content; avoid
+                        huge indexed texts.</li>
+                    <li><strong>Dates/Times:</strong> TIMESTAMP WITH TIME ZONE when you care about absolute instants.
+                    </li>
+                    <li><strong>UUIDs:</strong> use for global uniqueness but be mindful of index fragmentation (use
+                        UUIDv1 or ordered UUIDs if necessary).</li>
+                </ul>
+
+                <h3>Constraints & Integrity</h3>
+                <p class="muted">Primary keys, foreign keys, unique constraints, and check constraints encode business
+                    rules and prevent data corruption. Prefer DB-level constraints over app checks for correctness.</p>
+
+                <h3>Migrations</h3>
+                <p class="muted">Use a migration tool (Flyway, Liquibase, Rails ActiveRecord migrations) and design
+                    migrations to be backward-compatible where possible:</p>
+                <ul class="muted bullets">
+                    <li>Add columns with default NULL, backfill in background, then add NOT NULL constraint.</li>
+                    <li>Avoid dropping columns in a single step if replicas or old app versions may still read them.
+                    </li>
+                </ul>
+
+                <pre class="code" id="code-ddl-full">
+CREATE TABLE users (
+  id BIGSERIAL PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  profile JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE users ADD COLUMN last_login TIMESTAMP;
+-- Safe migration pattern: add nullable column -> backfill -> add NOT NULL constraint
+</pre>
+            </section>
+
+            <section id="dml" class="panel">
+                <h2>DML — SELECT Patterns & Bulk Operations</h2>
+                <p class="muted">Write SELECTs that are readable and optimized. Use LIMIT for paging, avoid large
+                    offsets, and prefer keyset pagination for deep pages.</p>
+
+                <h3>Keyset Pagination (a.k.a. cursor pagination)</h3>
+                <pre class="code" id="code-keyset">
+-- Avoid OFFSET for large pages; use WHERE + ORDER for keyset
+SELECT id, created_at FROM events
+WHERE (created_at, id) < ('2025-10-01 00:00:00', 1000)
+ORDER BY created_at DESC, id DESC LIMIT 50;
+</pre>
+
+                <h3>Bulk Inserts & Upserts</h3>
+                <pre class="code" id="code-upsert">
+-- Postgres upsert
+INSERT INTO products (id, sku, name, price) VALUES (1,'SKU1','Prod1',9.99)
+ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, price = EXCLUDED.price;
+
+-- Batch insert\ INSERT INTO table (cols) VALUES (),(),(); -- use COPY for huge loads
+</pre>
+
+                <h3>Safe Deletes</h3>
+                <p class="muted">Never execute unbounded deletes in production—use batched deletes or move to archive
+                    table then delete.</p>
+                <pre class="code" id="code-delete">
+-- Batch delete
+DELETE FROM logs WHERE created_at < NOW() - INTERVAL '90 days' LIMIT 10000;
+-- Repeat until rows deleted
+</pre>
+            </section>
+
+            <section id="joins" class="panel">
+                <h2>Joins — Correctness & Performance Patterns</h2>
+                <p class="muted">Joins are powerful; understand when to use each type and how they impact execution.</p>
+
+                <h3>Join Types</h3>
+                <ul class="muted bullets">
+                    <li><strong>INNER JOIN</strong> — return rows with matching keys on both sides.</li>
+                    <li><strong>LEFT JOIN</strong> — keep left rows, attach right if present.</li>
+                    <li><strong>RIGHT/FULL JOIN</strong> — rarer; use when combining sparse datasets.</li>
+                    <li><strong>CROSS JOIN</strong> — Cartesian product; use cautiously.</li>
+                </ul>
+
+                <h3>Avoiding N+1</h3>
+                <p class="muted">N+1 arises when apps run one query per parent row to fetch children. Fix by joining or
+                    preloading child data in a single query.</p>
+
+                <pre class="code" id="code-join-opt">
+-- Fetch users + latest order in one query (use lateral join)
+SELECT u.id, u.username, o.id AS last_order_id, o.total
+FROM users u
+LEFT JOIN LATERAL (
+  SELECT id, total FROM orders WHERE customer_id = u.id ORDER BY created_at DESC LIMIT 1
+) o ON true;
+</pre>
+            </section>
+
+            <section id="ctes" class="panel">
+                <h2>CTEs, Recursive Queries & Window Functions</h2>
+
+                <h3>CTEs (WITH)</h3>
+                <p class="muted">CTEs improve clarity and composability. Be cautious: some engines materialize CTEs
+                    (affecting performance) while others inline them.</p>
+                <pre class="code" id="code-cte">
+WITH recent_sales AS (
+  SELECT product_id, SUM(amount) AS revenue FROM sales WHERE sale_date > NOW() - INTERVAL '7 days' GROUP BY product_id
+)
+SELECT p.id, p.name, r.revenue FROM products p LEFT JOIN recent_sales r ON p.id = r.product_id;
+</pre>
+
+                <h3>Recursive Queries (hierarchies)</h3>
+                <pre class="code" id="code-recursive">
+WITH RECURSIVE managers AS (
+  SELECT id, manager_id, name FROM employees WHERE id = 1
+  UNION ALL
+  SELECT e.id, e.manager_id, e.name FROM employees e JOIN managers m ON e.manager_id = m.id
+)
+SELECT * FROM managers;
+</pre>
+
+                <h3>Window Functions</h3>
+                <p class="muted">Window functions let you compute aggregates without collapsing rows. Useful for
+                    rankings, running totals, and lag/lead.</p>
+                <pre class="code" id="code-window">
+SELECT id, customer_id, total,
+  RANK() OVER (PARTITION BY customer_id ORDER BY total DESC) AS rank,
+  SUM(total) OVER (PARTITION BY customer_id ORDER BY created_at ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_sum
+FROM orders;
+</pre>
+            </section>
+
+            <section id="json" class="panel">
+                <h2>JSON/JSONB & Semi-Structured Data</h2>
+                <p class="muted">Modern DBs support JSON types—store flexible schemas while indexing critical paths with
+                    JSONB indexes (Postgres) or document store indexes (MongoDB).</p>
+
+                <pre class="code" id="code-json">
+-- Postgres JSONB query
+SELECT id, profile->>'name' AS name FROM users WHERE profile->>'country' = 'IN';
+-- GIN index for JSONB
+CREATE INDEX idx_users_profile ON users USING gin (profile jsonb_path_ops);
+</pre>
+
+                <p class="muted">When to use JSON: evolving schemas or storing sparse attributes. When NOT to use JSON:
+                    when you need relational constraints and frequent joins on those fields.</p>
+            </section>
+
+            <section id="indexes" class="panel">
+                <h2>Indexes — Strategy, Maintenance & Heuristics</h2>
+                <p class="muted">Indexes speed reads but slow writes. Decide indexes based on query patterns,
+                    selectivity, and maintenance window.</p>
+
+                <h3>Types of Indexes</h3>
+                <ul class="muted bullets">
+                    <li>B-Tree: default for ordered queries and ranges.</li>
+                    <li>Hash: exact-match lookups.</li>
+                    <li>GIN/GiST: array, JSONB, full-text, geospatial indexes.</li>
+                    <li>Partial indexes: index subset of rows for high selectivity (e.g., WHERE deleted_at IS NULL).
+                    </li>
+                </ul>
+
+                <h3>Indexing Guidelines</h3>
+                <ul class="muted bullets">
+                    <li>Index columns used in WHERE and JOIN predicates.</li>
+                    <li>Composite indexes order matters—put most selective columns first or match query order.</li>
+                    <li>Covering indexes include all columns needed by query — avoids lookups to table rows.</li>
+                </ul>
+
+                <pre class="code" id="code-indexing">
+-- Composite covering index example
+CREATE INDEX idx_orders_customer_date_total ON orders (customer_id, order_date DESC) INCLUDE (total);
+
+-- Partial index
+CREATE INDEX idx_active_users ON users (last_login) WHERE active = true;
+</pre>
+            </section>
+
+            <section id="plans" class="panel">
+                <h2>Execution Plans, EXPLAIN & Interpreting Results</h2>
+                <p class="muted">Use EXPLAIN / EXPLAIN ANALYZE to compare estimated vs actual rows, IO, and time. Key
+                    things to watch:</p>
+                <ul class="muted bullets">
+                    <li>Sequential scan vs index scan</li>
+                    <li>Join method (nested loop/hash/merge)</li>
+                    <li>Estimated rows vs actual rows — indicates poor statistics</li>
+                    <li>Buffers read/written (IO cost)</li>
+                </ul>
+
+                <pre class="code" id="code-explain-sql">
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT p.id, COUNT(o.*) FROM products p JOIN orders o ON p.id = o.product_id GROUP BY p.id;
+</pre>
+
+                <p class="muted">If actual rows are much larger than estimated, consider ANALYZE/update statistics or
+                    rewrite query to give optimizer better hints.</p>
+            </section>
+
+            <section id="partitioning" class="panel">
+                <h2>Partitioning, Clustering & Table Design for Scale</h2>
+                <p class="muted">Partitioning splits large tables into smaller pieces (by range, list, or hash).
+                    Improves manageability and query performance for partition-pruning queries.</p>
+
+                <h3>Partitioning Strategies</h3>
+                <ul class="muted bullets">
+                    <li>Range partitions (by date) for time-series data.</li>
+                    <li>Hash partitions for even distribution across shards/partitions.</li>
+                    <li>List partitions for categorical splits.</li>
+                </ul>
+
+                <pre class="code" id="code-partition">
+-- Postgres range partition example
+CREATE TABLE events (
+  id BIGSERIAL PRIMARY KEY,
+  event_time TIMESTAMP NOT NULL,
+  payload JSONB
+) PARTITION BY RANGE (event_time);
+
+CREATE TABLE events_2025_01 PARTITION OF events FOR VALUES FROM ('2025-01-01') TO ('2025-02-01');
+</pre>
+
+                <p class="muted">Clustering (physically ordering a table by an index) can reduce IO for range queries,
+                    but must be re-run periodically to maintain order after writes.</p>
+            </section>
+
+            <section id="transactions-sql" class="panel">
+                <h2>Transactions, Locks & Isolation Levels</h2>
+                <p class="muted">Understand locking semantics and pick an isolation level that balances correctness and
+                    performance.</p>
+
+                <h3>Common Lock Types</h3>
+                <ul class="muted bullets">
+                    <li>Row-level locks (SELECT ... FOR UPDATE)</li>
+                    <li>Table-level locks</li>
+                    <li>Advisory locks (application-level cooperation)</li>
+                </ul>
+
+                <h3>Avoiding Lock Contention</h3>
+                <ul class="muted bullets">
+                    <li>Keep transactions short.</li>
+                    <li>Avoid full table scans inside transactions.</li>
+                    <li>Use lower isolation levels where safe (READ COMMITTED) and apply application-level checks.</li>
+                </ul>
+
+                <pre class="code" id="code-locks">
+BEGIN;
+SELECT balance FROM accounts WHERE id = 1 FOR UPDATE; -- locks row
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+COMMIT;
+</pre>
+            </section>
+
+            <section id="stored-proc" class="panel">
+                <h2>Stored Procedures, Triggers & User-Defined Functions</h2>
+                <p class="muted">Stored logic can be efficient but reduces portability. Keep procedures small and
+                    testable; avoid heavy business logic in DB unless justified.</p>
+
+                <pre class="code" id="code-proc">
+-- Postgres example
+CREATE OR REPLACE FUNCTION add_order(customer_id INT, items JSONB) RETURNS VOID AS $$
+BEGIN
+  -- simplified example: insert order and items with validation
+  INSERT INTO orders (customer_id, total, created_at) VALUES (customer_id, 0, NOW()) RETURNING id INTO new_order_id;
+  -- iterate JSON items, insert OrderItems, update total
+END;
+$$ LANGUAGE plpgsql;
+</pre>
+
+                <p class="muted">Triggers are useful for audits and enforcing invariants but can hide side effects —
+                    document them well.</p>
+            </section>
+
+            <section id="tuning-sql" class="panel">
+                <h2>Performance Tuning & Anti-Patterns</h2>
+                <ul class="muted bullets">
+                    <li>Avoid SELECT * in production; fetch only needed columns.</li>
+                    <li>Avoid functions on indexed columns in WHERE (prevents index use).</li>
+                    <li>Be wary of OR conditions that prevent index usage—rewrite using UNION ALL when possible.</li>
+                    <li>Use LIMIT early for exploratory queries to avoid large scans.</li>
+                </ul>
+
+                <h3>Index Maintenance</h3>
+                <p class="muted">Rebuild fragmented indexes, monitor bloat (vacuum/reindex). For Postgres, run
+                    VACUUM/ANALYZE periodically to keep stats fresh.</p>
+
+                <h3>Materialized Views</h3>
+                <p class="muted">Materialized views precompute expensive results; refresh them on schedule or
+                    incrementally if supported.</p>
+            </section>
+
+            <section id="security-sql" class="panel">
+                <h2>Security — Roles, Grants & SQL Injection</h2>
+                <p class="muted">Principle of least privilege and parameterized queries are non-negotiable.</p>
+                <pre class="code" id="code-security">
+-- Example: parameterized query (pseudo)
+PREPARE stmt AS SELECT * FROM users WHERE email = $1;
+EXECUTE stmt('a@example.com');
+
+-- Role example
+CREATE ROLE readonly NOINHERIT;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly;
+</pre>
+            </section>
+
+            <section id="backup" class="panel">
+                <h2>Backups, Restore & Point-in-Time Recovery (PITR)</h2>
+                <p class="muted">Automate backups and test restores. For WAL-based systems, ship WAL segments to remote
+                    storage to enable PITR.</p>
+                <pre class="code" id="code-backup">
+-- Example Postgres pg_dump (logical)
+pg_dump -Fc -h host -U user -d dbname -f backup.dump
+
+-- Restore
+pg_restore -d dbname backup.dump
+
+-- Base backup + WAL for PITR (example workflow)
+pg_basebackup -D /var/lib/postgres -F tar -z -P --wal-method=stream
+-- then ship WAL files to S3 and restore to desired point in time
+</pre>
+            </section>
+
+            <section id="distributed-sql" class="panel">
+                <h2>Distributed SQL & Cloud Considerations</h2>
+                <p class="muted">Cloud-managed DBs add convenience but hide internals. Understand SLA, replication
+                    strategy, backup policies, and network topology.</p>
+
+                <h3>Cloud trade-offs</h3>
+                <ul class="muted bullets">
+                    <li>Managed services handle backups and HA, but can cause noisy-neighbor issues and black-box
+                        behavior.</li>
+                    <li>Network latency to cloud region is real — collocate apps and DBs if latency-sensitive.</li>
+                    <li>Distributed SQL (Cockroach, Spanner) gives strong consistency but may increase write latency due
+                        to consensus across regions.</li>
+                </ul>
+            </section>
+
+            <section id="examples" class="panel">
+                <h2>Worked Examples & Cheats</h2>
+
+                <h3>Top-N per group (classic)</h3>
+                <pre class="code" id="code-topn">
+SELECT * FROM (
+  SELECT p.id, p.customer_id, p.total,
+    ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY total DESC) as rn
+  FROM orders p
+) x WHERE rn <= 3;
+</pre>
+
+                <h3>Detecting duplicates</h3>
+                <pre class="code" id="code-dup">
+SELECT email, COUNT(*) FROM users GROUP BY email HAVING COUNT(*) > 1;
+
+-- Delete duplicates keeping min(id)
+DELETE FROM users u USING (
+  SELECT MIN(id) as keep_id, email FROM users GROUP BY email HAVING COUNT(*) > 1
+) d WHERE u.email = d.email AND u.id <> d.keep_id;
+</pre>
+
+                <h3>Full-text search (Postgres)</h3>
+                <pre class="code" id="code-ft">
+-- Create tsvector column and GIN index
+ALTER TABLE articles ADD COLUMN tsv tsvector;
+UPDATE articles SET tsv = to_tsvector('english', coalesce(title,'') || ' ' || coalesce(body,''));
+CREATE INDEX idx_articles_tsv ON articles USING gin (tsv);
+
+-- Query
+SELECT id, title FROM articles WHERE tsv @@ plainto_tsquery('english', 'distributed databases');
+</pre>
+            </section>
+
+            <section id="summary" class="panel">
+                <h2>Summary & Next Steps</h2>
+                <p class="muted">Mastering SQL is iterative: write clear queries, profile with EXPLAIN, and adjust
+                    schema or indexes based on real workload. Apply patterns here in your apps, and pair them with the
+                    DBMS guide for storage and distributed systems concepts.</p>
+                <p class="muted">Next: integrate these SQL patterns into your testing and deployment pipelines; automate
+                    migrations and monitor production queries.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+    </footer>
+
+    <script src="../assets/scripts.js"></script>
+    <script>
+        function searchContentSQL() {
+            const query = document.getElementById('searchInputSQL').value.toLowerCase();
+            const panels = document.querySelectorAll('.panel');
+            const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+            let visibleCount = 0;
+
+            panels.forEach(panel => {
+                const text = panel.textContent.toLowerCase();
+                const isVisible = text.includes(query);
+                panel.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            tocLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target && target.style.display !== 'none') {
+                    link.style.background = 'rgba(0, 255, 136, 0.2)';
+                    link.style.fontWeight = 'bold';
+                } else {
+                    link.style.background = '';
+                    link.style.fontWeight = '';
+                }
+            });
+
+            const searchMsg = document.getElementById('searchMsgSQL') || document.createElement('div');
+            searchMsg.id = 'searchMsgSQL';
+            searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+            if (query && visibleCount === 0) {
+                searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+                searchMsg.style.display = 'block';
+                document.body.appendChild(searchMsg);
+            } else if (searchMsg.parentNode) {
+                searchMsg.parentNode.removeChild(searchMsg);
+            }
+
+            if (query && visibleCount > 0) {
+                const firstVisible = document.querySelector('.panel[style*="block"]');
+                if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('searchInputSQL').value = '';
+                searchContentSQL();
+                document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+                document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+            }
+        });
+
+        function copyCode(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const txt = el.textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                // silent
+            });
+        }
+    </script>
+
+</body>
+
+</html>
