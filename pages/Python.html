@@ -1,0 +1,561 @@
+# <!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Python — Complete Conceptual Guide (Beginner to Advanced + DSA Ready)</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="brand">
+      
+      <div>
+        <h1>_______🐍 Python — Complete Conceptual Guide</h1>
+        <div class="subtitle">From Zero to DSA Master • Practical & Modern • 2025 Edition</div>
+      </div>
+    </div>
+    <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="python.html">Python Guide</a>
+      <a class="btn ghost" href="dsa_tracker.html">DSA Tracker</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+```
+<!-- SIDEBAR - Always Visible -->
+<aside class="sidebar">
+  <div class="toc-title">Table of Contents</div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+  </div>
+
+  <ul class="toc" id="tocList">
+    <li><a href="#intro">Introduction to Python</a></li>
+    <li><a href="#setup">Interpreter, Versions & Tooling</a></li>
+    <li><a href="#types">Built-in Types & Immutability</a></li>
+    <li><a href="#memory">Memory Model & Object Model</a></li>
+    <li><a href="#syntax">Syntax, Control Flow & Comprehensions</a></li>
+    <li><a href="#functions">Functions: Closures, Decorators, Annotations</a></li>
+    <li><a href="#oop">OOP in Python</a>
+      <ul class="subtoc">
+        <li><a href="#classes-objects-py">Classes & Objects</a></li>
+        <li><a href="#dunder">Special Methods (dunder)</a></li>
+        <li><a href="#mro">MRO & Multiple Inheritance</a></li>
+      </ul>
+    </li>
+    <li><a href="#datastruct">Data Structures: list, tuple, dict, set, deque</a></li>
+    <li><a href="#it-gen">Iterators & Generators</a></li>
+    <li><a href="#async">Asyncio & Concurrency</a></li>
+    <li><a href="#stdlib">Standard Library & Ecosystem</a></li>
+    <li><a href="#typing">Typing & Type Hints (mypy)</a></li>
+    <li><a href="#performance">Performance & Optimization</a></li>
+    <li><a href="#dsa-py">DSA-Focused Python Techniques</a></li>
+    <li><a href="#examples">Expanded DSA Examples (Python)</a></li>
+    <li><a href="#best">Best Practices & Common Pitfalls</a></li>
+    <li><a href="#summary">Final Summary</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="content">
+
+  <section id="intro" class="panel">
+    <h2>💡 Introduction — Why Python Still Dominates in 2025</h2>
+    <p class="muted">
+      Python is the language of readability, rapid prototyping, data science, web development, automation, and competitive
+      programming when used well. Its batteries-included stdlib and vast ecosystem (NumPy, pandas, asyncio, scikit-learn)
+      make it ideal for fast iteration and production-ready systems.
+    </p>
+    <p class="muted">
+      This guide focuses on conceptual understanding, Pythonic idioms, modern typing, performance trade-offs, and how to
+      use Python effectively for DSA and interviews.
+    </p>
+  </section>
+
+  <section id="setup" class="panel">
+    <h2>🛠️ Interpreter, Versions & Tooling</h2>
+    <p class="muted">Common implementations: CPython (reference), PyPy (JIT), CPython + C-extensions for speed.</p>
+    <ul class="muted bullets">
+      <li><strong>Versioning:</strong> Prefer Python 3.11+ for performance & features; check <code>python --version</code>.</li>
+      <li><strong>Tooling:</strong> pip, venv, poetry, pipx. Use virtual environments per project.</li>
+      <li><strong>Formatters & Linters:</strong> black, isort, flake8, ruff for consistent style and early errors.</li>
+      <li><strong>Debuggers:</strong> pdb, ipdb, VS Code debugger, PyCharm debugger.</li>
+    </ul>
+    <p class="muted">Analogy: Virtualenv isolates each project's dependencies like separate toolboxes.</p>
+  </section>
+
+  <section id="types" class="panel">
+    <h2>📦 Built-in Types & Immutability</h2>
+    <p class="muted">Python has a small set of built-in types with clear mutability rules.</p>
+    <ul class="muted bullets">
+      <li><strong>Immutable:</strong> int, float, bool, str, tuple, frozenset. Safe for hashing and keys.</li>
+      <li><strong>Mutable:</strong> list, dict, set, bytearray — careful with shared references.</li>
+      <li><strong>Sequence protocol:</strong> Supports iteration, indexing, slicing.</li>
+      <li><strong>Duck typing:</strong> "If it quacks like a duck..." — prefer explicit interfaces with typing when needed.</li>
+    </ul>
+    <pre class="code" id="code-types">
+```
+
+# immutability example
+
+a = (1, 2)
+b = a
+
+# a and b reference same tuple (immutable)
+
+s = "hello"
+s2 = s.upper()  # creates new string <button class="copy" onclick="copyCode('code-types')">Copy</button> </pre> </section>
+
+```
+  <section id="memory" class="panel">
+    <h2>🧠 Memory Model & Object Model</h2>
+    <p class="muted">
+      Everything is an object. Names are references to objects. CPython uses reference counting + cyclic GC (idle cleanup).
+    </p>
+    <ul class="muted bullets">
+      <li><strong>Reference counting:</strong> immediate deallocation when refcount reaches zero.</li>
+      <li><strong>Cycle GC:</strong> handles reference cycles (containers pointing to each other).</li>
+      <li><strong>Small object cache & arenas:</strong> CPython manages memory for small objects for speed.</li>
+    </ul>
+    <p class="muted">Analogy: Variables are sticky notes pointing to pieces in a warehouse (objects on heap).</p>
+  </section>
+
+  <section id="syntax" class="panel">
+    <h2>🧩 Syntax, Control Flow & Comprehensions</h2>
+    <p class="muted">Readable indentation-based syntax with powerful comprehensions.</p>
+    <pre class="code" id="code-syntax">
+```
+
+# control flow & comprehension
+
+nums = [1,2,3,4,5]
+evens = [x for x in nums if x % 2 == 0]
+for i, v in enumerate(nums):
+print(i, v) <button class="copy" onclick="copyCode('code-syntax')">Copy</button> </pre> <p class="muted">Use comprehensions for clarity and performance (avoid heavy nesting when unreadable).</p> </section>
+
+```
+  <section id="functions" class="panel">
+    <h2>🔁 Functions: Closures, Decorators, Annotations</h2>
+    <p class="muted">Functions are first-class. Understand closures and decorators to write concise, reusable code.</p>
+    <pre class="code" id="code-func">
+```
+
+def make_adder(n):
+def adder(x):
+return x + n
+return adder
+
+def timer(func):
+import time
+def wrapper(*args, **kwargs):
+t0 = time.perf_counter()
+res = func(*args, **kwargs)
+print("time:", time.perf_counter()-t0)
+return res
+return wrapper <button class="copy" onclick="copyCode('code-func')">Copy</button> </pre> <p class="muted">Type hints (PEP 484) improve readability and tooling; they are optional but recommended for large codebases.</p> </section>
+
+```
+  <section id="oop" class="panel">
+    <h2>🏛️ OOP in Python</h2>
+    <p class="muted">Python supports classical OOP with dynamic features and metaprogramming.</p>
+
+    <h3 id="classes-objects-py">1. Classes & Objects</h3>
+    <pre class="code" id="code-class-py">
+```
+
+class Dog:
+def **init**(self, name, age):
+self.name = name
+self.age = age
+def bark(self):
+print(f"{self.name} says Woof!")
+
+d = Dog("Buddy", 3)
+d.bark() <button class="copy" onclick="copyCode('code-class-py')">Copy</button> </pre>
+
+```
+    <h3 id="dunder">2. Special Methods (dunder) — __str__, __repr__, __eq__</h3>
+    <pre class="code" id="code-dunder">
+```
+
+class Point:
+def **init**(self,x,y): self.x,self.y = x,y
+def **repr**(self): return f"Point({self.x},{self.y})"
+def **eq**(self, other): return (self.x,self.y) == (other.x,other.y) <button class="copy" onclick="copyCode('code-dunder')">Copy</button> </pre>
+
+```
+    <h3 id="mro">3. MRO & Multiple Inheritance</h3>
+    <p class="muted">Python uses C3 linearization for method resolution order. Prefer composition over complex multiple inheritance.</p>
+  </section>
+
+  <section id="datastruct" class="panel">
+    <h2>🧰 Data Structures: list, tuple, dict, set, deque</h2>
+    <p class="muted">Python's built-in structures are high-level and optimized in C for speed.</p>
+    <ul class="muted bullets">
+      <li><strong>list:</strong> dynamic array — O(1) append amortized, O(1) random access.</li>
+      <li><strong>tuple:</strong> immutable sequence — use as keys when appropriate.</li>
+      <li><strong>dict:</strong> hash map — average O(1) lookups; order-preserving since 3.7.</li>
+      <li><strong>set:</strong> unordered unique elements — typical O(1) membership.</li>
+      <li><strong>collections.deque:</strong> fast O(1) pops/pushes from both ends.</li>
+    </ul>
+    <pre class="code" id="code-ds">
+```
+
+from collections import deque
+q = deque([1,2,3])
+q.appendleft(0); q.pop()
+d = {"a":1, "b":2} <button class="copy" onclick="copyCode('code-ds')">Copy</button> </pre> </section>
+
+```
+  <section id="it-gen" class="panel">
+    <h2>🔁 Iterators & Generators</h2>
+    <p class="muted">Iterators unify looping; generators yield lazy sequences and are memory-efficient.</p>
+    <pre class="code" id="code-gen">
+```
+
+def gen_squares(n):
+for i in range(n):
+yield i*i
+
+for v in gen_squares(5): print(v) <button class="copy" onclick="copyCode('code-gen')">Copy</button> </pre> <p class="muted">Use generator expressions and itertools for large data processing without loading everything into memory.</p> </section>
+
+```
+  <section id="async" class="panel">
+    <h2>⚡ Asyncio & Concurrency</h2>
+    <p class="muted">Use asyncio for concurrent I/O-bound tasks; threads or multiprocessing for CPU-bound work.</p>
+    <pre class="code" id="code-async">
+```
+
+import asyncio
+
+async def say(s):
+await asyncio.sleep(1)
+print(s)
+
+async def main():
+await asyncio.gather(say("hi"), say("there"))
+
+# asyncio.run(main())
+
+<button class="copy" onclick="copyCode('code-async')">Copy</button> </pre> <p class="muted">Use <code>async</code>/<code>await</code> and avoid blocking calls inside coroutines. For heavy CPU tasks, use ProcessPoolExecutor.</p> </section>
+
+```
+  <section id="stdlib" class="panel">
+    <h2>📦 Standard Library & Ecosystem</h2>
+    <ul class="muted bullets">
+      <li><strong>Data:</strong> csv, json, sqlite3, sqlite, decimal</li>
+      <li><strong>Networking:</strong> requests (3rd-party), urllib, socket</li>
+      <li><strong>Concurrency:</strong> threading, multiprocessing, asyncio</li>
+      <li><strong>Utilities:</strong> itertools, functools, collections, heapq, bisect</li>
+      <li><strong>Testing & Packaging:</strong> unittest/pytest, setuptools/poetry</li>
+    </ul>
+    <p class="muted">Knowing the stdlib reduces reinventing solutions and speeds up development.</p>
+  </section>
+
+  <section id="typing" class="panel">
+    <h2>🔤 Typing & Type Hints (mypy)</h2>
+    <p class="muted">Type hints improve clarity and tooling. Use <code>from typing import List, Dict, Optional</code> and run mypy in CI.</p>
+    <pre class="code" id="code-typing">
+```
+
+from typing import List, Optional
+
+def greet(name: Optional[str]) -> str:
+return f"Hello {name or 'Guest'}" <button class="copy" onclick="copyCode('code-typing')">Copy</button> </pre> <p class="muted">Type checking is static analysis only — it doesn't change runtime behavior for CPython.</p> </section>
+
+```
+  <section id="performance" class="panel">
+    <h2>🚀 Performance & Optimization</h2>
+    <p class="muted">Python trades raw speed for developer velocity. Optimize hotspots with profiling and right tools.</p>
+    <ul class="muted bullets">
+      <li>Profile with cProfile, pyinstrument. Optimize where it matters.</li>
+      <li>Use built-in functions and libraries (map, sum, sorted) — they're implemented in C and fast.</li>
+      <li>Use <code>heapq</code>, <code>bisect</code> instead of naive loops when appropriate.</li>
+      <li>For heavy numeric work use NumPy; for JIT try PyPy or Numba.</li>
+    </ul>
+  </section>
+
+  <section id="dsa-py" class="panel">
+    <h2>🎯 DSA-Focused Python Techniques</h2>
+    <p class="muted">Python can be competitive if you use the right idioms and modules.</p>
+    <ul class="muted bullets">
+      <li><strong>heapq</strong> for heaps (min-heap); simulate max-heap with negative values.</li>
+      <li><strong>bisect</strong> for binary searches in sorted lists.</li>
+      <li><strong>collections.deque</strong> for O(1) pops from both ends; use for sliding window.</li>
+      <li><strong>collections.Counter</strong> for frequency counts; use most_common for top-k.</li>
+      <li><strong>set/dict comprehensions</strong> for expressiveness and speed.</li>
+      <li>Pre-allocate lists when possible: <code>[0]*n</code> and avoid repeated concatenation.</li>
+    </ul>
+  </section>
+
+  <section id="examples" class="panel">
+    <h2>🧩 Expanded DSA Examples (Python)</h2>
+
+    <h4>1. Graph (Adjacency List) — BFS</h4>
+    <pre class="code" id="code-graph-py">
+```
+
+from collections import deque
+
+def bfs(adj, start):
+n = len(adj)
+vis = [False]*n
+q = deque([start]); vis[start]=True
+order = []
+while q:
+u = q.popleft()
+order.append(u)
+for v in adj[u]:
+if not vis[v]:
+vis[v] = True
+q.append(v)
+return order <button class="copy" onclick="copyCode('code-graph-py')">Copy</button> </pre>
+
+```
+    <h4>2. Binary Tree — Iterative Inorder</h4>
+    <pre class="code" id="code-tree-py">
+```
+
+def inorder_iter(root):
+res = []; stack = []; curr = root
+while curr or stack:
+while curr:
+stack.append(curr)
+curr = curr.left
+curr = stack.pop()
+res.append(curr.val)
+curr = curr.right
+return res <button class="copy" onclick="copyCode('code-tree-py')">Copy</button> </pre>
+
+```
+    <h4>3. Heap — K-th Largest</h4>
+    <pre class="code" id="code-heap-py">
+```
+
+import heapq
+
+def kth_largest(nums, k):
+h = nums[:k]
+heapq.heapify(h)
+for x in nums[k:]:
+if x > h[0]:
+heapq.heapreplace(h, x)
+return h[0] <button class="copy" onclick="copyCode('code-heap-py')">Copy</button> </pre>
+
+```
+    <h4>4. Union-Find (Disjoint Set)</h4>
+    <pre class="code" id="code-dsu-py">
+```
+
+class DSU:
+def **init**(self,n):
+self.p = list(range(n)); self.r = [0]*n
+def find(self,x):
+while x != self.p[x]:
+self.p[x] = self.p[self.p[x]]
+x = self.p[x]
+return x
+def unite(self,a,b):
+a = self.find(a); b = self.find(b)
+if a == b: return False
+if self.r[a] < self.r[b]:
+a,b = b,a
+self.p[b] = a
+if self.r[a] == self.r[b]:
+self.r[a] += 1
+return True <button class="copy" onclick="copyCode('code-dsu-py')">Copy</button> </pre>
+
+```
+    <h4>5. Sliding Window Maximum</h4>
+    <pre class="code" id="code-sliding-py">
+```
+
+from collections import deque
+
+def max_sliding_window(nums, k):
+dq = deque(); res = []
+for i, x in enumerate(nums):
+if dq and dq[0] == i - k:
+dq.popleft()
+while dq and nums[dq[-1]] < x:
+dq.pop()
+dq.append(i)
+if i >= k - 1:
+res.append(nums[dq[0]])
+return res <button class="copy" onclick="copyCode('code-sliding-py')">Copy</button> </pre>
+
+```
+    <h4>6. Bit Manipulation — Single Number</h4>
+    <pre class="code" id="code-bit-py">
+```
+
+def single_number(nums):
+x = 0
+for v in nums:
+x ^= v
+return x <button class="copy" onclick="copyCode('code-bit-py')">Copy</button> </pre>
+
+```
+    <h4>7. Backtracking — Subsets</h4>
+    <pre class="code" id="code-backtrack-py">
+```
+
+def subsets(nums):
+res = []
+def backtrack(start, path):
+res.append(path.copy())
+for i in range(start, len(nums)):
+path.append(nums[i])
+backtrack(i+1, path)
+path.pop()
+backtrack(0, [])
+return res <button class="copy" onclick="copyCode('code-backtrack-py')">Copy</button> </pre>
+
+```
+    <p class="muted">Practice: use these templates and adapt to problem constraints. Avoid micro-optimizing until you profile.</p>
+  </section>
+
+  <section id="best" class="panel">
+    <h2>✅ Best Practices & Common Pitfalls</h2>
+    <ul class="muted bullets">
+      <li>Prefer list/dict comprehensions for clarity and speed; avoid building lists via repeated concatenation.</li>
+      <li>Avoid mutable default arguments (use None pattern).</li>
+      <li>Use <code>enumerate</code> and <code>zip</code> instead of manual index handling.</li>
+      <li>Use <code>with</code> context managers for files, locks, and resources (RAII-equivalent in Python).</li>
+      <li>Beware of copying large structures — use shallow/deep copy intentionally.</li>
+      <li>For large numeric workloads prefer NumPy or C-extensions.</li>
+    </ul>
+  </section>
+
+  <section id="summary" class="panel">
+    <h2>🏁 Final Summary — Python Proficiency Checklist</h2>
+    <p class="muted">Master these to be effective in scripting, data work, web services, and DSA using Python:</p>
+    <ul class="bullets">
+      <li>Interpreter & tooling (venv, pip, poetry)</li>
+      <li>Types, mutability, and object model (ref counting)</li>
+      <li>Iterators, generators, and itertools</li>
+      <li>Standard library mastery (heapq, bisect, collections)</li>
+      <li>Async for I/O concurrency and multiprocessing for CPU</li>
+      <li>Type hints and static checking to scale codebases</li>
+      <li>Profiling & targeted optimization</li>
+      <li>Write readable, testable, and idiomatic Python</li>
+    </ul>
+    <p class="muted"><strong>Next: Build scripts, solve DSA problems with Pythonic patterns, and incrementally optimize with profiling and tools.</strong></p>
+  </section>
+
+</main>
+```
+
+  </div>
+
+  <!-- Modal (code preview) -->
+
+  <div id="modal" class="modal" style="display:none;">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+      <pre id="modal-code" class="code"></pre>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+  </footer>
+
+  <script src="../assets/scripts.js"></script>
+
+  <script>
+    // Search Functionality (same behavior as other language pages)
+    function searchContent() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const panels = document.querySelectorAll('.panel');
+      const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+      let visibleCount = 0;
+
+      panels.forEach(panel => {
+        const text = panel.textContent.toLowerCase();
+        const isVisible = text.includes(query);
+        panel.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+
+      // Highlight matching TOC items
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target && target.style.display !== 'none') {
+          link.style.background = 'rgba(0, 255, 136, 0.2)';
+          link.style.fontWeight = 'bold';
+        } else {
+          link.style.background = '';
+          link.style.fontWeight = '';
+        }
+      });
+
+      // Show message if no results
+      const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+      searchMsg.id = 'searchMsg';
+      searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+      if (query && visibleCount === 0) {
+        searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+        searchMsg.style.display = 'block';
+        document.body.appendChild(searchMsg);
+      } else if (searchMsg.parentNode) {
+        searchMsg.parentNode.removeChild(searchMsg);
+      }
+
+      // Scroll to first match if query not empty
+      if (query && visibleCount > 0) {
+        const firstVisible = document.querySelector('.panel[style*="block"]');
+        if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Copy code helper (shows modal for safer copy)
+    function copyCode(id) {
+      const codeEl = document.getElementById(id);
+      if (!codeEl) return;
+      const code = codeEl.textContent;
+      const modal = document.getElementById('modal');
+      const modalCode = document.getElementById('modal-code');
+      modalCode.textContent = code;
+      modal.style.display = 'block';
+      navigator.clipboard?.writeText(code).then(() => {
+        // copied
+      }).catch(() => {
+        // ignore if copy fails — modal still available for manual copy
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // Clear search on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const input = document.getElementById('searchInput');
+        if (input.value) {
+          input.value = '';
+          searchContent();
+          document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+          document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+        } else {
+          closeModal();
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>
+

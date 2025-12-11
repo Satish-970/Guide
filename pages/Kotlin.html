@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kotlin — Complete Conceptual Guide (Beginner → Advanced → DSA Ready)</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">🔷</div>
+      <div>
+        <h1>Kotlin — Complete Conceptual Guide</h1>
+        <div class="subtitle">Modern, Concise, Multiplatform • Coroutines & DSA • 2025 Edition</div>
+      </div>
+    </div>
+    <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="kotlin.html">Kotlin Guide</a>
+      <a class="btn ghost" href="dsa_tracker.html">DSA Tracker</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+```
+<!-- SIDEBAR - Always Visible -->
+<aside class="sidebar">
+  <div class="toc-title">Table of Contents</div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+  </div>
+
+  <ul class="toc" id="tocList">
+    <li><a href="#intro">Introduction — Why Kotlin?</a></li>
+    <li><a href="#ecosystem">Ecosystem: JVM, Android, Multiplatform</a></li>
+    <li><a href="#toolchain">Toolchain & Build (Gradle, Ktor)</a></li>
+    <li><a href="#basics">Language Basics & Syntax</a></li>
+    <li><a href="#null-safety">Null Safety & Smart Casts</a></li>
+    <li><a href="#functions">Functions, Lambdas & Extensions</a></li>
+    <li><a href="#oop-kotlin">OOP & Data Classes</a></li>
+    <li><a href="#advanced">Advanced Types: Sealed, Inline, Delegation</a></li>
+    <li><a href="#coroutines">Coroutines & Concurrency</a></li>
+    <li><a href="#collections-kotlin">Collections & Sequences</a></li>
+    <li><a href="#dsa-kotlin">DSA-Focused Kotlin Techniques</a></li>
+    <li><a href="#io-kotlin">I/O & Competitive Kotlin</a></li>
+    <li><a href="#interop">Java Interop & Platform Types</a></li>
+    <li><a href="#examples-kotlin">Expanded DSA Examples (Kotlin)</a></li>
+    <li><a href="#best">Best Practices & Pitfalls</a></li>
+    <li><a href="#summary">Final Summary</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="content">
+
+  <section id="intro" class="panel">
+    <h2>💡 Introduction — Why Kotlin?</h2>
+    <p class="muted">
+      Kotlin is a pragmatic, modern language that runs on the JVM, compiles to JavaScript, and supports native targets.
+      It combines concise syntax with strong type safety and excellent interoperability with Java. Kotlin is widely used
+      for Android development, server-side apps (Ktor, Spring), and multiplatform libraries.
+    </p>
+    <p class="muted">This guide covers Kotlin from basics to coroutines and DSA patterns — practical and interview friendly.</p>
+  </section>
+
+  <section id="ecosystem" class="panel">
+    <h2>🌐 Ecosystem — JVM, Android & Multiplatform</h2>
+    <ul class="muted bullets">
+      <li><strong>JVM:</strong> Kotlin compiles to bytecode and interops with Java libraries seamlessly.</li>
+      <li><strong>Android:</strong> Officially supported; Kotlin features reduce boilerplate.</li>
+      <li><strong>Multiplatform:</strong> Kotlin Multiplatform (KMP) shares code between JVM, JS, and Native.</li>
+      <li><strong>Server & Frameworks:</strong> Ktor, Spring (Kotlin DSL), Micronaut.</li>
+    </ul>
+    <p class="muted">Practical: use Kotlin for both application logic and algorithmic code — concise syntax helps in DSA too.</p>
+  </section>
+
+  <section id="toolchain" class="panel">
+    <h2>🛠️ Toolchain & Build</h2>
+    <ul class="muted bullets">
+      <li><strong>Gradle Kotlin DSL:</strong> <code>build.gradle.kts</code> is the common build file.</li>
+      <li><strong>kotlinc:</strong> Kotlin compiler CLI; <code>javac</code> not required but used when mixing Java.</li>
+      <li><strong>IDE support:</strong> IntelliJ IDEA has the best Kotlin tooling; Android Studio for Android.</li>
+      <li><strong>Packaging:</strong> shadowJar, Spring Boot, native images via Kotlin/Native or GraalVM.</li>
+    </ul>
+  </section>
+
+  <section id="basics" class="panel">
+    <h2>🔤 Language Basics & Syntax</h2>
+    <p class="muted">Kotlin is statically typed with type inference and expressive syntax.</p>
+    <pre class="code" id="code-basics">
+```
+
+fun main() {
+val name: String = "Satish"   // immutability by default
+var x = 10                    // mutable
+println("Hello, $name — x = ${x}")
+} <button class="copy" onclick="copyCode('code-basics')">Copy</button> </pre> <p class="muted">Prefer <code>val</code> over <code>var</code> for safer code.</p> </section>
+
+```
+  <section id="null-safety" class="panel">
+    <h2>⭕ Null Safety & Smart Casts</h2>
+    <p class="muted">Kotlin differentiates nullable and non-nullable types at compile time.</p>
+    <pre class="code" id="code-null">
+```
+
+var s: String? = null   // nullable
+val len = s?.length ?: 0  // safe call + elvis operator
+if (s is String) {
+// smart cast — s is non-null String here
+println(s.length)
+} <button class="copy" onclick="copyCode('code-null')">Copy</button> </pre> <p class="muted">Use <code>!!</code> sparingly — it throws NPE when you're wrong. Prefer safe operators and clear contracts.</p> </section>
+
+```
+  <section id="functions" class="panel">
+    <h2>🔁 Functions, Lambdas & Extension Functions</h2>
+    <pre class="code" id="code-funcs">
+```
+
+fun add(a: Int, b: Int) = a + b
+
+val sq = { x: Int -> x * x }      // lambda
+fun String.exclaim() = this + "!" // extension
+println("hi".exclaim())           // "hi!" <button class="copy" onclick="copyCode('code-funcs')">Copy</button> </pre> <p class="muted">Extensions let you add API surface without inheritance — they don't modify original classes (static dispatch).</p> </section>
+
+```
+  <section id="oop-kotlin" class="panel">
+    <h2>🏛️ OOP & Data Classes</h2>
+    <p class="muted">Kotlin simplifies data containers using <code>data class</code> which auto-generates equals/hashCode/toString/copy.</p>
+    <pre class="code" id="code-data-class">
+```
+
+data class Point(val x: Int, val y: Int)
+
+val p1 = Point(1,2)
+val p2 = p1.copy(x = 3) // copy with change
+println(p1) // Point(x=1, y=2) <button class="copy" onclick="copyCode('code-data-class')">Copy</button> </pre> <p class="muted">Constructors, sealed classes, and object declarations support multiple design styles concisely.</p> </section>
+
+```
+  <section id="advanced" class="panel">
+    <h2>🔬 Advanced Types: Sealed, Inline, Delegation</h2>
+    <ul class="muted bullets">
+      <li><strong>Sealed classes:</strong> closed hierarchies — great for algebraic data types and exhaustive when branches.</li>
+      <li><strong>Inline functions:</strong> reduce lambda overhead for high-performance code.</li>
+      <li><strong>Delegation:</strong> <code>by</code> keyword for composition + reuse.</li>
+    </ul>
+    <pre class="code" id="code-sealed">
+```
+
+sealed class Result
+data class Ok(val v: Int): Result()
+data class Err(val msg: String): Result()
+
+fun handle(r: Result) = when(r) {
+is Ok -> r.v
+is Err -> -1
+} <button class="copy" onclick="copyCode('code-sealed')">Copy</button> </pre> </section>
+
+```
+  <section id="coroutines" class="panel">
+    <h2>⚡ Coroutines & Concurrency</h2>
+    <p class="muted">Kotlin coroutines provide structured concurrency and lightweight cooperative threads.</p>
+    <pre class="code" id="code-coroutine">
+```
+
+import kotlinx.coroutines.*
+
+fun main() = runBlocking {
+launch {
+delay(100)
+println("World")
+}
+println("Hello")
+}
+// Output: Hello \n World <button class="copy" onclick="copyCode('code-coroutine')">Copy</button> </pre> <p class="muted">Key primitives: <code>CoroutineScope</code>, <code>launch</code>, <code>async</code>, <code>flow</code> for reactive streams.</p> </section>
+
+```
+  <section id="collections-kotlin" class="panel">
+    <h2>📚 Collections & Sequences</h2>
+    <p class="muted">Kotlin collections are powerful and come as mutable/immutable views; <code>Sequence</code> is lazy (useful for large pipelines).</p>
+    <pre class="code" id="code-collections">
+```
+
+val list = listOf(1,2,3,4)
+val evens = list.filter { it % 2 == 0 }.map { it * it }
+
+val seq = sequenceOf(1,2,3,4).map { heavy(it) }.filter { it%2==0 } // lazy <button class="copy" onclick="copyCode('code-collections')">Copy</button> </pre> <p class="muted">Prefer eager collections for small sets and sequences for large or chained transformations to avoid intermediate allocations.</p> </section>
+
+```
+  <section id="dsa-kotlin" class="panel">
+    <h2>🎯 DSA-Focused Kotlin Techniques</h2>
+    <ul class="muted bullets">
+      <li><strong>Use IntArray / LongArray</strong> for primitive performance in tight loops (avoid boxing).</li>
+      <li><strong>Use ArrayList (MutableList)</strong> for dynamic arrays; prefer <code>arrayListOf()</code> when mutability needed.</li>
+      <li><strong>PriorityQueue</strong> from Java collections for heaps, or implement your own for custom comparators.</li>
+      <li><strong>Use inline functions</strong> and <code>@JvmStatic</code> when interoperating with Java for performance-critical hot paths.</li>
+      <li><strong>For graphs:</strong> adjacency lists as <code>Array<IntArray></code> or <code>Array<MutableList<Int>></code> depending on mutability/perf.</li>
+    </ul>
+    <p class="muted">Kotlin is concise for DSA: data classes, destructuring, and extension functions speed up implementation without excess boilerplate.</p>
+  </section>
+
+  <section id="io-kotlin" class="panel">
+    <h2>📁 I/O & Competitive Kotlin</h2>
+    <p class="muted">For competitive programming, use fast input via buffered reader & tokenizer or custom readers; avoid slow <code>readLine()</code> loops.</p>
+    <pre class="code" id="code-io-kotlin">
+```
+
+import java.io.BufferedInputStream
+import java.util.StringTokenizer
+
+class FastScanner {
+private val input = BufferedInputStream(System.`in`)
+private val buffer = ByteArray(1 shl 16)
+private var len = 0
+private var ptr = 0
+
+private fun read(): Int {
+if (ptr >= len) {
+len = input.read(buffer)
+ptr = 0
+if (len <= 0) return -1
+}
+return buffer[ptr++].toInt()
+}
+
+fun next(): String {
+val sb = StringBuilder()
+var c = read()
+while (c <= 32 && c >= 0) c = read()
+while (c > 32) {
+sb.append(c.toChar()); c = read()
+}
+return sb.toString()
+}
+} <button class="copy" onclick="copyCode('code-io-kotlin')">Copy</button> </pre> <p class="muted">Alternatively, use <code>java.io.BufferedReader</code> + <code>StringTokenizer</code> for simpler code.</p> </section>
+
+```
+  <section id="interop" class="panel">
+    <h2>🔗 Java Interop & Platform Types</h2>
+    <p class="muted">Kotlin integrates smoothly with Java — call Java APIs natively, but be mindful of platform types and nullability.</p>
+    <pre class="code" id="code-interop">
+```
+
+val list: java.util.List<String> = java.util.ArrayList()
+list.add("a") // works fine
+
+// When calling Java, Kotlin may see types as platform types (nullable/nonnull ambiguous). <button class="copy" onclick="copyCode('code-interop')">Copy</button> </pre> <p class="muted">Annotate Java APIs with nullability annotations to get safe Kotlin signatures.</p> </section>
+
+```
+  <section id="examples-kotlin" class="panel">
+    <h2>🧩 Expanded DSA Examples (Kotlin)</h2>
+
+    <h4>1. Graph — BFS</h4>
+    <pre class="code" id="code-graph-kotlin">
+```
+
+import java.util.ArrayDeque
+
+fun bfs(adj: Array<MutableList<Int>>, start: Int): List<Int> {
+val n = adj.size
+val vis = BooleanArray(n)
+val q = ArrayDeque<Int>()
+val order = mutableListOf<Int>()
+vis[start] = true; q.add(start)
+while (q.isNotEmpty()) {
+val u = q.removeFirst()
+order.add(u)
+for (v in adj[u]) if (!vis[v]) { vis[v] = true; q.add(v) }
+}
+return order
+} <button class="copy" onclick="copyCode('code-graph-kotlin')">Copy</button> </pre>
+
+```
+    <h4>2. Binary Tree — Iterative Inorder</h4>
+    <pre class="code" id="code-tree-kotlin">
+```
+
+class Node(var v: Int, var l: Node? = null, var r: Node? = null)
+
+fun inorderIter(root: Node?): List<Int> {
+val res = mutableListOf<Int>(); val st = ArrayDeque<Node>()
+var curr = root
+while (curr != null || st.isNotEmpty()) {
+while (curr != null) { st.addLast(curr); curr = curr.l }
+curr = st.removeLast()
+res.add(curr.v)
+curr = curr.r
+}
+return res
+} <button class="copy" onclick="copyCode('code-tree-kotlin')">Copy</button> </pre>
+
+```
+    <h4>3. Min-Heap (PriorityQueue)</h4>
+    <pre class="code" id="code-heap-kotlin">
+```
+
+import java.util.PriorityQueue
+
+fun kthLargest(arr: IntArray, k: Int): Int {
+val pq = PriorityQueue<Int>()
+for (x in arr) {
+pq.add(x)
+if (pq.size > k) pq.poll()
+}
+return pq.peek()
+} <button class="copy" onclick="copyCode('code-heap-kotlin')">Copy</button> </pre>
+
+```
+    <h4>4. Union-Find (DSU)</h4>
+    <pre class="code" id="code-dsu-kotlin">
+```
+
+class DSU(n: Int) {
+val p = IntArray(n) { it }
+val r = IntArray(n)
+fun find(x: Int): Int {
+if (p[x] == x) return x
+p[x] = find(p[x])
+return p[x]
+}
+fun unite(a: Int, b: Int): Boolean {
+var x = find(a); var y = find(b)
+if (x == y) return false
+if (r[x] < r[y]) { val t = x; x = y; y = t }
+p[y] = x
+if (r[x] == r[y]) r[x]++
+return true
+}
+} <button class="copy" onclick="copyCode('code-dsu-kotlin')">Copy</button> </pre>
+
+```
+    <h4>5. Sliding Window Maximum</h4>
+    <pre class="code" id="code-sliding-kotlin">
+```
+
+fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
+val dq = ArrayDeque<Int>(); val res = mutableListOf<Int>()
+for (i in nums.indices) {
+if (dq.isNotEmpty() && dq.first() == i - k) dq.removeFirst()
+while (dq.isNotEmpty() && nums[dq.last()] < nums[i]) dq.removeLast()
+dq.addLast(i)
+if (i >= k - 1) res.add(nums[dq.first()])
+}
+return res.toIntArray()
+} <button class="copy" onclick="copyCode('code-sliding-kotlin')">Copy</button> </pre>
+
+```
+    <p class="muted">Practice: prefer primitive arrays for heavy numeric tasks and avoid creating many boxed objects in hot loops.</p>
+  </section>
+
+  <section id="best" class="panel">
+    <h2>✅ Best Practices & Common Pitfalls</h2>
+    <ul class="muted bullets">
+      <li>Prefer <code>val</code> for immutability and clearer intent.</li>
+      <li>Avoid unnecessary boxing: use <code>IntArray</code>, <code>LongArray</code> when performance matters.</li>
+      <li>Use coroutines for async flows; cancel scopes properly to avoid leaks.</li>
+      <li>Mind platform types when calling Java — add explicit nullability where appropriate.</li>
+      <li>Use data classes for DTOs and domain models; be cautious with default values that are mutable.</li>
+      <li>Test critical algorithmic code and benchmark with realistic inputs.</li>
+    </ul>
+  </section>
+
+  <section id="summary" class="panel">
+    <h2>🏁 Final Summary — Kotlin Proficiency Checklist</h2>
+    <p class="muted">Key topics to master for Kotlin proficiency and DSA readiness:</p>
+    <ul class="bullets">
+      <li>Null safety, smart casts, and platform types</li>
+      <li>Coroutines and structured concurrency</li>
+      <li>Collections, sequences, and primitive arrays for performance</li>
+      <li>Data classes, sealed classes, and delegation</li>
+      <li>Interoperability with Java and build tooling (Gradle)</li>
+      <li>Practical DSA implementations using Kotlin idioms</li>
+    </ul>
+    <p class="muted"><strong>Next: convert common DSA templates to Kotlin, practice on contests, and build a small Kotlin project that uses coroutines and Ktor.</strong></p>
+  </section>
+
+</main>
+```
+
+  </div>
+
+  <!-- Modal (code preview) -->
+
+  <div id="modal" class="modal" style="display:none;">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+      <pre id="modal-code" class="code"></pre>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+  </footer>
+
+  <script src="../assets/scripts.js"></script>
+
+  <script>
+    // Search Functionality (same behavior as other language pages)
+    function searchContent() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const panels = document.querySelectorAll('.panel');
+      const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+      let visibleCount = 0;
+
+      panels.forEach(panel => {
+        const text = panel.textContent.toLowerCase();
+        const isVisible = text.includes(query);
+        panel.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+
+      // Highlight matching TOC items
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target && target.style.display !== 'none') {
+          link.style.background = 'rgba(0, 255, 136, 0.2)';
+          link.style.fontWeight = 'bold';
+        } else {
+          link.style.background = '';
+          link.style.fontWeight = '';
+        }
+      });
+
+      // Show message if no results
+      const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+      searchMsg.id = 'searchMsg';
+      searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+      if (query && visibleCount === 0) {
+        searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+        searchMsg.style.display = 'block';
+        document.body.appendChild(searchMsg);
+      } else if (searchMsg.parentNode) {
+        searchMsg.parentNode.removeChild(searchMsg);
+      }
+
+      // Scroll to first match if query not empty
+      if (query && visibleCount > 0) {
+        const firstVisible = document.querySelector('.panel[style*="block"]');
+        if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Copy code helper (shows modal for safer copy)
+    function copyCode(id) {
+      const codeEl = document.getElementById(id);
+      if (!codeEl) return;
+      const code = codeEl.textContent;
+      const modal = document.getElementById('modal');
+      const modalCode = document.getElementById('modal-code');
+      modalCode.textContent = code;
+      modal.style.display = 'block';
+      navigator.clipboard?.writeText(code).then(() => {
+        // optionally show toast (omitted)
+      }).catch(() => {
+        // ignore if clipboard fails — modal still available for manual copy
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // Clear search on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const input = document.getElementById('searchInput');
+        if (input.value) {
+          input.value = '';
+          searchContent();
+          document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+          document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+        } else {
+          closeModal();
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rust — Complete Conceptual Guide (Beginner → Advanced → DSA Ready)</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">🦀</div>
+      <div>
+        <h1>Rust — Complete Conceptual Guide</h1>
+        <div class="subtitle">Safe, Fast, Concurrent — Modern Rust for Systems & DSA • 2025 Edition</div>
+      </div>
+    </div>
+    <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="rust.html">Rust Guide</a>
+      <a class="btn ghost" href="dsa_tracker.html">DSA Tracker</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+```
+<!-- SIDEBAR - Always Visible -->
+<aside class="sidebar">
+  <div class="toc-title">Table of Contents</div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+  </div>
+
+  <ul class="toc" id="tocList">
+    <li><a href="#intro">Introduction — Why Rust?</a></li>
+    <li><a href="#toolchain">Toolchain: rustup, cargo & crates.io</a></li>
+    <li><a href="#ownership">Ownership, Borrowing & Lifetimes</a></li>
+    <li><a href="#types">Types, Mutability & Pattern Matching</a></li>
+    <li><a href="#memory">Memory Safety & Zero-Cost Abstractions</a></li>
+    <li><a href="#error">Error Handling: Option & Result</a></li>
+    <li><a href="#traits">Traits, Generics & Monomorphization</a></li>
+    <li><a href="#concurrency">Concurrency: Threads, async & Tokio</a></li>
+    <li><a href="#collections">Collections: Vec, HashMap, BTreeMap</a></li>
+    <li><a href="#dsa-rust">DSA Techniques in Rust</a></li>
+    <li><a href="#ffi">FFI & Interop (C, WASM)</a></li>
+    <li><a href="#examples">Expanded Examples (BFS, DSU, Heap, Sliding Window)</a></li>
+    <li><a href="#perf">Performance & Profiling</a></li>
+    <li><a href="#best">Best Practices & Common Pitfalls</a></li>
+    <li><a href="#summary">Final Summary</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="content">
+
+  <section id="intro" class="panel">
+    <h2>💡 Introduction — Why Rust?</h2>
+    <p class="muted">
+      Rust delivers memory safety without a GC, predictable performance, and strong concurrency guarantees. It's used
+      for systems programming, networking, game engines, CLI tools, WebAssembly, and algorithmic code where low-level control matters.
+    </p>
+    <p class="muted">This guide focuses on concepts (ownership, borrowing, lifetimes), modern Rust idioms, async programming, and DSA-ready patterns and examples.</p>
+  </section>
+
+  <section id="toolchain" class="panel">
+    <h2>🛠️ Toolchain: rustup, cargo & crates.io</h2>
+    <ul class="muted bullets">
+      <li><strong>rustup</strong> — toolchain installer & manager (stable/nightly/channels).</li>
+      <li><strong>cargo</strong> — build, test, bench, run, manage dependencies; your primary workflow tool.</li>
+      <li><strong>crates.io</strong> — package registry; use trusted crates (tokio, anyhow, serde, rayon).</li>
+      <li><strong>rustfmt & clippy</strong> — formatting and lints; use them in CI.</li>
+    </ul>
+    <p class="muted"><code>cargo new</code>, <code>cargo build --release</code>, <code>cargo test</code>, <code>cargo bench</code> are core commands.</p>
+  </section>
+
+  <section id="ownership" class="panel">
+    <h2>🔐 Ownership, Borrowing & Lifetimes</h2>
+    <p class="muted">Ownership is Rust's core: every value has one owner. Move semantics, borrowing (&) and mutable borrowing (&mut) enforce safety at compile time.</p>
+    <pre class="code" id="code-ownership">
+```
+
+fn main() {
+let s = String::from("hello"); // owner s
+let s2 = s; // move: s is invalid after this
+// println!("{}", s); // compile error
+let x = 5;
+let y = x; // Copy trait: x still usable
+} <button class="copy" onclick="copyCode('code-ownership')">Copy</button> </pre> <p class="muted">Lifetimes connect borrows to data — Rust infers many lifetimes; explicit annotations appear when needed for complex references.</p> </section>
+
+```
+  <section id="types" class="panel">
+    <h2>🔤 Types, Mutability & Pattern Matching</h2>
+    <p class="muted">Rust is statically typed with powerful pattern matching and algebraic data types (enums).</p>
+    <pre class="code" id="code-types">
+```
+
+let mut x: i32 = 10; // mutable
+let y = &x;          // immutable borrow
+match some_option {
+Some(v) => println!("{}", v),
+None => println!("none")
+}
+enum Tree { Leaf(i32), Node(Box<Tree>, Box<Tree>) } <button class="copy" onclick="copyCode('code-types')">Copy</button> </pre> <p class="muted">Pattern matching and enums make control flow expressive and safe (no null). Prefer <code>Option</code> over nullable references.</p> </section>
+
+```
+  <section id="memory" class="panel">
+    <h2>🧠 Memory Safety & Zero-Cost Abstractions</h2>
+    <p class="muted">Rust enforces memory safety at compile time; abstractions (iterators, closures, traits) compile down without runtime cost.</p>
+    <ul class="muted bullets">
+      <li>Stack-allocated values vs heap via <code>Box</code>, <code>Vec</code>, <code>String</code>.</li>
+      <li>No GC — deterministic drop via <code>Drop</code> trait.</li>
+      <li>Borrow checker prevents data races in safe code (Send + Sync traits for concurrency).</li>
+    </ul>
+  </section>
+
+  <section id="error" class="panel">
+    <h2>🛡️ Error Handling: Option & Result</h2>
+    <p class="muted">Rust encourages explicit error handling with <code>Option</code> and <code>Result</code>.</p>
+    <pre class="code" id="code-error">
+```
+
+use std::fs::File;
+use std::io::{self, Read};
+
+fn read_file(path: &str) -> Result<String, io::Error> {
+let mut s = String::new();
+File::open(path)?.read_to_string(&mut s)?;
+Ok(s)
+} <button class="copy" onclick="copyCode('code-error')">Copy</button> </pre> <p class="muted">Use the ? operator for propagation and crates like <code>anyhow</code> or <code>thiserror</code> for ergonomic error handling in apps.</p> </section>
+
+```
+  <section id="traits" class="panel">
+    <h2>🔧 Traits, Generics & Monomorphization</h2>
+    <p class="muted">Traits are type classes (interfaces). Generics are monomorphized at compile time, producing optimized code for each type.</p>
+    <pre class="code" id="code-traits">
+```
+
+trait Printable { fn print(&self); }
+
+impl Printable for i32 {
+fn print(&self) { println!("num: {}", self); }
+}
+
+fn show<T: Printable>(x: T) { x.print(); } <button class="copy" onclick="copyCode('code-traits')">Copy</button> </pre> <p class="muted">Use trait bounds and where-clauses for complex generic constraints. Prefer iterator adapters and zero-cost patterns.</p> </section>
+
+```
+  <section id="concurrency" class="panel">
+    <h2>⚡ Concurrency: Threads, async & Tokio</h2>
+    <p class="muted">Rust provides both native threads and async. <code>tokio</code> is the most popular async runtime; <code>rayon</code> for data parallelism.</p>
+    <pre class="code" id="code-async">
+```
+
+// simple thread example
+use std::thread;
+let handle = thread::spawn(|| { println!("hello from thread"); });
+handle.join().unwrap();
+
+// async with tokio
+// #[tokio::main]
+// async fn main() {
+//   let res = reqwest::get("[https://example.com").await.unwrap(](https://example.com%22%29.await.unwrap%28));
+//   println!("{}", res.status());
+// } <button class="copy" onclick="copyCode('code-async')">Copy</button> </pre> <p class="muted">Safe concurrency: Send + Sync markers ensure types are safe to transfer across threads. Use channels (<code>std::sync::mpsc</code> or <code>tokio::sync</code>) for communication.</p> </section>
+
+```
+  <section id="collections" class="panel">
+    <h2>📚 Collections: Vec, HashMap, BTreeMap</h2>
+    <p class="muted">Rust standard collections are in <code>std::collections</code>. Use Vec for dynamic arrays; HashMap and BTreeMap for maps.</p>
+    <pre class="code" id="code-collections">
+```
+
+use std::collections::{HashMap, BTreeMap};
+
+let mut v: Vec<i32> = Vec::with_capacity(100);
+v.push(1);
+
+let mut h = HashMap::new();
+h.insert("a", 1);
+
+let mut b = BTreeMap::new();
+b.insert(1, "one"); <button class="copy" onclick="copyCode('code-collections')">Copy</button> </pre> <p class="muted">Understand ownership when inserting/borrowing into collections. Prefer iterators and .iter().map().collect() for transformations.</p> </section>
+
+```
+  <section id="dsa-rust" class="panel">
+    <h2>🎯 DSA Techniques in Rust</h2>
+    <p class="muted">Rust is well-suited for algorithmic coding — strong typing, low-overhead abstractions, and efficient collections.</p>
+    <ul class="muted bullets">
+      <li>Preallocate Vec capacity: <code>Vec::with_capacity(n)</code>.</li>
+      <li>Use slices <code>&[T]</code> for borrowing arrays without copying.</li>
+      <li>Use <code>binary_search</code>, <code>sort_unstable</code> for performance; <code>sort_unstable</code> is often faster when stability not required.</li>
+      <li>Use <code>VecDeque</code> or index-based deque patterns for sliding-window problems.</li>
+      <li>For priority queues, use <code>std::collections::BinaryHeap</code> (max-heap by default).</li>
+      <li>Avoid unnecessary cloning — prefer references and lifetime-driven borrows.</li>
+    </ul>
+  </section>
+
+  <section id="ffi" class="panel">
+    <h2>🔗 FFI & Interop (C, WASM)</h2>
+    <p class="muted">Rust has excellent FFI. Use <code>#[no_mangle]</code> and <code>extern "C"</code> for C interop, and <code>wasm-bindgen</code> for WebAssembly.</p>
+    <pre class="code" id="code-ffi">
+```
+
+// expose to C
+#[no_mangle]
+pub extern "C" fn add(a: i32, b: i32) -> i32 { a + b }
+
+// wasm example uses wasm-bindgen (not shown here) <button class="copy" onclick="copyCode('code-ffi')">Copy</button> </pre> <p class="muted">When using FFI, be explicit about ownership and memory boundaries to avoid UB.</p> </section>
+
+```
+  <section id="examples" class="panel">
+    <h2>🧩 Expanded Examples (Rust)</h2>
+
+    <h4>1. BFS (Adjacency List)</h4>
+    <pre class="code" id="code-bfs-rust">
+```
+
+use std::collections::VecDeque;
+
+fn bfs(adj: &Vec<Vec<usize>>, start: usize) -> Vec<usize> {
+let n = adj.len();
+let mut vis = vec![false; n];
+let mut q = VecDeque::new();
+let mut res = Vec::new();
+vis[start] = true; q.push_back(start);
+while let Some(u) = q.pop_front() {
+res.push(u);
+for &v in &adj[u] {
+if !vis[v] {
+vis[v] = true;
+q.push_back(v);
+}
+}
+}
+res
+} <button class="copy" onclick="copyCode('code-bfs-rust')">Copy</button> </pre>
+
+```
+    <h4>2. Union-Find (DSU)</h4>
+    <pre class="code" id="code-dsu-rust">
+```
+
+struct DSU { parent: Vec<usize>, rank: Vec<u8> }
+
+impl DSU {
+fn new(n: usize) -> Self {
+DSU { parent: (0..n).collect(), rank: vec![0; n] }
+}
+fn find(&mut self, x: usize) -> usize {
+if self.parent[x] != x { self.parent[x] = self.find(self.parent[x]); }
+self.parent[x]
+}
+fn union(&mut self, a: usize, b: usize) -> bool {
+let mut x = self.find(a); let mut y = self.find(b);
+if x == y { return false; }
+if self.rank[x] < self.rank[y] { std::mem::swap(&mut x, &mut y); }
+self.parent[y] = x;
+if self.rank[x] == self.rank[y] { self.rank[x] += 1; }
+true
+}
+} <button class="copy" onclick="copyCode('code-dsu-rust')">Copy</button> </pre>
+
+```
+    <h4>3. Min-Heap (BinaryHeap)</h4>
+    <pre class="code" id="code-heap-rust">
+```
+
+use std::collections::BinaryHeap;
+use std::cmp::Reverse;
+
+fn kth_smallest(nums: Vec<i32>, k: usize) -> i32 {
+let mut heap = BinaryHeap::new(); // max-heap
+for &x in &nums {
+heap.push(x);
+if heap.len() > k { heap.pop(); }
+}
+*heap.peek().unwrap()
+}
+
+// for min-heap, use BinaryHeap<Reverse<T>> <button class="copy" onclick="copyCode('code-heap-rust')">Copy</button> </pre>
+
+```
+    <h4>4. Sliding Window Maximum (deque of indices)</h4>
+    <pre class="code" id="code-sliding-rust">
+```
+
+fn max_sliding_window(nums: &[i32], k: usize) -> Vec<i32> {
+use std::collections::VecDeque;
+if k == 0 { return vec![]; }
+let mut dq: VecDeque<usize> = VecDeque::new();
+let mut res = Vec::with_capacity(nums.len().saturating_sub(k) + 1);
+for i in 0..nums.len() {
+if let Some(&front) = dq.front() {
+if front + k == i { dq.pop_front(); }
+}
+while let Some(&back) = dq.back() {
+if nums[back] < nums[i] { dq.pop_back(); } else { break; }
+}
+dq.push_back(i);
+if i + 1 >= k { res.push(nums[*dq.front().unwrap()]); }
+}
+res
+} <button class="copy" onclick="copyCode('code-sliding-rust')">Copy</button> </pre>
+
+```
+    <p class="muted">These examples favor idiomatic Rust: minimal clones, borrow usage, and preallocation where appropriate.</p>
+  </section>
+
+  <section id="perf" class="panel">
+    <h2>🚀 Performance & Profiling</h2>
+    <ul class="muted bullets">
+      <li>Build release binaries: <code>cargo build --release</code> (enable LTO if needed).</li>
+      <li>Use <code>cargo bench</code> and <code>criterion</code> for reliable benchmarks.</li>
+      <li>Profile with <code>perf</code>, <code>flamegraph</code>, or <code>tokio-console</code> for async workloads.</li>
+      <li>Avoid needless allocation: prefer slices, references, & iterators; use <code>Vec::with_capacity</code>.</li>
+    </ul>
+  </section>
+
+  <section id="best" class="panel">
+    <h2>✅ Best Practices & Common Pitfalls</h2>
+    <ul class="muted bullets">
+      <li>Prefer references and borrowing over cloning; clone explicitly.</li>
+      <li>Minimize <code>unsafe</code>; when necessary, wrap and document invariants thoroughly and test aggressively.</li>
+      <li>Use <code>cargo fmt</code> and <code>clippy</code> to keep code idiomatic and catch pitfalls.</li>
+      <li>Be mindful of iterator adapters that may allocate; inspect generated code for hot paths.</li>
+      <li>Understand lifetime errors: they guide correct ownership, not an obstacle — refactor to simpler ownership models when stuck.</li>
+    </ul>
+  </section>
+
+  <section id="summary" class="panel">
+    <h2>🏁 Final Summary — Rust Proficiency Checklist</h2>
+    <p class="muted">Master these to write safe, high-performance Rust and to apply it in DSA/production:</p>
+    <ul class="bullets">
+      <li>Ownership, borrowing, lifetimes — the heart of Rust safety</li>
+      <li>Tooling with cargo, rustup, crates.io; format and lint with rustfmt/clippy</li>
+      <li>Pattern matching, enums, and idiomatic error handling with Option/Result</li>
+      <li>Concurrency with threads, async (tokio), and data-parallelism (rayon)</li>
+      <li>DSA patterns using Vec, BinaryHeap, VecDeque, HashMap, and BTreeMap</li>
+      <li>Profiling, benchmarks, and avoiding needless allocations</li>
+    </ul>
+    <p class="muted"><strong>Next: convert your DSA templates to Rust, write small systems-level utilities, and experiment with async networking using tokio + hyper.</strong></p>
+  </section>
+
+</main>
+```
+
+  </div>
+
+  <!-- Modal (code preview) -->
+
+  <div id="modal" class="modal" style="display:none;">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+      <pre id="modal-code" class="code"></pre>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+  </footer>
+
+  <script src="../assets/scripts.js"></script>
+
+  <script>
+    // Search Functionality (consistent with other language pages)
+    function searchContent() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const panels = document.querySelectorAll('.panel');
+      const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+      let visibleCount = 0;
+
+      panels.forEach(panel => {
+        const text = panel.textContent.toLowerCase();
+        const isVisible = text.includes(query);
+        panel.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+
+      // Highlight matching TOC items
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target && target.style.display !== 'none') {
+          link.style.background = 'rgba(0, 255, 136, 0.2)';
+          link.style.fontWeight = 'bold';
+        } else {
+          link.style.background = '';
+          link.style.fontWeight = '';
+        }
+      });
+
+      // Show message if no results
+      const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+      searchMsg.id = 'searchMsg';
+      searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+      if (query && visibleCount === 0) {
+        searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+        searchMsg.style.display = 'block';
+        document.body.appendChild(searchMsg);
+      } else if (searchMsg.parentNode) {
+        searchMsg.parentNode.removeChild(searchMsg);
+      }
+
+      // Scroll to first match if query not empty
+      if (query && visibleCount > 0) {
+        const firstVisible = document.querySelector('.panel[style*="block"]');
+        if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Copy code helper: shows modal and attempts clipboard write
+    function copyCode(id) {
+      const codeEl = document.getElementById(id);
+      if (!codeEl) return;
+      const code = codeEl.textContent;
+      const modal = document.getElementById('modal');
+      const modalCode = document.getElementById('modal-code');
+      modalCode.textContent = code;
+      modal.style.display = 'block';
+      navigator.clipboard?.writeText(code).then(() => {
+        // copied successfully
+      }).catch(() => {
+        // ignore failure — user can manually copy from modal
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // Clear search on Escape; close modal if no search
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const input = document.getElementById('searchInput');
+        if (input && input.value) {
+          input.value = '';
+          searchContent();
+          document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+          document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+        } else {
+          closeModal();
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>
+

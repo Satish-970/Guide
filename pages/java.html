@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Java — Complete Conceptual Guide (Beginner to Advanced + DSA Ready)</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">☕</div>
+      <div>
+        <h1>Java — Complete Conceptual Guide</h1>
+        <div class="subtitle">From Zero to DSA Master • Conceptual • Interview-Ready • 2025 Edition</div>
+      </div>
+    </div>
+    <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="java.html">Java Guide</a>
+      <a class="btn ghost" href="dsa.html">DSA Tracker</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR - Always Visible -->
+    <aside class="sidebar">
+      <div class="toc-title">Table of Contents</div>
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+      </div>
+      <ul class="toc" id="tocList">
+        <li><a href="#intro">Introduction to Java</a></li>
+        <li><a href="#jvm">JVM, JRE, JDK — How Java Works</a></li>
+        <li><a href="#datatypes">Data Types & Variables</a></li>
+        <li><a href="#oop">OOP Mastery</a>
+          <ul class="subtoc">
+            <li><a href="#classes-objects">Classes & Objects</a></li>
+            <li><a href="#encapsulation">Encapsulation</a></li>
+            <li><a href="#inheritance">Inheritance</a></li>
+            <li><a href="#polymorphism">Polymorphism</a></li>
+            <li><a href="#abstraction">Abstraction</a></li>
+          </ul>
+        </li>
+        <li><a href="#memory">Memory Model: Stack vs Heap</a></li>
+        <li><a href="#references">Reference vs Primitive Types</a></li>
+        <li><a href="#strings">Strings — Immutable & Pool</a></li>
+        <li><a href="#control">Control Flow & Loops</a></li>
+        <li><a href="#arrays">Arrays & Their Limitations</a></li>
+        <li><a href="#collections">Collections Framework (DSA Core)</a>
+          <ul class="subtoc">
+            <li><a href="#list">List (ArrayList, LinkedList)</a></li>
+            <li><a href="#set">Set (HashSet, TreeSet)</a></li>
+            <li><a href="#map">Map (HashMap, TreeMap)</a></li>
+            <li><a href="#queue">Queue & Deque</a></li>
+          </ul>
+        </li>
+        <li><a href="#dsa-java">DSA-Related Java Concepts</a></li>
+        <li><a href="#generics">Generics — Type Safety</a></li>
+        <li><a href="#comparable">Comparable vs Comparator</a></li>
+        <li><a href="#exceptions">Exception Handling (Checked vs Unchecked)</a></li>
+        <li><a href="#io">File I/O & Streams</a></li>
+        <li><a href="#lambdas">Functional Programming: Lambdas & Streams API</a></li>
+        <li><a href="#threads">Multithreading & Concurrency</a></li>
+        <li><a href="#gc">Garbage Collection</a></li>
+        <li><a href="#best">Best Practices & Common Mistakes</a></li>
+        <li><a href="#summary">Final Summary</a></li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content">
+
+      <section id="intro" class="panel">
+        <h2>☕ Introduction — Why Java Still Rules in 2025</h2>
+        <p class="muted">
+          Java is not just a language — it's a <strong>platform</strong>. Used by millions in Android, enterprise
+          backends, trading systems, and competitive programming.
+          With over 3 billion devices running Java, it's the backbone of modern software. This guide dives deep into its
+          design philosophy, from JVM magic to concurrent programming.
+        </p>
+        <p class="muted">
+          Learn conceptually: <strong>why</strong> Java enforces OOP, <strong>how</strong> memory works, and
+          <strong>what</strong> makes it DSA-friendly. Includes real-world analogies, code examples, and interview tips.
+        </p>
+      </section>
+
+      <section id="jvm" class="panel">
+        <h2>⚙️ JVM, JRE, JDK — The Magic Behind Java</h2>
+        <p class="muted">Java's "Write Once, Run Anywhere" (WORA) is powered by the JVM, which interprets bytecode on
+          any OS.</p>
+        <ul class="muted bullets">
+          <li><strong>JDK</strong>: Development Kit — compilers (javac), debuggers, tools for building apps.</li>
+          <li><strong>JRE</strong>: Runtime Environment — executes .class files, includes JVM + libraries.</li>
+          <li><strong>JVM</strong>: Virtual Machine — loads bytecode, manages memory (GC), JIT-compiles hot code for
+            speed.</li>
+        </ul>
+        <p class="muted"><em>Compilation: .java → javac → .class (platform-independent bytecode) → JVM → native machine
+            code.</em></p>
+        <p class="muted">Analogy: JVM is like a universal translator — your code speaks "bytecode Esperanto," runnable
+          everywhere.</p>
+      </section>
+
+      <section id="datatypes" class="panel">
+        <h2>📦 Data Types — Primitive vs Reference</h2>
+        <p class="muted">Java is statically typed — declare types upfront for safety and performance.</p>
+        <ul class="muted bullets">
+          <li><strong>Primitives (8 types, stack-allocated, fast):</strong> byte (8-bit), short (16-bit), int (32-bit),
+            long (64-bit), float (32-bit), double (64-bit), char (16-bit Unicode), boolean (true/false).</li>
+          <li><strong>Reference Types:</strong> Objects, arrays, strings — heap-allocated, hold addresses (references).
+          </li>
+          <li><strong>Wrappers:</strong> Integer, Double, etc. — box primitives for collections (autoboxing/unboxing).
+          </li>
+        </ul>
+        <p class="muted">Analogy: Primitives are like cash (quick access), references are like credit cards (point to
+          bank account).</p>
+      </section>
+
+      <section id="oop" class="panel">
+        <h2>🏛️ OOP Mastery — The Heart of Java</h2>
+        <p class="muted">Java is purely object-oriented — everything (except primitives) is an object. OOP models
+          real-world entities for modularity and reuse.</p>
+
+        <h3 id="classes-objects">1. Classes = Blueprint, Objects = Real Things</h3>
+        <p class="muted">Classes define structure/behavior; objects are instances with state.</p>
+        <pre class="code" id="code-dog">
+class Dog {
+    String name;
+    int age;
+    
+    void bark() {
+        System.out.println(name + " says Woof!");
+    }
+}
+
+Dog myDog = new Dog();  // Object created on heap
+myDog.name = "Buddy";
+myDog.bark();
+<button class="copy" onclick="copyCode('code-dog')">Copy</button>
+      </pre>
+
+        <h3 id="encapsulation">2. Encapsulation — Hide Internal Details</h3>
+        <p class="muted">Bundle data + methods; use access modifiers (private, protected, public). Getters/setters
+          control access.</p>
+        <p class="muted">Analogy: Car engine — you drive (public methods), but don't tinker internals (private fields).
+        </p>
+
+        <h3 id="inheritance">3. Inheritance — Reuse & Extend</h3>
+        <p class="muted"><code>extends</code> Keyword: Child class inherits parent's fields/methods. Single inheritance
+          only; use interfaces for multiple.</p>
+        <p class="muted"><code>super()</code> calls parent constructor. Override with @Override annotation.</p>
+        <p class="muted">Analogy: Animal → Dog extends Animal (barks + general behaviors).</p>
+
+        <h3 id="polymorphism">4. Polymorphism — Many Forms</h3>
+        <p class="muted">Same interface, different implementations. Compile-time (overloading), runtime (overriding).
+        </p>
+        <p class="muted">Upcasting: Animal a = new Dog(); — treat child as parent.</p>
+        <p class="muted">Analogy: "Play" method — Cat plays with yarn, Dog with ball (same call, different action).</p>
+
+        <h3 id="abstraction">5. Abstraction — Hide Complexity</h3>
+        <p class="muted">Abstract classes (partial impl.) + Interfaces (contracts, default/static methods since Java 8).
+        </p>
+        <pre class="code">
+interface Flyable {
+    void fly();  // Abstract method
+    default void land() { System.out.println("Landing..."); }  // Java 8+
+}
+<button class="copy" onclick="copyCode('code-abstraction')">Copy</button>
+      </pre>
+        <p class="muted">Analogy: Remote control — buttons (methods), no wiring details.</p>
+      </section>
+
+      <section id="memory" class="panel">
+        <h2>🧠 Memory Model: Stack vs Heap</h2>
+        <p class="muted">
+          <strong>Stack</strong>: LIFO for method frames, locals, primitives (auto-cleaned on method exit).<br>
+          <strong>Heap</strong>: Dynamic for objects/arrays (GC-managed, longer-lived).<br>
+          <strong>Method Area</strong>: Class metadata, statics, constants.
+        </p>
+        <p class="muted">Analogy: Stack = desk (temporary notes), Heap = filing cabinet (permanent docs).</p>
+      </section>
+
+      <section id="references" class="panel">
+        <h2>📡 Reference Variables — You're Holding a Remote Control</h2>
+        <p class="muted">Variables hold references (addresses), not objects. Pass-by-value for primitives;
+          pass-by-reference illusion for objects.</p>
+        <pre class="code">
+Dog d1 = new Dog();
+Dog d2 = d1;  // d2 references same object
+d2.name = "Rex";  // Changes d1 too!
+d1 = null;  // d1 remote broken; object lives until no refs
+<button class="copy" onclick="copyCode('code-ref')">Copy</button>
+      </pre>
+        <p class="muted">NullPointerException: Using null reference (dangling remote).</p>
+      </section>
+
+      <section id="strings" class="panel">
+        <h2>🔤 Strings — Immutable & String Pool</h2>
+        <p class="muted">Strings are immutable (security, hashing). Changes create new objects.</p>
+        <pre class="code">
+String s1 = "hello";  // Pool
+String s2 = "hello";  // Same reference
+String s3 = new String("hello");  // New heap object
+s1 == s2;  // true (pool)
+s1 == s3;  // false
+s1.equals(s3);  // true (content)
+<button class="copy" onclick="copyCode('code-string')">Copy</button>
+      </pre>
+        <p class="muted">Use StringBuilder/StringBuffer for mutable strings (Buffer is thread-safe).</p>
+        <p class="muted">Analogy: String = engraved stone tablet; editing = new tablet.</p>
+      </section>
+
+      <section id="control" class="panel">
+        <h2>🧱 Control Flow & Loops</h2>
+        <p class="muted">Direct program execution path.</p>
+        <ul class="muted bullets">
+          <li><strong>Conditionals:</strong> if/else, switch (enhanced in Java 14+ for expressions).</li>
+          <li><strong>Loops:</strong> for (init; cond; incr), enhanced for (foreach), while/do-while.</li>
+          <li><strong>Break/Continue:</strong> Exit/alter loops.</li>
+        </ul>
+        <p class="muted">Analogy: Conditionals = road forks; Loops = treadmills.</p>
+        <pre class="code">
+for (int i : Arrays.asList(1,2,3)) {  // Enhanced for
+    System.out.println(i);
+}
+<button class="copy" onclick="copyCode('code-loop')">Copy</button>
+      </pre>
+      </section>
+
+      <section id="arrays" class="panel">
+        <h2>🔢 Arrays & Their Limitations</h2>
+        <p class="muted">Fixed-size, contiguous memory. Declare: int[] arr = new int[5];</p>
+        <ul class="muted bullets">
+          <li>Access O(1), but insert/delete O(n) (shifting).</li>
+          <li>Multi-dimensional: int[][] matrix = new int[3][3];</li>
+          <li>Limitations: No resize, no type safety pre-generics.</li>
+        </ul>
+        <p class="muted">Analogy: Array = fixed parking lot spots — can't add more without rebuilding.</p>
+      </section>
+
+      <section id="collections" class="panel">
+        <h2>🚀 Collections Framework — DSA Superpower</h2>
+        <p class="muted">java.util.Collection — dynamic, generic containers. Hierarchy: Collection (List/Set) vs Map.
+        </p>
+        <p class="muted">Fail-fast iterators (ConcurrentModificationException) vs fail-safe (CopyOnWriteArrayList).</p>
+
+        <h3 id="list">List → Ordered, Allows Duplicates</h3>
+        <ul class="muted bullets">
+          <li><strong>ArrayList</strong>: Resizable array, O(1) get, O(n) insert. Use for random access.</li>
+          <li><strong>LinkedList</strong>: Doubly-linked, O(1) insert/delete at ends, O(n) access. Implements Deque.
+          </li>
+        </ul>
+
+        <h3 id="set">Set → Unique Elements</h3>
+        <ul class="muted bullets">
+          <li><strong>HashSet</strong>: Hash table, O(1) avg, unordered.</li>
+          <li><strong>TreeSet</strong>: Red-black tree, O(log n), sorted (natural or Comparator).</li>
+        </ul>
+
+        <h3 id="map">Map → Key-Value Storage</h3>
+        <ul class="muted bullets">
+          <li><strong>HashMap</strong>: O(1) avg, allows null key/value, not thread-safe.</li>
+          <li><strong>TreeMap</strong>: Sorted keys, O(log n).</li>
+          <li><strong>ConcurrentHashMap</strong>: Thread-safe, segmented locking.</li>
+        </ul>
+
+        <h3 id="queue">Queue & PriorityQueue</h3>
+        <p class="muted">FIFO: LinkedList as Queue. PriorityQueue: Min/max heap, O(log n) offer/poll.</p>
+        <p class="muted">Analogy: Collections = smart toolbox — pick tool for job (speed vs order).</p>
+      </section>
+
+      <section id="dsa-java" class="panel">
+        <h2>🎯 DSA-Related Java Concepts: What to Learn to Execute DSA Efficiently</h2>
+        <p class="muted">Java's strength in DSA lies in its robust standard library and performance features. To execute
+          DSA problems like a pro (e.g., on LeetCode, HackerRank), master these key concepts:</p>
+        <ul class="muted bullets">
+          <li><strong>Core Data Structures:</strong> Arrays (base for everything), Collections (ArrayList for dynamic
+            arrays, HashMap for O(1) lookups, PriorityQueue for heaps). Why? 80% of DSA uses these—know time
+            complexities (e.g., HashMap.get() = O(1) avg).</li>
+          <li><strong>Generics & Type Safety:</strong> Use &lt;Integer&gt; for clean, error-free code. Essential for
+            avoiding casts in sorted lists or maps.</li>
+          <li><strong>Comparators & Sorting:</strong> Implement Comparator for custom sorts (e.g., sort by frequency).
+            Collections.sort() is stable and O(n log n).</li>
+          <li><strong>Streams API:</strong> For elegant filtering/mapping (e.g., stream().filter().collect()). Parallel
+            streams for speed on multi-core.</li>
+          <li><strong>Recursion & Backtracking:</strong> Java's stack handles recursion well (up to ~10k depth). Use for
+            trees, graphs, permutations.</li>
+          <li><strong>Bit Manipulation:</strong> Use int/long for bits (&, |, ^, <<). Crucial for space-optimized
+              problems.</li>
+          <li><strong>Custom Classes for Graphs/Trees:</strong> Define Node/Edge classes with lists for adjacency. OOP
+            makes complex structures manageable.</li>
+          <li><strong>Input/Output Optimization:</strong> FastScanner or BufferedReader for large inputs in contests.
+          </li>
+          <li><strong>Interview Tip:</strong> Always analyze Big O; explain why ArrayList over LinkedList (random access
+            vs inserts).</li>
+        </ul>
+        <p class="muted">Analogy: DSA in Java = Swiss Army knife—Collections are the blades; learn to switch tools
+          mid-problem for optimal solutions.</p>
+
+        <h3>Expanded Examples</h3>
+
+        <h4>1. Graph Adjacency List (BFS/DFS)</h4>
+        <pre class="code" id="code-dsa-graph">
+import java.util.*;
+
+class Graph {
+    List<List<Integer>> adj = new ArrayList<>();
+    Graph(int v) {
+        for (int i = 0; i < v; i++) adj.add(new ArrayList<>());
+    }
+    void addEdge(int u, int v) { adj.get(u).add(v); }
+}
+
+// BFS using Queue
+public void bfs(int start) {
+    boolean[] visited = new boolean[adj.size()];
+    Queue<Integer> q = new LinkedList<>();
+    q.offer(start);
+    visited[start] = true;
+    while (!q.isEmpty()) {
+        int u = q.poll();
+        System.out.print(u + " ");
+        for (int v : adj.get(u)) {
+            if (!visited[v]) {
+                visited[v] = true;
+                q.offer(v);
+            }
+        }
+    }
+}
+<button class="copy" onclick="copyCode('code-dsa-graph')">Copy</button>
+      </pre>
+
+        <h4>2. Binary Tree Node (Traversal)</h4>
+        <pre class="code" id="code-dsa-tree">
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int val) { this.val = val; }
+}
+
+// Inorder Traversal (Recursive)
+public void inorder(TreeNode root) {
+    if (root == null) return;
+    inorder(root.left);
+    System.out.print(root.val + " ");
+    inorder(root.right);
+}
+
+// Iterative using Stack
+public void inorderIterative(TreeNode root) {
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode curr = root;
+    while (curr != null || !stack.isEmpty()) {
+        while (curr != null) {
+            stack.push(curr);
+            curr = curr.left;
+        }
+        curr = stack.pop();
+        System.out.print(curr.val + " ");
+        curr = curr.right;
+    }
+}
+<button class="copy" onclick="copyCode('code-dsa-tree')">Copy</button>
+      </pre>
+
+        <h4>3. Heap (Min-Heap with PriorityQueue)</h4>
+        <pre class="code" id="code-dsa-heap">
+import java.util.*;
+
+public class MinHeapExample {
+    public static void main(String[] args) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        minHeap.offer(5); minHeap.offer(2); minHeap.offer(8); minHeap.offer(1);
+        while (!minHeap.isEmpty()) {
+            System.out.print(minHeap.poll() + " ");  // 1 2 5 8
+        }
+    }
+}
+
+// Kth Largest using MaxHeap
+PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+for (int num : arr) {
+    maxHeap.offer(num);
+    if (maxHeap.size() > k) maxHeap.poll();
+}
+int kthLargest = maxHeap.peek();
+<button class="copy" onclick="copyCode('code-dsa-heap')">Copy</button>
+      </pre>
+
+        <h4>4. Union-Find (Disjoint Set Union - DSU)</h4>
+        <pre class="code" id="code-dsa-dsu">
+class UnionFind {
+    int[] parent, rank;
+    UnionFind(int n) {
+        parent = new int[n];
+        rank = new int[n];
+        for (int i = 0; i < n; i++) parent[i] = i;
+    }
+    int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]);  // Path compression
+        return parent[x];
+    }
+    boolean union(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) return false;
+        if (rank[px] < rank[py]) {
+            parent[px] = py;
+        } else {
+            parent[py] = px;
+            if (rank[px] == rank[py]) rank[px]++;
+        }
+        return true;
+    }
+}
+<button class="copy" onclick="copyCode('code-dsa-dsu')">Copy</button>
+      </pre>
+
+        <h4>5. Sliding Window (Maximum in Window)</h4>
+        <pre class="code" id="code-dsa-sliding">
+import java.util.*;
+
+public List<Integer> maxSlidingWindow(int[] nums, int k) {
+    List<Integer> result = new ArrayList<>();
+    Deque<Integer> dq = new ArrayDeque<>();  // Stores indices
+    for (int i = 0; i < nums.length; i++) {
+        // Remove out-of-window
+        if (!dq.isEmpty() && dq.peek() == i - k) dq.poll();
+        // Remove smaller than current
+        while (!dq.isEmpty() && nums[dq.peekLast()] < nums[i]) dq.pollLast();
+        dq.offer(i);
+        if (i >= k - 1) result.add(nums[dq.peek()]);
+    }
+    return result;
+}
+<button class="copy" onclick="copyCode('code-dsa-sliding')">Copy</button>
+      </pre>
+
+        <h4>6. Bit Manipulation (Single Number)</h4>
+        <pre class="code" id="code-dsa-bit">
+public int singleNumber(int[] nums) {
+    int result = 0;
+    for (int num : nums) {
+        result ^= num;  // XOR: same cancel, unique remains
+    }
+    return result;
+}
+
+// Count Set Bits
+public int hammingWeight(int n) {
+    int count = 0;
+    while (n != 0) {
+        count += n & 1;  // Rightmost bit
+        n >>>= 1;  // Unsigned right shift
+    }
+    return count;
+}
+<button class="copy" onclick="copyCode('code-dsa-bit')">Copy</button>
+      </pre>
+
+        <h4>7. Backtracking (Subsets)</h4>
+        <pre class="code" id="code-dsa-backtrack">
+import java.util.*;
+
+public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> result = new ArrayList<>();
+    backtrack(result, new ArrayList<>(), nums, 0);
+    return result;
+}
+
+private void backtrack(List<List<Integer>> result, List<Integer> temp, int[] nums, int start) {
+    result.add(new ArrayList<>(temp));
+    for (int i = start; i < nums.length; i++) {
+        temp.add(nums[i]);
+        backtrack(result, temp, nums, i + 1);
+        temp.remove(temp.size() - 1);  // Backtrack
+    }
+}
+<button class="copy" onclick="copyCode('code-dsa-backtrack')">Copy</button>
+      </pre>
+
+        <p class="muted">Practice: Implement these in LeetCode problems (e.g., Graph: 133 Clone Graph, Tree: 94 Binary
+          Tree Inorder, Heap: 215 Kth Largest).</p>
+      </section>
+
+      <section id="generics" class="panel">
+        <h2>🔒 Generics — Compile-Time Type Safety</h2>
+        <p class="muted">Type parameters &lt;T&gt; prevent runtime errors. Wildcards: ? extends T (read), ? super T
+          (write).</p>
+        <pre class="code">
+List<String> names = new ArrayList<>();  // Type-safe
+names.add("Alice");  // No cast needed
+<button class="copy" onclick="copyCode('code-generic')">Copy</button>
+      </pre>
+        <p class="muted">Erasure: Generics compile to raw types (no runtime generics).</p>
+      </section>
+
+      <section id="comparable" class="panel">
+        <h2>⚖️ Comparable vs Comparator</h2>
+        <p class="muted">
+          <strong>Comparable&lt;T&gt;</strong>: Natural order, implement compareTo(T o).<br>
+          <strong>Comparator&lt;T&gt;</strong>: External, compare(T o1, T o2) — flexible sorting.<br>
+          Use in TreeSet, Collections.sort(), Stream.sorted().
+        </p>
+        <p class="muted">Analogy: Comparable = built-in ruler; Comparator = custom measuring tape.</p>
+      </section>
+
+      <section id="exceptions" class="panel">
+        <h2>🛡️ Exception Handling (Checked vs Unchecked)</h2>
+        <p class="muted">Exceptions = runtime errors. Checked (compile-time: IOException) vs Unchecked (runtime:
+          NullPointerException).</p>
+        <pre class="code">
+try {
+    int x = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("Error: " + e.getMessage());
+} finally {
+    System.out.println("Cleanup");  // Always runs
+}
+<button class="copy" onclick="copyCode('code-exception')">Copy</button>
+      </pre>
+        <p class="muted">Custom: extend Exception. Analogy: Exceptions = safety airbags — catch crashes gracefully.</p>
+      </section>
+
+      <section id="io" class="panel">
+        <h2>📁 File I/O & Streams</h2>
+        <p class="muted">java.io + java.nio. Byte streams (InputStream/OutputStream) vs Character (Reader/Writer).</p>
+        <ul class="muted bullets">
+          <li>BufferedReader for efficient reading.</li>
+          <li>Files class (Java 7+): Paths, readAllLines.</li>
+          <li>NIO: Channels, Buffers for non-blocking I/O.</li>
+        </ul>
+        <p class="muted">Analogy: Streams = pipelines — byte = water drops, char = labeled bottles.</p>
+      </section>
+
+      <section id="lambdas" class="panel">
+        <h2>⚡ Lambdas & Streams — Modern Java (Java 8+)</h2>
+        <p class="muted">Functional interfaces (@FunctionalInterface), lambdas (params -> body), method refs (::).</p>
+        <p class="muted">Streams: Lazy, parallel processing. Intermediate (filter/map), terminal (collect/reduce).</p>
+        <pre class="code" id="code-stream">
+import java.util.*;
+import java.util.stream.Collectors;
+
+List<Integer> nums = Arrays.asList(3,1,4,1,5,9);
+List<Integer> result = nums.stream()
+    .filter(n -> n % 2 == 1)
+    .map(n -> n * n)
+    .sorted(Comparator.reverseOrder())
+    .collect(Collectors.toList());
+// → [81, 25, 9, 1, 1]
+<button class="copy" onclick="copyCode('code-stream')">Copy</button>
+      </pre>
+        <p class="muted">Optional&lt;T&gt;: Avoid nulls. Analogy: Streams = assembly line — filter defective parts.</p>
+      </section>
+
+      <section id="threads" class="panel">
+        <h2>🚦 Multithreading & Concurrency</h2>
+        <p class="muted">Threads: Lightweight processes. Extend Thread or implement Runnable.</p>
+        <ul class="muted bullets">
+          <li><strong>Synchronization:</strong> synchronized keyword, locks (ReentrantLock).</li>
+          <li><strong>Executors:</strong> ThreadPoolExecutor for managed pools.</li>
+          <li><strong>Atomic:</strong> AtomicInteger for lock-free ops.</li>
+          <li><strong>Concurrency Utils:</strong> ConcurrentHashMap, BlockingQueue, ForkJoinPool.</li>
+        </ul>
+        <p class="muted">Java 21+: Virtual threads (lightweight). Analogy: Threads = highway lanes — avoid deadlocks
+          (traffic jams).</p>
+      </section>
+
+      <section id="gc" class="panel">
+        <h2>🗑️ Garbage Collection — Automatic Memory Management</h2>
+        <p class="muted">GC frees unreferenced objects. Generations: Young (Eden/Survivor), Old.</p>
+        <ul class="muted bullets">
+          <li>Collectors: G1 (low-pause), ZGC (ultra-low latency).</li>
+          <li>Mark-and-Sweep: Identify live objects, reclaim dead.</li>
+        </ul>
+        <p class="muted">Tune with -Xms/-Xmx. Analogy: GC = roomba vacuum — cleans forgotten trash.</p>
+      </section>
+
+      <section id="best" class="panel">
+        <h2>✅ Best Practices & Common Interview Traps</h2>
+        <ul class="muted bullets">
+          <li>Use StringBuilder for loops (avoids quadratic time).</li>
+          <li>Override equals() + hashCode() for custom objects (contracts).</li>
+          <li>Prefer immutable objects (thread-safety, caching).</li>
+          <li>Avoid public fields; use private + getters/setters.</li>
+          <li>Handle exceptions specifically; don't swallow.</li>
+          <li>Use var (Java 10+) for locals; enhances readability.</li>
+          <li>Records (Java 14+): Immutable data classes.</li>
+          <li>Sealed classes (Java 17+): Restricted inheritance.</li>
+          <li>Trap: String == vs .equals(); Integer caching (-128 to 127).</li>
+        </ul>
+      </section>
+
+      <section id="summary" class="panel">
+        <h2>🏁 Final Summary — You Are Now Java-Proficient</h2>
+        <p class="muted">Mastered:</p>
+        <ul class="bullets">
+          <li>Platform fundamentals (JVM ecosystem)</li>
+          <li>OOP pillars with deep analogies</li>
+          <li>Memory, references, strings pitfalls</li>
+          <li>Control structures & arrays basics</li>
+          <li>Collections: DSA enablers (time complexities)</li>
+          <li>Generics, comparators for safety/sorting</li>
+          <li>Exceptions, I/O for robust apps</li>
+          <li>Lambdas/Streams: Functional power</li>
+          <li>Threads/GC: Concurrent, efficient code</li>
+          <li>Practices: Interview-ready clean code</li>
+        </ul>
+        <p class="muted"><strong>Next: Apply to DSA problems, build projects, contribute to open-source.</strong></p>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal (optional) -->
+  <div id="modal" class="modal" style="display:none;">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+      <pre id="modal-code" class="code"></pre>
+    </div>
+ 
+  </div>
+<footer class="footer">
+        <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+      </footer>
+      
+  <script src="../assets/scripts.js"></script>
+  <script>
+    // Search Functionality
+    function searchContent() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const panels = document.querySelectorAll('.panel');
+      const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+      let visibleCount = 0;
+
+      panels.forEach(panel => {
+        const text = panel.textContent.toLowerCase();
+        const isVisible = text.includes(query);
+        panel.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+
+      // Highlight matching TOC items
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target && target.style.display !== 'none') {
+          link.style.background = 'rgba(0, 255, 136, 0.2)';
+          link.style.fontWeight = 'bold';
+        } else {
+          link.style.background = '';
+          link.style.fontWeight = '';
+        }
+      });
+
+      // Show message if no results
+      const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+      searchMsg.id = 'searchMsg';
+      searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+      if (query && visibleCount === 0) {
+        searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+        searchMsg.style.display = 'block';
+        document.body.appendChild(searchMsg);
+      } else if (searchMsg.parentNode) {
+        searchMsg.parentNode.removeChild(searchMsg);
+      }
+
+      // Scroll to first match if query not empty
+      if (query && visibleCount > 0) {
+        const firstVisible = document.querySelector('.panel[style*="block"]');
+        if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Clear search on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.getElementById('searchInput').value = '';
+        searchContent();
+        document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+        document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+      }
+    });
+  </script>
+</body>
+
+</html>

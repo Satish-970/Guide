@@ -1,0 +1,299 @@
+/* =============================
+   assets/styles.css
+   Centralized Dark Cyberpunk Theme for Java Guide & DSA Tracker
+   Green/Blue Accents | Mobile-Responsive | 2025 Edition
+   ============================= */
+
+/* Base Reset & Typography */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #000000; 
+  min-height: 100vh; 
+  color: #e0e0e0; 
+  line-height: 1.6;
+}
+
+/* Layout & Containers */
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  background: #0a0a0a;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+  overflow: hidden;
+  border: 1px solid #1a1a1a;
+}
+.layout { display: flex; flex-direction: row; }
+.header {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+  color: #00ff88;
+  padding: 30px;
+  text-align: center;
+  border-bottom: 2px solid #00ff88;}
+.header h1 { 
+  font-size: 2.5em; 
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+.header .subtitle { 
+  font-size: 1.1em; 
+  color: #a0a0a0;
+}
+.brand { display: flex; align-items: center; gap: 15px; justify-content: center; }
+.logo { font-size: 2em; }
+.top-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+.btn, .btn.ghost { 
+  padding: 8px 16px; 
+  border: 2px solid #00ff88; 
+  border-radius: 6px; 
+  text-decoration: none; 
+  color: #00ff88; 
+  font-weight: 600; 
+  transition: all 0.3s;
+  background: transparent;
+}
+.btn:hover, .btn.ghost:hover { 
+  background: #00ff88; 
+  color: #000; 
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+}
+
+/* Sidebar - W3Schools Style: Always Visible, Fixed Left */
+.sidebar-toggle { display: none; } /* Hide toggle since always visible */
+.sidebar { 
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  background: #111111;
+  padding: 20px 0;
+  border-right: 1px solid #1a1a1a;
+  overflow-y: auto;
+  z-index: 1000;
+  transform: none; /* Always visible, no transform */
+}
+.toc-title { 
+  color: #00ff88; 
+  margin: 0 20px 15px; 
+  font-weight: bold; 
+  text-shadow: 0 0 10px rgba(0,255,136,0.3); 
+  font-size: 1.2em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.search-container {
+  margin: 0 20px 20px;
+  position: relative;
+}
+#searchInput {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  background: #1a1a1a;
+  border: 1px solid #00ff88;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+#searchInput:focus {
+  outline: none;
+  border-color: #00ccff;
+  box-shadow: 0 0 5px rgba(0, 204, 255, 0.3);
+}
+#searchInput::placeholder { color: #808080; }
+.toc { list-style: none; margin: 0; padding: 0; }
+.toc li { margin: 0; }
+.toc a { 
+  color: #a0a0a0; 
+  text-decoration: none; 
+  display: block; 
+  padding: 12px 20px; 
+  border-left: 3px solid transparent;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+.toc a:hover, .toc a.active { 
+  color: #00ff88; 
+  background: rgba(0, 255, 136, 0.1); 
+  border-left-color: #00ff88;
+}
+.subtoc { 
+  margin-left: 0; 
+  font-size: 0.9em; 
+  list-style: none; 
+  background: rgba(0, 255, 136, 0.05);
+  border-left: 1px solid #1a1a1a;
+}
+.subtoc a { padding-left: 30px; }
+.sidebar-footer { 
+  margin-top: auto; 
+  padding: 20px; 
+  color: #808080; 
+  font-size: 12px; 
+  border-top: 1px solid #1a1a1a;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Content Panels */
+.content { 
+  flex: 1; 
+  padding: 20px; 
+  overflow-y: auto; 
+  background: #0a0a0a; 
+  margin-left: 280px; /* Offset for fixed sidebar */
+  min-height: 100vh;
+}
+.panel { 
+  margin: 2rem 0; 
+  padding: 1.5rem; 
+  background: #111111; 
+  border-radius: 12px; 
+  border: 1px solid #1a1a1a; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+h2 { color: #00ff88; border-bottom: 2px solid #00ff88; padding-bottom: 8px; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
+h3 { color: #00ccff; margin-top: 1.8rem; text-shadow: 0 0 5px rgba(0,204,255,0.3); }
+.muted { color: #a0a0a0; }
+.bullets { list-style: none; }
+.bullets li { margin: 0.5rem 0; padding-left: 1rem; position: relative; }
+.bullets li:before { content: '•'; color: #00ff88; font-weight: bold; position: absolute; left: 0; }
+
+/* Code Blocks */
+.code { 
+  background: #1a1a1a; 
+  color: #e2e8f0; 
+  padding: 1rem; 
+  border-radius: 8px; 
+  overflow-x: auto; 
+  position: relative; 
+  border: 1px solid #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+.copy { 
+  position: absolute; 
+  top: 8px; 
+  right: 8px; 
+  background: #00ff88; 
+  color: #000;
+  border: none; 
+  padding: 6px 10px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  font-size: 12px;
+  transition: all 0.3s;
+}
+.copy:hover { background: #00ccff; transform: scale(1.05); }
+
+/* Tracker Specific Styles (Conditional for java.html) */
+.info-box, .data-info, .heatmap-container, .stats, .progress-bar, .controls, .table-container, .footer {
+  /* These are hidden or not used in guide; defined for tracker */
+  display: none; /* Override in tracker pages via JS or specific class */
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-inner {
+  background: #1a1a1a;
+  color: #e2e8f0;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  position: relative;
+  border: 1px solid #00ff88;
+}
+.modal-close {
+  position: absolute;
+  top: 10px; right: 15px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.modal-close:hover { background: #ef4444; transform: scale(1.1); }
+
+/* Mobile Responsiveness - Sidebar Overlays on Mobile */
+@media (max-width: 968px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: #00ff88;
+    color: #000;
+    border: none;
+    padding: 10px 14px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,255,136,0.3);
+  }
+  .content, .header {
+    margin-left: 0 !important;
+  }
+  .content {
+    padding: 10px;
+  }
+  .header {
+    padding: 20px;
+  }
+  .panel {
+    margin: 1rem 0;
+    padding: 1rem;
+  }
+  /* Overlay backdrop for mobile sidebar */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+  }
+  .sidebar.open + .sidebar-backdrop {
+    display: block;
+  }
+}
+
+/* Tracker Overrides (for dsa.html/java-tracker.html if separate) */
+body.tracker .content { display: none; }
+body.tracker .container { display: block; margin-left: 0 !important; }
+/* Add more as needed for tracker elements in CSS */
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 10px 20px;
+  color:darkgoldenrod
+}

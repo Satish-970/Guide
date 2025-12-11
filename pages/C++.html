@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>C++ — Complete Conceptual Guide (Beginner to Advanced + DSA Ready)</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">💠</div>
+      <div>
+        <h1>C++ — Complete Conceptual Guide</h1>
+        <div class="subtitle">From Zero to DSA Master • Modern C++ (11/17/20) • Interview-Ready • 2025 Edition</div>
+      </div>
+    </div>
+    <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="C++.html">C++ Guide</a>
+      <a class="btn ghost" href="dsa_tracker.html">DSA Tracker</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+```
+<!-- SIDEBAR - Always Visible -->
+<aside class="sidebar">
+  <div class="toc-title">Table of Contents</div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+  </div>
+
+  <ul class="toc" id="tocList">
+    <li><a href="#intro">Introduction to C++</a></li>
+    <li><a href="#toolchain">Compiler Toolchain & Build Process</a></li>
+    <li><a href="#datatypes">Data Types, Type System & Literals</a></li>
+    <li><a href="#memory">Memory Model: Stack, Heap, Static</a></li>
+    <li><a href="#refs-ptrs">References vs Pointers</a></li>
+    <li><a href="#oop">OOP in C++</a>
+      <ul class="subtoc">
+        <li><a href="#classes-objects">Classes & Objects</a></li>
+        <li><a href="#constructors">Constructors & Destructors</a></li>
+        <li><a href="#raii">RAII & Resource Management</a></li>
+        <li><a href="#copy-move">Copy vs Move Semantics</a></li>
+      </ul>
+    </li>
+    <li><a href="#templates">Templates — Generics & Metaprogramming</a></li>
+    <li><a href="#stl">STL: Containers, Iterators, Algorithms</a></li>
+    <li><a href="#algo">Standard Algorithms & Complexity</a></li>
+    <li><a href="#dsa-cpp">DSA-Focused C++ Techniques</a></li>
+    <li><a href="#io">Fast I/O & Competitive Tips</a></li>
+    <li><a href="#concurrency">Multithreading & Concurrency</a></li>
+    <li><a href="#modern">Modern C++ (11/14/17/20+) Features</a></li>
+    <li><a href="#debug">Debugging, UB & Undefined Behaviour</a></li>
+    <li><a href="#best">Best Practices & Common Pitfalls</a></li>
+    <li><a href="#examples">Expanded DSA Examples (C++)</a></li>
+    <li><a href="#summary">Final Summary</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="content">
+
+  <section id="intro" class="panel">
+    <h2>💡 Introduction — Why C++ Matters in 2025</h2>
+    <p class="muted">
+      C++ is both a systems language and a high-performance toolbox. It powers operating systems, game engines,
+      real-time systems, trading platforms, and competitive programming. C++ gives you precise control over memory,
+      performance, and abstraction — when used carefully it is incredibly powerful.
+    </p>
+    <p class="muted">
+      This guide is modern-C++ focused (C++11/14/17/20). Learn not only <strong>how</strong> to write C++ but
+      <strong>why</strong> features exist, how to avoid UB, and how to write DSA-friendly, contest-ready code.
+    </p>
+  </section>
+
+  <section id="toolchain" class="panel">
+    <h2>🛠️ Compiler Toolchain & Build Process</h2>
+    <p class="muted">C++ compiles to native machine code via a toolchain:</p>
+    <ul class="muted bullets">
+      <li><strong>Preprocessor:</strong> Handles #include, macros, conditional compilation.</li>
+      <li><strong>Compiler (g++, clang++ MSVC):</strong> Translates translation units (.cpp) → object files (.o).</li>
+      <li><strong>Linker:</strong> Combines object files and libraries into an executable or library.</li>
+      <li><strong>Header files (.h/.hpp):</strong> Declarations. Templates and inline functions must be visible at compile time.</li>
+    </ul>
+    <p class="muted"><em>Common commands:</em> <code>g++ -std=c++17 -O2 -Wall -Wextra main.cpp -o prog</code></p>
+    <p class="muted">Build systems: Make, CMake (recommended), Meson. For large projects always use CMake for portability.</p>
+  </section>
+
+  <section id="datatypes" class="panel">
+    <h2>📦 Data Types, Type System & Literals</h2>
+    <p class="muted">C++ is statically typed and offers built-in types, user types, and strong compile-time checks.</p>
+    <ul class="muted bullets">
+      <li><strong>Fundamental types:</strong> char, signed/unsigned integer types (short, int, long, long long),
+        float, double, bool.</li>
+      <li><strong>Fixed-width:</strong> <code>int32_t</code>, <code>uint64_t</code> from &lt;cstdint&gt; for portability.</li>
+      <li><strong>auto:</strong> Type deduction for local variables (C++11). Use to reduce verbosity.</li>
+      <li><strong>decltype:</strong> Get type of expression without evaluating it.</li>
+      <li><strong>String literals:</strong> "text", raw R"(multi\nline)".</li>
+    </ul>
+    <p class="muted">Analogy: auto is the compiler filling in blanks like a helpful assistant — but don't abuse it where types matter.</p>
+  </section>
+
+  <section id="memory" class="panel">
+    <h2>🧠 Memory Model: Stack, Heap, Static</h2>
+    <p class="muted">
+      <strong>Stack:</strong> Local variables, function frames — fast, limited lifetime.<br>
+      <strong>Heap:</strong> Dynamically allocated via <code>new</code>/<code>delete</code> or smart pointers — manual lifetime unless RAII used.<br>
+      <strong>Static/Global:</strong> Program lifetime memory, initialized before main.
+    </p>
+    <p class="muted">Understand lifetime and ownership to avoid leaks, dangling pointers, and UB.</p>
+  </section>
+
+  <section id="refs-ptrs" class="panel">
+    <h2>🧭 References vs Pointers</h2>
+    <p class="muted">
+      <strong>Reference (&):</strong> Alias to an object, must be initialized, cannot be reseated.<br>
+      <strong>Pointer (*):</strong> Holds address, can be null, can be reseated, arithmetic possible.
+    </p>
+    <pre class="code">
+```
+
+int x = 10;
+int &r = x; // reference
+int *p = &x; // pointer
+*p = 20;  // modifies x via pointer
+r = 30;   // modifies x via reference <button class="copy" onclick="copyCode('code-refs')">Copy</button> </pre> <p class="muted">Use references for guaranteed aliasing, pointers when ownership or optional presence is needed. Prefer smart pointers for ownership.</p> </section>
+
+```
+  <section id="oop" class="panel">
+    <h2>🏛️ OOP in C++</h2>
+    <p class="muted">C++ supports OOP but also multi-paradigm features. Use classes for encapsulation and RAII.</p>
+
+    <h3 id="classes-objects">1. Classes & Objects</h3>
+    <p class="muted">Access specifiers: public, protected, private. Methods and data members.</p>
+    <pre class="code" id="code-class">
+```
+
+class Dog {
+public:
+std::string name;
+int age;
+void bark() const { std::cout << name << " says Woof!\n"; }
+private:
+int internalId;
+};
+Dog d; <button class="copy" onclick="copyCode('code-class')">Copy</button> </pre>
+
+```
+    <h3 id="constructors">2. Constructors & Destructors</h3>
+    <p class="muted">Constructors initialize objects; destructors release resources. Use member initializer lists.</p>
+    <pre class="code" id="code-ctor">
+```
+
+class Resource {
+public:
+Resource() { handle = acquire(); }
+~Resource() { release(handle); }
+private:
+int handle;
+}; <button class="copy" onclick="copyCode('code-ctor')">Copy</button> </pre>
+
+```
+    <h3 id="raii">3. RAII — Resource Acquisition Is Initialization</h3>
+    <p class="muted">Wrap resources (files, sockets, locks) in objects whose constructor acquires and destructor releases them.</p>
+    <p class="muted">Analogy: A guard that knocks on exit to clean up.</p>
+
+    <h3 id="copy-move">4. Copy & Move Semantics</h3>
+    <p class="muted">Rule of Five / Zero: if you manage resources implement copy/move ctor & assignment or default to smart pointers.</p>
+    <pre class="code" id="code-move">
+```
+
+class Buffer {
+public:
+Buffer(size_t n): n(n), data(new int[n]) {}
+~Buffer(){ delete[] data; }
+
+```
+// Move constructor
+Buffer(Buffer&& other) noexcept : n(other.n), data(other.data) {
+    other.data = nullptr; other.n = 0;
+}
+// Disable copy for speed/safety (or implement deep copy)
+Buffer(const Buffer&) = delete;
+```
+
+private:
+size_t n;
+int *data;
+}; <button class="copy" onclick="copyCode('code-move')">Copy</button> </pre> </section>
+
+```
+  <section id="templates" class="panel">
+    <h2>🔧 Templates — Generics & Metaprogramming</h2>
+    <p class="muted">Templates provide compile-time polymorphism. Use function/class templates and SFINAE, concepts (C++20).</p>
+    <pre class="code" id="code-template">
+```
+
+template <typename T>
+T add(T a, T b) { return a + b; }
+
+template <typename T>
+class Stack {
+std::vector<T> v;
+public:
+void push(const T& x){ v.push_back(x); }
+T pop(){ T x = v.back(); v.pop_back(); return x; }
+}; <button class="copy" onclick="copyCode('code-template')">Copy</button> </pre> <p class="muted">Templates enable high-performance, type-safe abstractions but can produce complex compiler errors — learn to read them.</p> </section>
+
+```
+  <section id="stl" class="panel">
+    <h2>📚 STL: Containers, Iterators, Algorithms</h2>
+    <p class="muted">The Standard Template Library (STL) is the DSA workhorse in C++: vectors, lists, sets, maps, priority_queue, unordered_map, etc.</p>
+
+    <h3>Common Containers</h3>
+    <ul class="muted bullets">
+      <li><strong>std::vector</strong>: Dynamic array — O(1) access, amortized O(1) push_back.</li>
+      <li><strong>std::deque</strong>: Double-ended queue — O(1) push/pop both ends.</li>
+      <li><strong>std::list</strong>: Doubly-linked list — O(1) insert/erase with iterator, poor cache locality.</li>
+      <li><strong>std::set / std::map</strong>: Balanced trees, O(log n).</li>
+      <li><strong>std::unordered_map / unordered_set</strong>: Hash tables, average O(1).</li>
+      <li><strong>std::priority_queue</strong>: Heap wrapper for top-k problems.</li>
+    </ul>
+
+    <h3>Iterators & Range-based for</h3>
+    <pre class="code" id="code-iter">
+```
+
+std::vector<int> v = {1,2,3};
+for (int &x : v) { x *= 2; } // range-based for
+for (auto it = v.begin(); it != v.end(); ++it) { /* *it */ } <button class="copy" onclick="copyCode('code-iter')">Copy</button> </pre> </section>
+
+```
+  <section id="algo" class="panel">
+    <h2>⚙️ Standard Algorithms & Complexity</h2>
+    <p class="muted">Use &lt;algorithm&gt; functions: <code>sort</code>, <code>lower_bound</code>, <code>binary_search</code>, <code>nth_element</code>, <code>accumulate</code>.</p>
+    <pre class="code" id="code-sort">
+```
+
+#include <algorithm>
+#include <vector>
+
+std::vector<int> a = {5,2,9,1};
+std::sort(a.begin(), a.end());          // O(n log n)
+auto it = std::lower_bound(a.begin(), a.end(), 3); // binary search <button class="copy" onclick="copyCode('code-sort')">Copy</button> </pre> <p class="muted">Understand complexity for each container/algorithm: vector random access O(1), map O(log n), unordered_map average O(1).</p> </section>
+
+```
+  <section id="dsa-cpp" class="panel">
+    <h2>🎯 DSA-Focused C++ Techniques</h2>
+    <p class="muted">C++ excels in DSA with concise syntax and fast I/O. Key techniques:</p>
+    <ul class="muted bullets">
+      <li><strong>Use std::vector</strong> for dynamic arrays; reserve capacity with <code>v.reserve(n)</code>.</li>
+      <li><strong>Fast maps:</strong> prefer <code>unordered_map</code> for average O(1) lookups; use custom hash for pair keys.</li>
+      <li><strong>Priority queues:</strong> for k-th problems and event simulation.</li>
+      <li><strong>Bitsets:</strong> <code>std::bitset</code> and bit operations for space-efficient sets.</li>
+      <li><strong>Custom comparators:</strong> lambdas for sort and priority_queue.</li>
+      <li><strong>Fast recursion tips:</strong> increase stack if necessary or rewrite iterative; use tail recursion when possible.</li>
+      <li><strong>Use inline functions and -O2 optimization for contests.</strong></li>
+    </ul>
+    <p class="muted">Analogy: STL is your toolkit — choose the right tool and avoid hammering nails with a wrench.</p>
+  </section>
+
+  <section id="io" class="panel">
+    <h2>⚡ Fast I/O & Competitive Tips</h2>
+    <p class="muted">For large inputs use fast I/O:</p>
+    <pre class="code" id="code-io">
+```
+
+#include <iostream>
+#include <ios>
+#include <vector>
+
+int main() {
+std::ios::sync_with_stdio(false);
+std::cin.tie(nullptr);
+
+```
+int n;
+while (std::cin &gt;&gt; n) { /* read fast */ }
+```
+
+} <button class="copy" onclick="copyCode('code-io')">Copy</button> </pre> <p class="muted">For extreme speed use fread/fwrite or custom buffered readers, but prefer sync_with_stdio(false) + cin.tie(nullptr) for most needs.</p> </section>
+
+```
+  <section id="concurrency" class="panel">
+    <h2>🚦 Multithreading & Concurrency</h2>
+    <p class="muted">C++11 introduced <code>&lt;thread&gt;</code>, mutexes, condition_variable, futures, and async.</p>
+    <ul class="muted bullets">
+      <li><strong>std::thread:</strong> spawn threads.</li>
+      <li><strong>Mutexes & Locks:</strong> std::mutex, std::unique_lock, std::lock_guard.</li>
+      <li><strong>Atomics:</strong> std::atomic for lock-free primitives.</li>
+      <li><strong>Thread pools:</strong> not in std, use libraries or implement one.</li>
+    </ul>
+    <p class="muted">Avoid data races and undefined behaviour; prefer message passing or immutable data when possible.</p>
+  </section>
+
+  <section id="modern" class="panel">
+    <h2>✨ Modern C++ (11 / 14 / 17 / 20+) Features</h2>
+    <ul class="muted bullets">
+      <li><strong>C++11:</strong> auto, range-for, smart pointers (unique_ptr, shared_ptr), move semantics, lambda expressions.</li>
+      <li><strong>C++14:</strong> generic lambdas, improved compile-time features.</li>
+      <li><strong>C++17:</strong> structured bindings, std::optional, std::variant, std::string_view, std::filesystem (partial).</li>
+      <li><strong>C++20:</strong> concepts, ranges, coroutines (library evolving), modules (compiler support growing).</li>
+    </ul>
+    <p class="muted">Use smart pointers, prefer <code>std::unique_ptr</code> for exclusive ownership, and use <code>std::shared_ptr</code> only when shared ownership is required.</p>
+  </section>
+
+  <section id="debug" class="panel">
+    <h2>🔎 Debugging, Undefined Behaviour & Safety</h2>
+    <p class="muted">Undefined behaviour (UB) is your enemy — examples: use-after-free, signed integer overflow, dereferencing null pointers.</p>
+    <ul class="muted bullets">
+      <li>Use sanitizers: <code>-fsanitize=address,undefined,leak,thread</code> with clang/gcc.</li>
+      <li>Use valgrind for memory debugging (Linux).</li>
+      <li>Compile with warnings: <code>-Wall -Wextra -Wshadow -Wconversion</code>.</li>
+    </ul>
+    <p class="muted">When in doubt, minimize UB surface: prefer RAII, avoid raw owning pointers, document invariants.</p>
+  </section>
+
+  <section id="best" class="panel">
+    <h2>✅ Best Practices & Common Pitfalls</h2>
+    <ul class="muted bullets">
+      <li>Prefer <code>std::vector</code> over raw arrays unless you need manual control.</li>
+      <li>Avoid naked new/delete; prefer smart pointers.</li>
+      <li>Be careful with copies — prefer move semantics for expensive resources.</li>
+      <li>Prefer <code>emplace_back</code> when constructing in containers to avoid copies.</li>
+      <li>Don't catch exceptions by value; catch by const reference.</li>
+      <li>Order includes and use forward declarations where possible to reduce compile time.</li>
+      <li>Avoid premature optimization; profile before micro-optimizing.</li>
+    </ul>
+  </section>
+
+  <section id="examples" class="panel">
+    <h2>🧩 Expanded DSA Examples (C++)</h2>
+
+    <h4>1. Graph Adjacency List (BFS/DFS)</h4>
+    <pre class="code" id="code-graph">
+```
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Graph {
+vector<vector<int>> adj;
+Graph(int n): adj(n) {}
+void addEdge(int u,int v){ adj[u].push_back(v); }
+void bfs(int s){
+vector<bool> vis(adj.size());
+queue<int> q;
+vis[s]=true; q.push(s);
+while(!q.empty()){
+int u=q.front(); q.pop();
+cout<<u<<' ';
+for(int v:adj) if(!vis[v]){ vis[v]=true; q.push(v); }
+}
+}
+}; <button class="copy" onclick="copyCode('code-graph')">Copy</button> </pre>
+
+```
+    <h4>2. Binary Tree Traversal (Iterative Inorder)</h4>
+    <pre class="code" id="code-tree">
+```
+
+struct Node { int val; Node *l,*r; Node(int v):val(v),l(nullptr),r(nullptr){} };
+
+vector<int> inorderIterative(Node* root){
+vector<int> res;
+stack<Node*> st; Node* curr = root;
+while(curr || !st.empty()){
+while(curr){ st.push(curr); curr = curr->l; }
+curr = st.top(); st.pop();
+res.push_back(curr->val);
+curr = curr->r;
+}
+return res;
+} <button class="copy" onclick="copyCode('code-tree')">Copy</button> </pre>
+
+```
+    <h4>3. Heap (Min-Heap with priority_queue)</h4>
+    <pre class="code" id="code-heap">
+```
+
+priority_queue<int, vector<int>, greater<int>> minHeap;
+minHeap.push(5); minHeap.push(2); minHeap.push(8);
+while(!minHeap.empty()){ cout << minHeap.top() << ' '; minHeap.pop(); } // 2 5 8 <button class="copy" onclick="copyCode('code-heap')">Copy</button> </pre>
+
+```
+    <h4>4. Union-Find (Disjoint Set)</h4>
+    <pre class="code" id="code-dsu">
+```
+
+struct DSU {
+vector<int> p, r;
+DSU(int n): p(n), r(n,0){ iota(p.begin(), p.end(), 0); }
+int find(int x){ return p[x]==x?x:p=find(p[x]); }
+bool unite(int a,int b){
+a=find(a); b=find(b); if(a==b) return false;
+if(r[a]<r[b]) swap(a,b);
+p[b]=a; if(r[a]==r[b]) r[a]++; return true;
+}
+}; <button class="copy" onclick="copyCode('code-dsu')">Copy</button> </pre>
+
+```
+    <h4>5. Sliding Window Maximum</h4>
+    <pre class="code" id="code-sliding">
+```
+
+vector<int> maxSlidingWindow(vector<int>& nums, int k){
+vector<int> res; deque<int> dq;
+for(int i=0;i<nums.size();++i){
+if(!dq.empty() && dq.front()==i-k) dq.pop_front();
+while(!dq.empty() && nums[dq.back()]<nums[i]) dq.pop_back();
+dq.push_back(i);
+if(i>=k-1) res.push_back(nums[dq.front()]);
+}
+return res;
+} <button class="copy" onclick="copyCode('code-sliding')">Copy</button> </pre>
+
+```
+    <h4>6. Bit Manipulation — Single Number</h4>
+    <pre class="code" id="code-bit">
+```
+
+int singleNumber(vector<int>& nums){
+int x=0; for(int v:nums) x ^= v; return x;
+} <button class="copy" onclick="copyCode('code-bit')">Copy</button> </pre>
+
+```
+    <h4>7. Backtracking — Subsets</h4>
+    <pre class="code" id="code-backtrack">
+```
+
+void backtrack(vector<vector<int>>& res, vector<int>& temp, vector<int>& nums, int start){
+res.push_back(temp);
+for(int i=start;i<nums.size();++i){
+temp.push_back(nums[i]);
+backtrack(res,temp,nums,i+1);
+temp.pop_back();
+}
+}
+vector<vector<int>> subsets(vector<int>& nums){
+vector<vector<int>> res; vector<int> temp;
+backtrack(res,temp,nums,0); return res;
+} <button class="copy" onclick="copyCode('code-backtrack')">Copy</button> </pre>
+
+```
+    <p class="muted">Practice these on platforms like Codeforces, LeetCode, AtCoder. Use C++ for speed and concise STL usage.</p>
+  </section>
+
+  <section id="summary" class="panel">
+    <h2>🏁 Final Summary — C++ Proficiency Checklist</h2>
+    <p class="muted">By mastering these, you'll be ready for systems programming, competitive contests, and real-world C++ development:</p>
+    <ul class="bullets">
+      <li>Compiler toolchain & build systems (CMake)</li>
+      <li>Memory model, pointers, references, ownership</li>
+      <li>RAII, constructors/destructors, Rule of Five/Zero</li>
+      <li>Move semantics & perfect forwarding</li>
+      <li>Templates & STL (containers, iterators, algorithms)</li>
+      <li>Fast I/O and contest heuristics</li>
+      <li>Modern C++ idioms (smart pointers, auto, ranges, concepts)</li>
+      <li>Debugging with sanitizers & UB avoidance</li>
+    </ul>
+    <p class="muted"><strong>Next: Solve DSA problems using the STL; write small projects that use concurrency and low-level I/O; contribute to open-source C++ projects.</strong></p>
+  </section>
+
+</main>
+```
+
+  </div>
+
+  <!-- Modal (code preview) -->
+
+  <div id="modal" class="modal" style="display:none;">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+      <pre id="modal-code" class="code"></pre>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+  </footer>
+
+  <script src="../assets/scripts.js"></script>
+
+  <script>
+    // Search Functionality (same behavior as Java page)
+    function searchContent() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const panels = document.querySelectorAll('.panel');
+      const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+      let visibleCount = 0;
+
+      panels.forEach(panel => {
+        const text = panel.textContent.toLowerCase();
+        const isVisible = text.includes(query);
+        panel.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+
+      // Highlight matching TOC items
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target && target.style.display !== 'none') {
+          link.style.background = 'rgba(0, 255, 136, 0.2)';
+          link.style.fontWeight = 'bold';
+        } else {
+          link.style.background = '';
+          link.style.fontWeight = '';
+        }
+      });
+
+      // Show message if no results
+      const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+      searchMsg.id = 'searchMsg';
+      searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+      if (query && visibleCount === 0) {
+        searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+        searchMsg.style.display = 'block';
+        document.body.appendChild(searchMsg);
+      } else if (searchMsg.parentNode) {
+        searchMsg.parentNode.removeChild(searchMsg);
+      }
+
+      // Scroll to first match if query not empty
+      if (query && visibleCount > 0) {
+        const firstVisible = document.querySelector('.panel[style*="block"]');
+        if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Copy code helper (shows modal for safer copy)
+    function copyCode(id) {
+      const codeEl = document.getElementById(id);
+      if (!codeEl) return;
+      const code = codeEl.textContent;
+      // show modal with code for user to copy manually or use clipboard
+      const modal = document.getElementById('modal');
+      const modalCode = document.getElementById('modal-code');
+      modalCode.textContent = code;
+      modal.style.display = 'block';
+      // attempt clipboard copy (may be blocked on some browsers)
+      navigator.clipboard?.writeText(code).then(() => {
+        // optionally show a small toast (omitted to keep behavior consistent)
+      }).catch(() => {
+        // ignore if copy fails — modal still available for manual copy
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // Clear search on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const input = document.getElementById('searchInput');
+        if (input.value) {
+          input.value = '';
+          searchContent();
+          document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+          document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+        } else {
+          closeModal();
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Go (Golang) — Complete Conceptual Guide (Beginner → Advanced → DSA Ready)</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">🟦</div>
+      <div>
+        <h1>Go (Golang) — Complete Conceptual Guide</h1>
+        <div class="subtitle">Simplicity, Concurrency, Production — Practical & DSA-Ready • 2025 Edition</div>
+      </div>
+    </div>
+    <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="go.html">Go Guide</a>
+      <a class="btn ghost" href="dsa_tracker.html">DSA Tracker</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+```
+<!-- SIDEBAR - Always Visible -->
+<aside class="sidebar">
+  <div class="toc-title">Table of Contents</div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+  </div>
+
+  <ul class="toc" id="tocList">
+    <li><a href="#intro">Introduction — Why Go?</a></li>
+    <li><a href="#toolchain">Toolchain & Modules</a></li>
+    <li><a href="#runtime">Go Runtime: Scheduler, Garbage Collector & Escape Analysis</a></li>
+    <li><a href="#syntax">Syntax Essentials: Variables, Types, Slices, Maps</a></li>
+    <li><a href="#structs">Structs, Methods & Interfaces</a></li>
+    <li><a href="#errors">Error Handling Idioms</a></li>
+    <li><a href="#pointers">Pointers & Memory Safety (no arithmetic)</a></li>
+    <li><a href="#concurrency">Concurrency: Goroutines & Channels</a></li>
+    <li><a href="#patterns">Concurrency Patterns: Worker Pools, Fan-in/Fan-out</a></li>
+    <li><a href="#stdlib">Standard Library Tools & Testing</a></li>
+    <li><a href="#ecosystem">Popular Libraries & Real-World Examples</a></li>
+    <li><a href="#dsa-go">DSA Techniques in Go</a></li>
+    <li><a href="#examples">Expanded Examples (BFS, DSU, Heap, Sliding Window, Worker Pool)</a></li>
+    <li><a href="#perf">Performance, Profiling & Best Practices</a></li>
+    <li><a href="#pitfalls">Common Pitfalls & Gotchas</a></li>
+    <li><a href="#summary">Final Summary</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="content">
+
+  <section id="intro" class="panel">
+    <h2>💡 Introduction — Why Go?</h2>
+    <p class="muted">
+      Go (Golang) is a pragmatic language designed at Google for fast compilation, simple concurrency, and robust production systems.
+      It balances low ceremony, predictable performance, and batteries-included standard library — making it ideal for servers,
+      CLI tools, networking, and systems programming, while remaining friendly for algorithmic work.
+    </p>
+    <p class="muted">This guide covers Go from the toolchain and runtime internals to idiomatic concurrency and DSA-ready implementations, plus practical examples using popular libraries (gorilla/mux, zap, errgroup).</p>
+  </section>
+
+  <section id="toolchain" class="panel">
+    <h2>🛠️ Toolchain & Modules</h2>
+    <p class="muted">
+      Go's toolchain is minimal and fast. Key commands:
+    </p>
+    <ul class="muted bullets">
+      <li><code>go version</code> — check version (prefer recent 1.20+ or 1.21+ for features/optimizations).</li>
+      <li><code>go env</code> — inspect environment variables (GOPATH, GOMODCACHE).</li>
+      <li><code>go mod init</code> / <code>go mod tidy</code> — module-based dependency management.</li>
+      <li><code>go build</code>, <code>go run</code>, <code>go test</code>, <code>go vet</code>, <code>go fmt</code>.</li>
+    </ul>
+    <p class="muted">Go modules decouple code from GOPATH and make dependency reproducibility straightforward. Use semantic import paths and pinned versions in CI.</p>
+  </section>
+
+  <section id="runtime" class="panel">
+    <h2>⚙️ Go Runtime — Scheduler, GC & Escape Analysis</h2>
+    <p class="muted">
+      The runtime provides goroutine scheduling (M:N model), a concurrent garbage collector, and escape analysis to decide whether variables live on the heap.
+    </p>
+    <ul class="muted bullets">
+      <li><strong>Goroutine scheduler:</strong> multiplexes many goroutines onto OS threads; runtime.GOMAXPROCS controls OS threads.</li>
+      <li><strong>Stacks grow:</strong> goroutine stacks are small and grow/shrink dynamically (cheap to spawn many goroutines).</li>
+      <li><strong>Garbage Collector:</strong> concurrent, low-pause; tuning via GOGC and memory-conscious coding.</li>
+      <li><strong>Escape Analysis:</strong> compiler decides whether a local variable escapes to heap (use &amp; take care to avoid unnecessary allocations).</li>
+    </ul>
+    <p class="muted">Implication: spawn goroutines liberally for I/O and concurrency patterns, but measure allocations and GC impact for hot loops.</p>
+  </section>
+
+  <section id="syntax" class="panel">
+    <h2>🔤 Syntax Essentials: Variables, Types, Slices, Maps</h2>
+    <p class="muted">Go is statically typed but with concise declarations and built-in composite types.</p>
+    <pre class="code" id="code-syntax-go">
+```
+
+package main
+
+import "fmt"
+
+func main() {
+var x int = 10       // explicit
+y := 20              // short declaration
+s := []int{1,2,3}    // slice (dynamic array)
+m := map[string]int{"a":1}
+fmt.Println(x, y, s, m)
+} <button class="copy" onclick="copyCode('code-syntax-go')">Copy</button> </pre> <p class="muted">Slices are references to arrays: capacity vs length matters (use <code>make([]T, len, cap)</code> to preallocate).</p> </section>
+
+```
+  <section id="structs" class="panel">
+    <h2>🏗️ Structs, Methods & Interfaces</h2>
+    <p class="muted">Go uses structs for data and methods for behavior. Interfaces are satisfied implicitly — a cornerstone of Go's simplicity.</p>
+    <pre class="code" id="code-structs-go">
+```
+
+package main
+
+import "fmt"
+
+type Point struct { X, Y int }
+
+func (p Point) Sum() int { return p.X + p.Y }   // value receiver
+func (p *Point) Move(dx, dy int) { p.X += dx; p.Y += dy } // pointer receiver
+
+type Stringer interface { String() string }
+
+func main() {
+p := Point{1,2}
+fmt.Println(p.Sum())
+} <button class="copy" onclick="copyCode('code-structs-go')">Copy</button> </pre> <p class="muted">Choose pointer receivers when method needs to modify the receiver or avoid copying large structs.</p> </section>
+
+```
+  <section id="errors" class="panel">
+    <h2>❗ Error Handling Idioms</h2>
+    <p class="muted">Go favors explicit error returns over exceptions. Common patterns:</p>
+    <ul class="muted bullets">
+      <li>Return <code>(T, error)</code> and check <code>if err != nil</code>.</li>
+      <li>Wrap errors with context using <code>fmt.Errorf("msg: %w", err)</code> and inspect with <code>errors.Is/As</code>.</li>
+      <li>Use sentinel errors or typed error values for specific handling.</li>
+      <li>Use <code>panic</code> and <code>recover</code> only for unrecoverable programmer errors or top-level guards.</li>
+    </ul>
+    <pre class="code" id="code-errors-go">
+```
+
+val, err := doSomething()
+if err != nil {
+return fmt.Errorf("doSomething failed: %w", err)
+} <button class="copy" onclick="copyCode('code-errors-go')">Copy</button> </pre> </section>
+
+```
+  <section id="pointers" class="panel">
+    <h2>🔗 Pointers & Memory Safety</h2>
+    <p class="muted">Go has pointers but no pointer arithmetic. Use pointers to share/mutate data or avoid copies of large structs.</p>
+    <pre class="code" id="code-pointers-go">
+```
+
+type Node struct {
+Val int
+Next *Node
+}
+
+func NewList() *Node {
+return &Node{Val: 1} // returns pointer; may escape to heap
+} <button class="copy" onclick="copyCode('code-pointers-go')">Copy</button> </pre> <p class="muted">Understand escape analysis — taking addresses of locals may move them to heap and increase GC pressure.</p> </section>
+
+```
+  <section id="concurrency" class="panel">
+    <h2>⚡ Concurrency — Goroutines & Channels</h2>
+    <p class="muted">Goroutines are lightweight threads; channels are typed pipes for communicating and synchronizing.</p>
+    <pre class="code" id="code-goroutine-go">
+```
+
+package main
+
+import (
+"fmt"
+"time"
+)
+
+func worker(id int, ch <-chan int) {
+for v := range ch {
+fmt.Printf("worker %d got %d\n", id, v)
+}
+}
+
+func main() {
+ch := make(chan int)
+go worker(1, ch)
+ch <- 42
+close(ch)
+time.Sleep(100 * time.Millisecond) // wait for goroutine
+} <button class="copy" onclick="copyCode('code-goroutine-go')">Copy</button> </pre> <p class="muted">Prefer channels for coordination; use mutexes for shared mutable state. Avoid sharing memory by default — share by communicating.</p> </section>
+
+```
+  <section id="patterns" class="panel">
+    <h2>🔁 Concurrency Patterns: Worker Pools, Fan-in/Fan-out</h2>
+    <p class="muted">Common patterns that are easy and idiomatic in Go:</p>
+    <ul class="muted bullets">
+      <li><strong>Worker pool:</strong> fixed set of goroutines pulling tasks from a channel.</li>
+      <li><strong>Fan-out/fan-in:</strong> multiple goroutines produce results; a single goroutine aggregates them.</li>
+      <li><strong>Pipeline:</strong> chaining stages via channels to process streams of data.</li>
+    </ul>
+    <pre class="code" id="code-workerpool-go">
+```
+
+func worker(id int, jobs <-chan int, results chan<- int) {
+for j := range jobs {
+results <- j * 2 // process
+}
+}
+
+func main() {
+jobs := make(chan int, 100)
+results := make(chan int, 100)
+for w := 0; w < 4; w++ { go worker(w, jobs, results) }
+for j := 0; j < 10; j++ { jobs <- j }
+close(jobs)
+for i := 0; i < 10; i++ { fmt.Println(<-results) }
+} <button class="copy" onclick="copyCode('code-workerpool-go')">Copy</button> </pre> </section>
+
+```
+  <section id="stdlib" class="panel">
+    <h2>📦 Standard Library Tools & Testing</h2>
+    <ul class="muted bullets">
+      <li><strong>net/http</strong> — simple and powerful HTTP servers/clients.</li>
+      <li><strong>encoding/json</strong>, <strong>encoding/gob</strong> — serialization.</li>
+      <li><strong>context</strong> — cancellation and timeouts for request-scoped operations.</li>
+      <li><strong>testing</strong> & <strong>testing/bench</strong> — unit tests and benchmarks.</li>
+      <li><strong>pprof</strong> and <strong>trace</strong> — CPU/memory profiling and tracing.</li>
+    </ul>
+    <p class="muted">Use <code>context.Context</code> in public APIs to allow cancellation and deadlines. Benchmark critical code with <code>go test -bench</code>.</p>
+  </section>
+
+  <section id="ecosystem" class="panel">
+    <h2>🔗 Popular Libraries & Real-World Examples</h2>
+    <p class="muted">Here are common libraries used in real-world Go services and examples showing idiomatic usage.</p>
+
+    <h3>Router + HTTP server (gorilla/mux)</h3>
+    <pre class="code" id="code-gorilla-mux">
+```
+
+package main
+
+import (
+"net/http"
+"github.com/gorilla/mux"
+"fmt"
+)
+
+func Hello(w http.ResponseWriter, r *http.Request) {
+vars := mux.Vars(r)
+fmt.Fprintf(w, "Hello, %s!", vars["name"])
+}
+
+func main() {
+r := mux.NewRouter()
+r.HandleFunc("/hello/{name}", Hello).Methods("GET")
+http.ListenAndServe(":8080", r)
+} <button class="copy" onclick="copyCode('code-gorilla-mux')">Copy</button> </pre>
+
+```
+    <h3>Structured Logging (uber-go/zap)</h3>
+    <pre class="code" id="code-zap">
+```
+
+package main
+
+import (
+"go.uber.org/zap"
+)
+
+func main() {
+logger, _ := zap.NewProduction()
+defer logger.Sync()
+logger.Info("server started", zap.Int("port", 8080))
+} <button class="copy" onclick="copyCode('code-zap')">Copy</button> </pre>
+
+```
+    <h3>Parallel Tasks (golang.org/x/sync/errgroup)</h3>
+    <pre class="code" id="code-errgroup">
+```
+
+package main
+
+import (
+"context"
+"fmt"
+"golang.org/x/sync/errgroup"
+)
+
+func main() {
+g, ctx := errgroup.WithContext(context.Background())
+urls := []string{"a", "b", "c"}
+for _, u := range urls {
+u := u
+g.Go(func() error {
+// do request with ctx
+fmt.Println("fetch", u)
+return nil
+})
+}
+if err := g.Wait(); err != nil {
+fmt.Println("error:", err)
+}
+} <button class="copy" onclick="copyCode('code-errgroup')">Copy</button> </pre>
+
+```
+    <p class="muted">These examples use third-party libraries commonly found in production systems. Add them to your module (<code>go get</code>) and vendor if needed.</p>
+  </section>
+
+  <section id="dsa-go" class="panel">
+    <h2>🎯 DSA Techniques in Go</h2>
+    <p class="muted">Go is suitable for algorithmic work. Use idiomatic types for performance and clarity:</p>
+    <ul class="muted bullets">
+      <li>Use <code>[]int</code> slices with preallocation: <code>make([]int, 0, n)</code>.</li>
+      <li>Use <code>map[T]U</code> for hash-based lookup; for custom keys implement <code>string</code> encoding or use composite keys.</li>
+      <li>Use <code>container/heap</code> for priority queues (implement heap.Interface).</li>
+      <li>Minimize allocations in hot loops — reuse buffers or use <code>sync.Pool</code> for temporary objects.</li>
+      <li>For graphs, adjacency slices (<code>[][]int</code>) are simple and fast.</li>
+    </ul>
+    <p class="muted">Go's simple concurrency makes it easy to parallelize independent parts of an algorithm (careful with synchronization and memory bandwidth).</p>
+  </section>
+
+  <section id="examples" class="panel">
+    <h2>🧩 Expanded Examples (Go)</h2>
+
+    <h4>1. BFS (Adjacency List)</h4>
+    <pre class="code" id="code-bfs-go">
+```
+
+package main
+
+import "fmt"
+
+func bfs(adj [][]int, start int) []int {
+n := len(adj)
+vis := make([]bool, n)
+q := make([]int, 0, n)
+res := []int{}
+q = append(q, start); vis[start] = true
+for len(q) > 0 {
+u := q[0]; q = q[1:]
+res = append(res, u)
+for _, v := range adj[u] {
+if !vis[v] {
+vis[v] = true
+q = append(q, v)
+}
+}
+}
+return res
+}
+
+func main(){ fmt.Println(bfs([][]int{{1},{2},{},{}}, 0)) } <button class="copy" onclick="copyCode('code-bfs-go')">Copy</button> </pre>
+
+```
+    <h4>2. Union-Find (Disjoint Set)</h4>
+    <pre class="code" id="code-dsu-go">
+```
+
+package main
+
+import "fmt"
+
+type DSU struct {
+p []int
+r []int
+}
+
+func NewDSU(n int) *DSU {
+p := make([]int, n); for i := range p { p[i] = i }
+return &DSU{p: p, r: make([]int, n)}
+}
+
+func (d *DSU) Find(x int) int {
+if d.p[x] == x { return x }
+d.p[x] = d.Find(d.p[x])
+return d.p[x]
+}
+
+func (d *DSU) Union(a, b int) bool {
+a = d.Find(a); b = d.Find(b)
+if a == b { return false }
+if d.r[a] < d.r[b] { a, b = b, a }
+d.p[b] = a
+if d.r[a] == d.r[b] { d.r[a]++ }
+return true
+}
+
+func main() {
+d := NewDSU(5)
+d.Union(0,1); d.Union(1,2)
+fmt.Println(d.Find(2)==d.Find(0))
+} <button class="copy" onclick="copyCode('code-dsu-go')">Copy</button> </pre>
+
+```
+    <h4>3. Min-Heap (container/heap)</h4>
+    <pre class="code" id="code-heap-go">
+```
+
+package main
+
+import (
+"container/heap"
+"fmt"
+)
+
+type IntHeap []int
+func (h IntHeap) Len() int { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *IntHeap) Pop() interface{} {
+old := *h; n := len(old)
+x := old[n-1]; *h = old[:n-1]; return x
+}
+
+func main() {
+h := &IntHeap{5,2,8,1}
+heap.Init(h)
+heap.Push(h, 3)
+fmt.Println(heap.Pop(h)) // 1
+} <button class="copy" onclick="copyCode('code-heap-go')">Copy</button> </pre>
+
+```
+    <h4>4. Sliding Window Maximum (deque via indices)</h4>
+    <pre class="code" id="code-sliding-go">
+```
+
+package main
+
+import "fmt"
+
+func maxSlidingWindow(nums []int, k int) []int {
+if k == 0 { return nil }
+dq := make([]int, 0) // indices
+res := make([]int, 0, len(nums)-k+1)
+for i := 0; i < len(nums); i++ {
+if len(dq) > 0 && dq[0] == i-k { dq = dq[1:] }
+for len(dq) > 0 && nums[dq[len(dq)-1]] < nums[i] { dq = dq[:len(dq)-1] }
+dq = append(dq, i)
+if i >= k-1 { res = append(res, nums[dq[0]]) }
+}
+return res
+}
+
+func main() { fmt.Println(maxSlidingWindow([]int{1,3,-1,-3,5,3,6,7}, 3)) } <button class="copy" onclick="copyCode('code-sliding-go')">Copy</button> </pre>
+
+```
+    <h4>5. Worker Pool with context cancellation</h4>
+    <pre class="code" id="code-workerpool-go-example">
+```
+
+package main
+
+import (
+"context"
+"fmt"
+"time"
+)
+
+func worker(ctx context.Context, id int, jobs <-chan int, results chan<- int) {
+for {
+select {
+case <-ctx.Done():
+return
+case j, ok := <-jobs:
+if !ok { return }
+// do work
+results <- j * 2
+}
+}
+}
+
+func main() {
+ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+defer cancel()
+jobs := make(chan int)
+results := make(chan int)
+for w := 0; w < 4; w++ { go worker(ctx, w, jobs, results) }
+go func() {
+for i := 0; i < 100; i++ { jobs <- i }
+close(jobs)
+}()
+for i := 0; i < 100; i++ {
+select {
+case r := <-results: fmt.Println(r)
+case <-ctx.Done(): fmt.Println("timeout"); return
+}
+}
+} <button class="copy" onclick="copyCode('code-workerpool-go-example')">Copy</button> </pre>
+
+```
+  </section>
+
+  <section id="perf" class="panel">
+    <h2>🚀 Performance, Profiling & Best Practices</h2>
+    <ul class="muted bullets">
+      <li>Use <code>go test -bench</code> and <code>pprof</code> to find bottlenecks (CPU & memory).</li>
+      <li>Minimize allocations: reuse buffers, preallocate slices, avoid creating many short-lived objects.</li>
+      <li>Use <code>sync.Pool</code> for temporary objects in hot paths.</li>
+      <li>Prefer iteration over recursion for deep recursion risk; Go's stack grows but recursion can still be costly.</li>
+      <li>Set <code>GOGC</code> and <code>GOMAXPROCS</code> thoughtfully in production based on profiling.</li>
+    </ul>
+    <pre class="code" id="code-bench-go">
+```
+
+/* simple benchmark */
+func BenchmarkMyFunc(b *testing.B) {
+for i := 0; i < b.N; i++ { MyFunc() }
+} <button class="copy" onclick="copyCode('code-bench-go')">Copy</button> </section>
+
+```
+  <section id="pitfalls" class="panel">
+    <h2>⚠️ Common Pitfalls & Gotchas</h2>
+    <ul class="muted bullets">
+      <li>Slice reslicing can keep underlying arrays alive — be mindful of memory leaks when slicing large arrays.</li>
+      <li>Deadlocks with channels if not closed or if goroutines block indefinitely.</li>
+      <li>Data races when sharing mutable state — run <code>go test -race</code> during development.</li>
+      <li>Unbounded goroutine spawning for unbounded inputs can OOM; use worker pools with backpressure.</li>
+      <li>Take pointers of loop variables incorrectly — capture loop variable pitfalls when launching goroutines inside loops.</li>
+    </ul>
+    <pre class="code" id="code-loop-ptr-go">
+```
+
+for i := range items {
+i := i // capture new variable
+go func() { fmt.Println(i) }() // safe
+} <button class="copy" onclick="copyCode('code-loop-ptr-go')">Copy</button> </section>
+
+```
+  <section id="summary" class="panel">
+    <h2>🏁 Final Summary — Go Proficiency Checklist</h2>
+    <p class="muted">Key topics to master for production Go and DSA readiness:</p>
+    <ul class="bullets">
+      <li>Tooling & modules (go mod), fast compilation workflow</li>
+      <li>Goroutines, channels, context-based cancellation</li>
+      <li>Memory model, escape analysis, and GC awareness</li>
+      <li>Idiomatic error handling and interface-based design</li>
+      <li>Use standard library and popular libraries (gorilla/mux, zap, errgroup) for real systems</li>
+      <li>Measure: profiling, benchmarks, and race detector</li>
+    </ul>
+    <p class="muted"><strong>Next: implement DSA templates, benchmark hot code, build a small HTTP service using gorilla/mux + zap + errgroup and deploy it with containers.</strong></p>
+  </section>
+
+</main>
+```
+
+  </div>
+
+  <!-- Modal (code preview) -->
+
+  <div id="modal" class="modal" style="display:none;">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+      <pre id="modal-code" class="code"></pre>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+  </footer>
+
+  <script src="../assets/scripts.js"></script>
+
+  <script>
+    // Search Functionality (consistent with other pages)
+    function searchContent() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const panels = document.querySelectorAll('.panel');
+      const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+      let visibleCount = 0;
+
+      panels.forEach(panel => {
+        const text = panel.textContent.toLowerCase();
+        const isVisible = text.includes(query);
+        panel.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+
+      // Highlight matching TOC items
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target && target.style.display !== 'none') {
+          link.style.background = 'rgba(0, 255, 136, 0.2)';
+          link.style.fontWeight = 'bold';
+        } else {
+          link.style.background = '';
+          link.style.fontWeight = '';
+        }
+      });
+
+      // Show message if no results
+      const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+      searchMsg.id = 'searchMsg';
+      searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+      if (query && visibleCount === 0) {
+        searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+        searchMsg.style.display = 'block';
+        document.body.appendChild(searchMsg);
+      } else if (searchMsg.parentNode) {
+        searchMsg.parentNode.removeChild(searchMsg);
+      }
+
+      // Scroll to first match if query not empty
+      if (query && visibleCount > 0) {
+        const firstVisible = document.querySelector('.panel[style*="block"]');
+        if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Copy code helper: shows modal and attempts clipboard write
+    function copyCode(id) {
+      const codeEl = document.getElementById(id);
+      if (!codeEl) return;
+      const code = codeEl.textContent;
+      const modal = document.getElementById('modal');
+      const modalCode = document.getElementById('modal-code');
+      modalCode.textContent = code;
+      modal.style.display = 'block';
+      navigator.clipboard?.writeText(code).then(() => {
+        // copied successfully
+      }).catch(() => {
+        // ignore failure — user can manually copy from modal
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // Clear search on Escape; close modal if no search
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const input = document.getElementById('searchInput');
+        if (input && input.value) {
+          input.value = '';
+          searchContent();
+          document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+          document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+        } else {
+          closeModal();
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>
+

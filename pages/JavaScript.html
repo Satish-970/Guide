@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JavaScript — Complete Conceptual Guide (Beginner → Advanced → DSA Ready)</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">✨</div>
+      <div>
+        <h1>JavaScript — Complete Conceptual Guide</h1>
+        <div class="subtitle">Browser + Node • Async-first • Modern (ES6+) • 2025 Edition</div>
+      </div>
+    </div>
+    <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="javascript.html">JS Guide</a>
+      <a class="btn ghost" href="dsa_tracker.html">DSA Tracker</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+```
+<!-- SIDEBAR - Always Visible -->
+<aside class="sidebar">
+  <div class="toc-title">Table of Contents</div>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+  </div>
+
+  <ul class="toc" id="tocList">
+    <li><a href="#intro">Introduction — JS in 2025</a></li>
+    <li><a href="#engines">JS Engines & Runtime (V8, SpiderMonkey, JIT)</a></li>
+    <li><a href="#types">Types, Coercion & Equality</a></li>
+    <li><a href="#scope-hoist">Scope, Hoisting & Closures</a></li>
+    <li><a href="#functions">Functions: Declaration, Expression, Arrow</a></li>
+    <li><a href="#objects-proto">Objects, Prototypes & Classes</a></li>
+    <li><a href="#async">Async Patterns: Callbacks → Promises → Async/Await</a></li>
+    <li><a href="#eventloop">Event Loop, Microtasks & Macrotasks</a></li>
+    <li><a href="#modules">Modules: ES Modules & CommonJS</a></li>
+    <li><a href="#dom">DOM, Events & Browser APIs</a></li>
+    <li><a href="#node">Node.js Essentials</a></li>
+    <li><a href="#data-structures">Data Structures: Array, Map, Set, WeakMap</a></li>
+    <li><a href="#functional">Functional Patterns & Immutability</a></li>
+    <li><a href="#algorithms-js">Algorithms & STL-like Helpers</a></li>
+    <li><a href="#dsa-js">DSA Techniques in JS</a></li>
+    <li><a href="#examples">Expanded DSA Examples (JS)</a></li>
+    <li><a href="#best">Best Practices & Common Pitfalls</a></li>
+    <li><a href="#summary">Final Summary</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="content">
+
+  <section id="intro" class="panel">
+    <h2>🚀 Introduction — JavaScript Today</h2>
+    <p class="muted">
+      JavaScript is a universal language: browsers, servers (Node.js), edge functions, desktop apps, mobile frameworks,
+      and more. Its asynchronous model and lightweight objects make it great for DSA when paired with correct data
+      structures and patterns.
+    </p>
+    <p class="muted">This guide focuses on conceptual clarity: runtime behavior, async patterns, modern ES features,
+      and DSA-friendly idioms for competitive and production code.</p>
+  </section>
+
+  <section id="engines" class="panel">
+    <h2>⚙️ JS Engines & Runtime</h2>
+    <p class="muted">Major engines: <strong>V8</strong> (Chrome, Node.js), <strong>SpiderMonkey</strong> (Firefox), <strong>JavaScriptCore</strong> (Safari).</p>
+    <ul class="muted bullets">
+      <li><strong>Parser → AST → Baseline JIT → Optimizing JIT</strong>: engines parse code, run baseline, then optimize hot functions.</li>
+      <li><strong>Hidden classes & inline caches</strong> optimize object property access — predictable shapes are faster.</li>
+      <li><strong>Memory:</strong> GC-managed heap for objects; stack for call frames and primitives.</li>
+    </ul>
+    <p class="muted">Implication: writing predictable object shapes and avoiding excessive dynamic changes helps performance.</p>
+  </section>
+
+  <section id="types" class="panel">
+    <h2>🧩 Types, Coercion & Equality</h2>
+    <p class="muted">JS has dynamic types and subtle coercion rules. Know the differences between <code>==</code> and <code>===</code>.</p>
+    <pre class="code" id="code-types-js">
+```
+
+typeof 42           // "number"
+typeof "hi"         // "string"
+[] + {}             // "[object Object]" or "[object Object]" depending on engine (avoid).
+0 == "0"            // true  (coercion)
+0 === "0"           // false (strict) <button class="copy" onclick="copyCode('code-types-js')">Copy</button> </pre> <p class="muted">Prefer <code>===</code>, avoid relying on coercion, and use <code>Number()</code>/<code>String()</code> for conversions when explicitness helps.</p> </section>
+
+```
+  <section id="scope-hoist" class="panel">
+    <h2>🔒 Scope, Hoisting & Closures</h2>
+    <p class="muted">Three scope keywords: <code>var</code> (function-scoped, hoisted), <code>let</code> and <code>const</code> (block-scoped, no temporal dead zone after initialization).</p>
+    <pre class="code" id="code-closure">
+```
+
+function makeAdder(n) {
+return function(x) { return x + n; }; // closed-over n
+}
+const add5 = makeAdder(5);
+console.log(add5(2)); // 7 <button class="copy" onclick="copyCode('code-closure')">Copy</button> </pre> <p class="muted">Closures capture variables by reference to the environment — watch loops capturing variables (use <code>let</code> or IIFE fixes).</p> </section>
+
+```
+  <section id="functions" class="panel">
+    <h2>🧠 Functions: Declarations, Expressions & Arrow Functions</h2>
+    <p class="muted">Arrow functions are concise but have lexical <code>this</code>. Understand when to use each.</p>
+    <pre class="code" id="code-funcs-js">
+```
+
+function foo(){ console.log(this); }       // dynamic this
+const bar = () => { console.log(this); } // lexically bound this
+const add = (a,b) => a + b; <button class="copy" onclick="copyCode('code-funcs-js')">Copy</button> </pre> <p class="muted">Use arrow functions for callbacks where you want lexical this; use function declarations when you need hoisting or prototype methods.</p> </section>
+
+```
+  <section id="objects-proto" class="panel">
+    <h2>🧩 Objects, Prototypes & Classes</h2>
+    <p class="muted">JS uses prototype-based inheritance. ES6 <code>class</code> is syntax sugar over prototypes.</p>
+    <pre class="code" id="code-class-js">
+```
+
+class Animal {
+constructor(name){ this.name = name; }
+speak(){ return this.name + ' makes a noise'; }
+}
+class Dog extends Animal {
+speak(){ return this.name + ' barks'; }
+}
+const d = new Dog('Rex'); <button class="copy" onclick="copyCode('code-class-js')">Copy</button> </pre> <p class="muted">Prefer composition over deep inheritance chains. Keep object shapes stable to benefit JIT optimizations.</p> </section>
+
+```
+  <section id="async" class="panel">
+    <h2>⚡ Async Patterns: Callbacks → Promises → Async/Await</h2>
+    <p class="muted">JS is single-threaded (per runtime) with asynchronous I/O. Understand the evolution:</p>
+    <ul class="muted bullets">
+      <li><strong>Callbacks</strong>: basic but error-prone (callback hell).</li>
+      <li><strong>Promises</strong>: chainable, catchable, avoid pyramid of doom.</li>
+      <li><strong>Async/Await</strong>: syntactic sugar over promises for readable async code.</li>
+    </ul>
+    <pre class="code" id="code-async-js">
+```
+
+function wait(ms){ return new Promise(res => setTimeout(res, ms)); }
+
+async function fetchAndProcess(){
+await wait(100);
+const res = await fetch('/data');
+const json = await res.json();
+return json;
+} <button class="copy" onclick="copyCode('code-async-js')">Copy</button> </pre> <p class="muted">Always handle rejected promises (use try/catch or .catch). Use Promise.allSettled for partial failures.</p> </section>
+
+```
+  <section id="eventloop" class="panel">
+    <h2>🔁 Event Loop, Microtasks & Macrotasks</h2>
+    <p class="muted">Execution ordering:</p>
+    <ul class="muted bullets">
+      <li><strong>Call stack</strong> executes code synchronously.</li>
+      <li><strong>Microtasks</strong> (Promises .then, queueMicrotask) run after current stack and before next macrotask.</li>
+      <li><strong>Macrotasks</strong> (setTimeout, setInterval, I/O callbacks) run after microtasks.</li>
+    </ul>
+    <pre class="code" id="code-eventloop">
+```
+
+console.log('start');
+setTimeout(()=> console.log('timeout'),0);
+Promise.resolve().then(()=> console.log('promise'));
+console.log('end');
+// Output: start, end, promise, timeout <button class="copy" onclick="copyCode('code-eventloop')">Copy</button> </pre> <p class="muted">Use microtask/macro understanding to avoid surprising ordering (e.g., update UI after awaited ops).</p> </section>
+
+```
+  <section id="modules" class="panel">
+    <h2>📦 Modules: ES Modules & CommonJS</h2>
+    <p class="muted">Two module systems:</p>
+    <ul class="muted bullets">
+      <li><strong>ES Modules (ESM):</strong> <code>import</code>/<code>export</code>, static, supported by browsers & Node (with type: module).</li>
+      <li><strong>CommonJS:</strong> <code>require</code>/<code>module.exports</code>, Node legacy, dynamic loading.</li>
+    </ul>
+    <pre class="code" id="code-modules">
+```
+
+/* ES Module */
+export function add(a,b){ return a+b; }
+import { add } from './math.js';
+
+/* CommonJS (Node)
+module.exports = { add };
+const { add } = require('./math');
+*/ <button class="copy" onclick="copyCode('code-modules')">Copy</button> </pre> <p class="muted">Prefer ESM for new projects; understand bundlers (webpack, rollup, Vite) for browser builds.</p> </section>
+
+```
+  <section id="dom" class="panel">
+    <h2>🌐 DOM, Events & Browser APIs</h2>
+    <p class="muted">The DOM is the browser object model. Use event delegation and passive listeners where appropriate.</p>
+    <pre class="code" id="code-dom">
+```
+
+document.getElementById('btn').addEventListener('click', (e) => {
+e.preventDefault();
+fetch('/api').then(r => r.json()).then(data => console.log(data));
+}); <button class="copy" onclick="copyCode('code-dom')">Copy</button> </pre> <p class="muted">Familiarize with fetch, WebSockets, localStorage, service workers, and performance APIs.</p> </section>
+
+```
+  <section id="node" class="panel">
+    <h2>🟩 Node.js Essentials</h2>
+    <p class="muted">Node.js uses V8 and libuv for async I/O. Key modules: <code>fs</code>, <code>http</code>, <code>stream</code>, <code>worker_threads</code>.</p>
+    <pre class="code" id="code-node">
+```
+
+import fs from 'fs/promises'; // ESM
+const data = await fs.readFile('./file.txt', 'utf8');
+
+import http from 'http';
+const server = http.createServer((req,res) => {
+res.end('hello');
+});
+server.listen(3000); <button class="copy" onclick="copyCode('code-node')">Copy</button> </pre> <p class="muted">Understand streams for memory-efficient I/O and prefer async/await for clarity. Use PM2, Docker, and proper logging in production.</p> </section>
+
+```
+  <section id="data-structures" class="panel">
+    <h2>📚 Data Structures: Arrays, Map, Set, WeakMap</h2>
+    <ul class="muted bullets">
+      <li><strong>Array:</strong> dynamic indexed list; many helpful methods (map, filter, reduce).</li>
+      <li><strong>Map:</strong> key-value store with arbitrary keys and predictable iteration order.</li>
+      <li><strong>Set:</strong> unique values.</li>
+      <li><strong>WeakMap / WeakSet:</strong> keys held weakly for GC (use for caches with object keys).</li>
+    </ul>
+    <pre class="code" id="code-data-structures">
+```
+
+const m = new Map(); m.set({id:1}, 'obj'); // object key
+const s = new Set([1,2,3]); s.has(2); // true
+const arr = [1,2,3].map(x => x*2); <button class="copy" onclick="copyCode('code-data-structures')">Copy</button> </pre> <p class="muted">Choose data structures based on access patterns: use Map for frequent key lookups, Set for unique collections, arrays for ordered data.</p> </section>
+
+```
+  <section id="functional" class="panel">
+    <h2>♻️ Functional Patterns & Immutability</h2>
+    <p class="muted">JS supports functional style: pure functions, higher-order functions, immutability (with libraries or spread syntax).</p>
+    <pre class="code" id="code-functional">
+```
+
+const nums = [1,2,3];
+const squares = nums.map(x => x*x);
+const filtered = nums.filter(x => x % 2 === 1);
+const sum = nums.reduce((a,b) => a+b, 0); <button class="copy" onclick="copyCode('code-functional')">Copy</button> </pre> <p class="muted">Prefer immutability in shared state scenarios (React/Redux patterns). Use structured cloning or libs for complex immutable updates.</p> </section>
+
+```
+  <section id="algorithms-js" class="panel">
+    <h2>⚙️ Algorithms & Helpers</h2>
+    <p class="muted">JavaScript doesn't include a heap by default; implement or use libraries for priority queues. Use built-in <code>Array.prototype.sort</code> (be mindful it sorts strings by default).</p>
+    <pre class="code" id="code-sort">
+```
+
+const a = [5,2,9,1];
+a.sort((x,y) => x - y); // numeric ascending <button class="copy" onclick="copyCode('code-sort')">Copy</button> </pre> <p class="muted">Remember complexities: array push/pop O(1), shift/unshift O(n), map/get/set average O(1) for Map/Set.</p> </section>
+
+```
+  <section id="dsa-js" class="panel">
+    <h2>🎯 DSA Techniques in JavaScript</h2>
+    <ul class="muted bullets">
+      <li><strong>Use typed arrays</strong> (Int32Array, Float64Array) for numeric performance when applicable.</li>
+      <li><strong>Implement priority queue</strong> for k-th elements or Dijkstra.</li>
+      <li><strong>Prefer Map over object</strong> when keys are not strings or you need predictable semantics.</li>
+      <li><strong>Avoid excessive object churn</strong> in hot loops — reuse arrays or preallocate when possible.</li>
+      <li><strong>Use iterative solutions</strong> to avoid deep recursion limits in Node/browser stacks.</li>
+    </ul>
+  </section>
+
+  <section id="examples" class="panel">
+    <h2>🧩 Expanded DSA Examples (JavaScript)</h2>
+
+    <h4>1. BFS (Adjacency List)</h4>
+    <pre class="code" id="code-bfs-js">
+```
+
+function bfs(adj, start) {
+const n = adj.length;
+const vis = Array(n).fill(false);
+const q = [start]; vis[start] = true;
+const res = [];
+while (q.length) {
+const u = q.shift(); // O(n) — for large graphs use deque implementation
+res.push(u);
+for (const v of adj[u]) {
+if (!vis[v]) { vis[v] = true; q.push(v); }
+}
+}
+return res;
+} <button class="copy" onclick="copyCode('code-bfs-js')">Copy</button> </pre>
+
+```
+    <h4>2. Sliding Window Maximum (Deque implemented)</h4>
+    <pre class="code" id="code-sliding-js">
+```
+
+function maxSlidingWindow(nums, k) {
+const dq = []; // store indices
+const res = [];
+for (let i = 0; i < nums.length; i++) {
+if (dq.length && dq[0] === i - k) dq.shift();
+while (dq.length && nums[dq[dq.length-1]] < nums[i]) dq.pop();
+dq.push(i);
+if (i >= k - 1) res.push(nums[dq[0]]);
+}
+return res;
+} <button class="copy" onclick="copyCode('code-sliding-js')">Copy</button> </pre>
+
+```
+    <h4>3. Min-Heap (Priority Queue)</h4>
+    <pre class="code" id="code-heap-js">
+```
+
+class MinHeap {
+constructor(){ this.a = []; }
+size(){ return this.a.length; }
+push(x){ this.a.push(x); this._siftUp(this.a.length-1); }
+pop(){
+if(!this.a.length) return undefined;
+const r = this.a[0];
+const last = this.a.pop();
+if(this.a.length) { this.a[0]=last; this._siftDown(0); }
+return r;
+}
+_siftUp(i){
+while(i>0){
+const p = Math.floor((i-1)/2);
+if(this.a[p] <= this.a[i]) break;
+[this.a[p], this.a[i]] = [this.a[i], this.a[p]];
+i = p;
+}
+}
+_siftDown(i){
+const n = this.a.length;
+while(true){
+let l = 2*i+1, r = 2*i+2, smallest = i;
+if(l<n && this.a[l]<this.a[smallest]) smallest = l;
+if(r<n && this.a[r]<this.a[smallest]) smallest = r;
+if(smallest===i) break;
+[this.a[i], this.a[smallest]] = [this.a[smallest], this.a[i]];
+i = smallest;
+}
+}
+} <button class="copy" onclick="copyCode('code-heap-js')">Copy</button> </pre>
+
+```
+    <h4>4. Union-Find (Disjoint Set)</h4>
+    <pre class="code" id="code-dsu-js">
+```
+
+class DSU {
+constructor(n){ this.p = Array.from({length:n}, (_,i) => i); this.r = Array(n).fill(0); }
+find(x){ return this.p[x] === x ? x : (this.p[x] = this.find(this.p[x])); }
+union(a,b){
+a = this.find(a); b = this.find(b); if(a === b) return false;
+if(this.r[a] < this.r[b]) [a,b] = [b,a];
+this.p[b] = a; if(this.r[a] === this.r[b]) this.r[a]++;
+return true;
+}
+} <button class="copy" onclick="copyCode('code-dsu-js')">Copy</button> </pre>
+
+```
+    <h4>5. Bit Manipulation — Single Number (XOR)</h4>
+    <pre class="code" id="code-bit-js">
+```
+
+function singleNumber(nums) {
+return nums.reduce((acc, x) => acc ^ x, 0);
+} <button class="copy" onclick="copyCode('code-bit-js')">Copy</button> </pre>
+
+```
+    <p class="muted">Practice: prefer typed arrays and heap implementation for performance-critical tasks; tests matter — Node and browser stacks can differ.</p>
+  </section>
+
+  <section id="best" class="panel">
+    <h2>✅ Best Practices & Common Pitfalls</h2>
+    <ul class="muted bullets">
+      <li>Use <code>const</code> by default, <code>let</code> for reassignments; avoid <code>var</code>.</li>
+      <li>Avoid mutating objects passed into functions unless intended (prefer pure functions).</li>
+      <li>Always handle promise rejections — uncaught rejections can crash Node (older versions) or be ignored.</li>
+      <li>Use linting & formatters (ESLint, Prettier) and strict TypeScript or JSDoc for safer large codebases.</li>
+      <li>Be explicit with conversions; avoid relying on coercion rules for correctness.</li>
+      <li>Prefer small, testable functions. Write unit tests for critical DSA helpers (heap, dsu).</li>
+    </ul>
+  </section>
+
+  <section id="summary" class="panel">
+    <h2>🏁 Final Summary — JavaScript Proficiency Checklist</h2>
+    <p class="muted">Key takeaways to be productive and DSA-ready:</p>
+    <ul class="bullets">
+      <li>Understand runtime & engine optimizations (object shapes, hidden classes).</li>
+      <li>Master async flow: event loop, promises, async/await, microtasks.</li>
+      <li>Use appropriate data structures (Map/Set/TypedArray) and implement missing ones (heap, deque).</li>
+      <li>Prefer readable, testable patterns; avoid subtle coercion bugs.</li>
+      <li>For competitive problems, pre-optimize algorithmic choices and prefer Node CLI with fast I/O patterns.</li>
+    </ul>
+    <p class="muted"><strong>Next: implement these DSA patterns in JS projects and contest practice; write small benchmarks when performance matters.</strong></p>
+  </section>
+
+</main>
+```
+
+  </div>
+
+  <!-- Modal (code preview) -->
+
+  <div id="modal" class="modal" style="display:none;">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+      <pre id="modal-code" class="code"></pre>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+  </footer>
+
+  <script src="../assets/scripts.js"></script>
+
+  <script>
+    // Search Functionality (consistent with other language pages)
+    function searchContent() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const panels = document.querySelectorAll('.panel');
+      const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+      let visibleCount = 0;
+
+      panels.forEach(panel => {
+        const text = panel.textContent.toLowerCase();
+        const isVisible = text.includes(query);
+        panel.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+
+      // Highlight matching TOC items
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target && target.style.display !== 'none') {
+          link.style.background = 'rgba(0, 255, 136, 0.2)';
+          link.style.fontWeight = 'bold';
+        } else {
+          link.style.background = '';
+          link.style.fontWeight = '';
+        }
+      });
+
+      // Show message if no results
+      const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+      searchMsg.id = 'searchMsg';
+      searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+      if (query && visibleCount === 0) {
+        searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+        searchMsg.style.display = 'block';
+        document.body.appendChild(searchMsg);
+      } else if (searchMsg.parentNode) {
+        searchMsg.parentNode.removeChild(searchMsg);
+      }
+
+      // Scroll to first match if query not empty
+      if (query && visibleCount > 0) {
+        const firstVisible = document.querySelector('.panel[style*="block"]');
+        if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Copy code helper: open modal and try clipboard copy
+    function copyCode(id) {
+      const codeEl = document.getElementById(id);
+      if (!codeEl) return;
+      const code = codeEl.textContent;
+      const modal = document.getElementById('modal');
+      const modalCode = document.getElementById('modal-code');
+      modalCode.textContent = code;
+      modal.style.display = 'block';
+      navigator.clipboard?.writeText(code).then(() => {
+        // copied successfully
+      }).catch(() => {
+        // ignore copy failure (modal shown for manual copy)
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // Clear search on Escape; close modal if no search
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const input = document.getElementById('searchInput');
+        if (input && input.value) {
+          input.value = '';
+          searchContent();
+          document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+          document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+        } else {
+          closeModal();
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>
+

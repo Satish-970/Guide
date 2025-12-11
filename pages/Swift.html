@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Swift — Complete Conceptual Guide (Language-first • DSA Ready • 2025)</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">🦅</div>
+      <div>
+        <h1>Swift — Complete Conceptual Guide</h1>
+        <div class="subtitle">Language-first • Safe & Fast • DSA-Ready • 2025 Edition</div>
+      </div>
+    </div>
+    <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="swift.html">Swift Guide</a>
+      <a class="btn ghost" href="dsa.html">DSA Tracker</a>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+```
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="toc-title">Table of Contents</div>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Search topics..." onkeyup="searchContent()">
+  </div>
+
+  <ul class="toc" id="tocList">
+    <li><a href="#intro">Introduction — Why Swift?</a></li>
+    <li><a href="#toolchain">Toolchain & Tooling</a></li>
+    <li><a href="#types">Types & Type Inference</a></li>
+    <li><a href="#optionals">Optionals & Nil Safety</a></li>
+    <li><a href="#valref">Value vs Reference Types</a></li>
+    <li><a href="#memory">Memory: ARC & Copy-On-Write</a></li>
+    <li><a href="#structures">Structs, Classes & Enums</a></li>
+    <li><a href="#protocols">Protocols & Protocol-Oriented Design</a></li>
+    <li><a href="#generics">Generics & Associated Types</a></li>
+    <li><a href="#closures">Closures & Capture Lists</a></li>
+    <li><a href="#error">Error Handling</a></li>
+    <li><a href="#collections">Collections & Algorithms</a></li>
+    <li><a href="#dsa-swift">DSA Techniques in Swift</a></li>
+    <li><a href="#examples">DSA Examples (Swift)</a></li>
+    <li><a href="#best">Best Practices & Pitfalls</a></li>
+    <li><a href="#summary">Final Summary</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN -->
+<main class="content">
+
+  <section id="intro" class="panel">
+    <h2>💡 Introduction — Why Swift?</h2>
+    <p class="muted">
+      Swift is a modern, statically typed language emphasizing safety, clarity, and performance. Although widely used for Apple platforms,
+      its language features (optionals, value types, generics, protocol-oriented design) make it excellent for algorithmic work and DSA templates.
+    </p>
+  </section>
+
+  <section id="toolchain" class="panel">
+    <h2>🛠️ Toolchain & Tooling</h2>
+    <ul class="muted bullets">
+      <li><strong>swiftc</strong> — compiler: <code>swiftc main.swift -o prog</code>.</li>
+      <li><strong>swift</strong> — REPL / script runner: <code>swift file.swift</code>.</li>
+      <li><strong>Swift Package Manager (SPM)</strong> — <code>swift build</code>, <code>swift test</code>.</li>
+      <li>Use Xcode for app dev; use SPM + VS Code or CLI for DSA/contest work.</li>
+    </ul>
+  </section>
+
+  <section id="types" class="panel">
+    <h2>🔤 Types & Type Inference</h2>
+    <p class="muted">Swift is strongly typed with excellent inference — prefer explicit types for public APIs and ambiguous literals.</p>
+    <pre class="code" id="code-types-swift">
+```
+
+let a: Int = 10
+let b = 20          // inferred Int
+let s = "hello"     // String
+let f = 3.14        // Double by default
+let arr = [1,2,3]   // [Int] <button class="copy" onclick="copyCode('code-types-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="optionals" class="panel">
+    <h2>⭕ Optionals & Nil Safety</h2>
+    <p class="muted">Optionals encode presence/absence: <code>Int?</code> holds value or <code>nil</code>. Use safe unwrapping.</p>
+    <pre class="code" id="code-optionals-swift">
+```
+
+var name: String? = nil
+if let actual = name {
+print(actual)
+} else {
+print("no name")
+}
+let forced = name! // avoid unless certain <button class="copy" onclick="copyCode('code-optionals-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="valref" class="panel">
+    <h2>🔁 Value vs Reference Types</h2>
+    <p class="muted">Structs & enums are value types (copied); classes are reference types (shared). Prefer structs when possible.</p>
+    <pre class="code" id="code-valref-swift">
+```
+
+struct Point { var x:Int; var y:Int }
+var p1 = Point(x:1,y:2)
+var p2 = p1
+p2.x = 5 // p1.x still 1
+
+class Node { var val:Int; init(_ v:Int){val=v} }
+let n1 = Node(1); let n2 = n1
+n2.val = 9 // n1.val is 9 <button class="copy" onclick="copyCode('code-valref-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="memory" class="panel">
+    <h2>🧠 Memory: ARC & Copy-On-Write (COW)</h2>
+    <p class="muted">ARC manages class lifetimes. Collections are value types with COW — mutations trigger copies only when necessary.</p>
+    <p class="muted">Avoid strong reference cycles (use <code>weak</code> / <code>unowned</code>), and reserve capacity for large arrays.</p>
+  </section>
+
+  <section id="structures" class="panel">
+    <h2>🏗️ Structs, Classes & Enums</h2>
+    <p class="muted">Swift enums are powerful ADTs with associated values; <code>switch</code> is exhaustive and safe.</p>
+    <pre class="code" id="code-structures-swift">
+```
+
+enum Result<T> {
+case success(T)
+case failure(String)
+}
+
+struct User { let id:Int; var name:String }
+class Manager { var users:[User] = [] } <button class="copy" onclick="copyCode('code-structures-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="protocols" class="panel">
+    <h2>🔗 Protocols & Protocol-Oriented Design</h2>
+    <p class="muted">Protocols + extensions enable powerful composition. Prefer small, focused protocols and default implementations via extensions.</p>
+    <pre class="code" id="code-protocols-swift">
+```
+
+protocol Describable { func describe() -> String }
+extension Describable { func printIt(){ print(describe()) } }
+
+struct Item: Describable {
+let value:Int
+func describe() -> String { "Item((value))" }
+} <button class="copy" onclick="copyCode('code-protocols-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="generics" class="panel">
+    <h2>⚙️ Generics & Associated Types</h2>
+    <p class="muted">Generics create reusable, type-safe containers. Use <code>where</code> for complex constraints.</p>
+    <pre class="code" id="code-generics-swift">
+```
+
+struct Stack<T> {
+private var items = [T]()
+mutating func push(_ x:T){ items.append(x) }
+mutating func pop() -> T? { items.popLast() }
+} <button class="copy" onclick="copyCode('code-generics-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="closures" class="panel">
+    <h2>🔁 Closures & Capture Lists</h2>
+    <p class="muted">Closures capture variables; use capture lists (<code>[weak self]</code>) to avoid retain cycles when capturing <code>self</code>.</p>
+    <pre class="code" id="code-closures-swift">
+```
+
+class C {
+var handler: (() -> Void)?
+func setHandler() {
+handler = { [weak self] in
+guard let s = self else { return }
+print(s)
+}
+}
+} <button class="copy" onclick="copyCode('code-closures-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="error" class="panel">
+    <h2>🛡️ Error Handling</h2>
+    <p class="muted">Swift uses throwing functions and structured <code>do/try/catch</code>. Use typed errors and propagate with <code>throws</code>.</p>
+    <pre class="code" id="code-error-swift">
+```
+
+enum MyError: Error { case runtime(String) }
+
+func mightFail(_ x:Int) throws -> Int {
+if x == 0 { throw MyError.runtime("zero") }
+return 10 / x
+}
+
+do {
+let v = try mightFail(0)
+print(v)
+} catch { print("error:", error) } <button class="copy" onclick="copyCode('code-error-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="collections" class="panel">
+    <h2>📚 Collections & Algorithms</h2>
+    <p class="muted">Arrays, Dictionary, Set are value types with many helpful standard methods. For long chains, consider <code>LazySequence</code> to avoid intermediates.</p>
+    <pre class="code" id="code-collections-swift">
+```
+
+var arr = [5,2,9,1]
+arr.sort() // in-place
+let idx = arr.firstIndex(of: 9)
+let dict = ["a":1, "b":2]
+let set: Set = [1,2,3] <button class="copy" onclick="copyCode('code-collections-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="dsa-swift" class="panel">
+    <h2>🎯 DSA Techniques in Swift</h2>
+    <ul class="muted bullets">
+      <li>Reserve capacity for arrays: <code>arr.reserveCapacity(n)</code>.</li>
+      <li>Prefer iterative solutions for deep inputs to avoid recursion limits.</li>
+      <li>Implement heaps (array-based) for priority queues; stdlib doesn't include heap.</li>
+      <li>Use <code>Dictionary</code> for hash maps (average O(1)), <code>Set</code> for membership.</li>
+      <li>Use <code>ContiguousArray</code> for tighter memory layout when needed.</li>
+    </ul>
+  </section>
+
+  <section id="examples" class="panel">
+    <h2>🧩 DSA Examples (Swift)</h2>
+
+    <h4>1. BFS (Adjacency List)</h4>
+    <pre class="code" id="code-bfs-swift">
+```
+
+func bfs(adj: [[Int]], start: Int) -> [Int] {
+var vis = Array(repeating:false, count: adj.count)
+var q: [Int] = []
+var res: [Int] = []
+q.append(start); vis[start] = true
+while !q.isEmpty {
+let u = q.removeFirst()
+res.append(u)
+for v in adj[u] where !vis[v] {
+vis[v] = true; q.append(v)
+}
+}
+return res
+} <button class="copy" onclick="copyCode('code-bfs-swift')">Copy</button> </pre>
+
+```
+    <h4>2. Union-Find (DSU)</h4>
+    <pre class="code" id="code-dsu-swift">
+```
+
+struct DSU {
+private var parent: [Int]
+private var rank: [Int]
+init(_ n:Int) { parent = Array(0..<n); rank = Array(repeating:0, count:n) }
+mutating func find(_ x:Int) -> Int {
+if parent[x] != x { parent[x] = find(parent[x]) }
+return parent[x]
+}
+mutating func union(_ a:Int, _ b:Int) -> Bool {
+var x = find(a), y = find(b)
+if x == y { return false }
+if rank[x] < rank[y] { swap(&x, &y) }
+parent[y] = x
+if rank[x] == rank[y] { rank[x] += 1 }
+return true
+}
+} <button class="copy" onclick="copyCode('code-dsu-swift')">Copy</button> </pre>
+
+```
+    <h4>3. Min-Heap (array-based)</h4>
+    <pre class="code" id="code-heap-swift">
+```
+
+struct MinHeap {
+private var a: [Int] = []
+mutating func push(_ x: Int) { a.append(x); siftUp(a.count-1) }
+mutating func pop() -> Int? {
+guard !a.isEmpty else { return nil }
+a.swapAt(0, a.count-1); let v = a.removeLast()
+siftDown(0); return v
+}
+private mutating func siftUp(_ i:Int) { var i=i; while i>0 {
+let p=(i-1)/2; if a[p] <= a[i] { break }; a.swapAt(p,i); i=p } }
+private mutating func siftDown(_ i:Int) { var i=i, n=a.count
+while true {
+let l=2*i+1, r=2*i+2; var smallest=i
+if l<n && a[l] < a[smallest] { smallest = l }
+if r<n && a[r] < a[smallest] { smallest = r }
+if smallest == i { break }
+a.swapAt(i, smallest); i = smallest
+}
+}
+} <button class="copy" onclick="copyCode('code-heap-swift')">Copy</button> </pre>
+
+```
+    <h4>4. Sliding Window Maximum</h4>
+    <pre class="code" id="code-sliding-swift">
+```
+
+func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+guard k > 0, nums.count >= k else { return [] }
+var dq: [Int] = [] // indices
+var res: [Int] = []
+for i in 0..<nums.count {
+if let first = dq.first, first == i - k { dq.removeFirst() }
+while let last = dq.last, nums[last] < nums[i] { dq.removeLast() }
+dq.append(i)
+if i >= k - 1 { res.append(nums[dq.first!]) }
+}
+return res
+} <button class="copy" onclick="copyCode('code-sliding-swift')">Copy</button> </pre> </section>
+
+```
+  <section id="best" class="panel">
+    <h2>✅ Best Practices & Common Pitfalls</h2>
+    <ul class="muted bullets">
+      <li>Prefer <code>let</code> for immutability; explicit <code>var</code> for mutability.</li>
+      <li>Avoid force-unwrapping optionals (<code>!</code>); use <code>guard let</code> or <code>if let</code>.</li>
+      <li>Use <code>reserveCapacity</code> to avoid repeated reallocations.</li>
+      <li>Avoid retain cycles with closures capturing <code>self</code> — use <code>[weak self]</code> or <code>[unowned self]</code>.</li>
+      <li>Profile before micro-optimizing; use Instruments or simple timing for contest timings.</li>
+    </ul>
+  </section>
+
+  <section id="summary" class="panel">
+    <h2>🏁 Final Summary — Swift Checklist</h2>
+    <ul class="bullets">
+      <li>Optionals & safe unwrapping</li>
+      <li>Value types (structs) for safety & performance</li>
+      <li>ARC & COW semantics — be mindful of references and copies</li>
+      <li>Protocols & generics for reusable DSA code</li>
+      <li>Preallocate, avoid unnecessary allocations in hot loops</li>
+    </ul>
+    <p class="muted"><strong>Next:</strong> port your DSA templates to Swift, practice on contest platforms that accept Swift, and measure hotspots if performance matters.</p>
+  </section>
+
+</main>
+```
+
+  </div>
+
+  <!-- Modal (code preview) -->
+
+  <div id="modal" class="modal" style="display:none;">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+      <pre id="modal-code" class="code"></pre>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+  </footer>
+
+  <script src="../assets/scripts.js"></script>
+
+  <script>
+    // Search (consistent behavior)
+    function searchContent() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const panels = document.querySelectorAll('.panel');
+      const tocLinks = document.querySelectorAll('.toc a, .subtoc a');
+      let visibleCount = 0;
+      panels.forEach(panel => {
+        const text = panel.textContent.toLowerCase();
+        const isVisible = text.includes(query);
+        panel.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target && target.style.display !== 'none') {
+          link.style.background = 'rgba(0, 255, 136, 0.2)';
+          link.style.fontWeight = 'bold';
+        } else {
+          link.style.background = '';
+          link.style.fontWeight = '';
+        }
+      });
+      const searchMsg = document.getElementById('searchMsg') || document.createElement('div');
+      searchMsg.id = 'searchMsg';
+      searchMsg.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 10px; border-radius: 5px; z-index: 1001; display: none;';
+      if (query && visibleCount === 0) {
+        searchMsg.textContent = `No results for "${query}". Try broader terms.`;
+        searchMsg.style.display = 'block';
+        document.body.appendChild(searchMsg);
+      } else if (searchMsg.parentNode) {
+        searchMsg.parentNode.removeChild(searchMsg);
+      }
+      if (query && visibleCount > 0) {
+        const firstVisible = document.querySelector('.panel[style*="block"]');
+        if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Copy code helper
+    function copyCode(id) {
+      const codeEl = document.getElementById(id);
+      if (!codeEl) return;
+      const code = codeEl.textContent;
+      const modal = document.getElementById('modal');
+      const modalCode = document.getElementById('modal-code');
+      modalCode.textContent = code;
+      modal.style.display = 'block';
+      navigator.clipboard?.writeText(code).catch(()=>{ /* ignore */ });
+    }
+
+    function closeModal(){ document.getElementById('modal').style.display = 'none'; }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const input = document.getElementById('searchInput');
+        if (input && input.value) {
+          input.value = '';
+          searchContent();
+          document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+          document.querySelectorAll('.toc a').forEach(a => { a.style.background = ''; a.style.fontWeight = ''; });
+        } else {
+          closeModal();
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+

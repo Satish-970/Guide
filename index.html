@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Programming & DSA Hub — Futuristic (Purple Galaxy)</title>
+  <style>
+    /* --- CSS Variables for Themes --- */
+    :root {
+      /* Purple Galaxy (Default) */
+      --bg-1: #07020d;
+      --bg-2: #0d0520;
+      --accent-1: #7be3ff;
+      /* light blue */
+      --accent-2: #a96bff;
+      /* purple */
+      --text-color: #e9eef8;
+      --muted: #bfc4d6;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --glass-glow: 0 8px 30px rgba(169, 107, 255, 0.08);
+    }
+
+    /* Solar Flare Theme */
+    [data-theme="solar-flare"] {
+      --bg-1: #1a0f02;
+      --bg-2: #241505;
+      --accent-1: #ffc87b;
+      /* light orange */
+      --accent-2: #ff8a6b;
+      /* reddish-orange */
+      --text-color: #fff7e9;
+      --muted: #ffdebf;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-glow: 0 8px 30px rgba(255, 138, 107, 0.12);
+    }
+
+    /* Reset + base */
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      /* Use variables for dynamic theme background */
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 60%);
+      color: var(--text-color);
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      transition: background 0.5s ease;
+      /* Smooth background transition */
+    }
+
+    /* Canvas for particles fills behind content */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Parallax layers - Colors updated to use accent variables */
+    .parallax {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .parallax .layer {
+      position: absolute;
+      width: 160%;
+      height: 160%;
+      left: -30%;
+      top: -30%;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      opacity: 0.06;
+      transform-origin: center;
+      filter: blur(16px);
+    }
+
+    /* Updated color blobs to use a mix of backgrounds that work with both themes */
+    .parallax .layer.l1 {
+      background: radial-gradient(circle at 20% 20%, var(--accent-2) 0%, transparent 30%);
+      opacity: 0.08;
+    }
+
+    .parallax .layer.l2 {
+      background: radial-gradient(circle at 80% 70%, var(--accent-1) 0%, transparent 30%);
+      opacity: 0.08;
+    }
+
+    .parallax .layer.l3 {
+      background: radial-gradient(circle at 50% 40%, var(--accent-2) 0%, transparent 30%);
+      opacity: 0.06;
+    }
+
+    /* Page layout */
+    .wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 36px 24px 120px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent-1));
+      box-shadow: 0 6px 30px rgba(169, 107, 255, 0.18), 0 1px 0 rgba(255, 255, 255, 0.02) inset;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bg-1);
+      /* Text color contrast to background */
+      font-weight: 700;
+      font-size: 20px;
+      transition: background 0.5s ease;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.05;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    /* Sidebar toggle and general buttons */
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .24s ease;
+      font-weight: 600;
+    }
+
+    .btn-ghost:hover {
+      transform: translateY(-3px);
+      color: var(--accent-1);
+    }
+
+    .sidebar {
+      position: fixed;
+      right: 18px;
+      top: 92px;
+      width: 260px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: var(--glass-glow);
+      z-index: 5;
+      transform: translateX(18px) scale(0.98);
+      transition: all .28s cubic-bezier(.2, .9, .32, 1);
+      backdrop-filter: blur(6px) saturate(140%);
+    }
+
+    .sidebar.hidden {
+      opacity: 0;
+      transform: translateX(28px) scale(0.96);
+      pointer-events: none;
+    }
+
+    .sidebar h3 {
+      margin: 6px 0 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .sidebar a {
+      display: block;
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .sidebar a:hover {
+      background: linear-gradient(90deg, rgba(169, 107, 255, 0.06), rgba(123, 227, 255, 0.03));
+      color: var(--accent-1);
+    }
+
+    /* hero */
+    .hero {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 50px rgba(13, 6, 30, 0.5);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .hero .left {
+      max-width: 66%
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(123, 227, 255, 0.06), rgba(169, 107, 255, 0.05));
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 12px
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.05
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 10px
+    }
+
+    .hero .cta {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .primary {
+      background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+      color: var(--bg-1);
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(169, 107, 255, 0.16);
+    }
+
+    .secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 12px 18px;
+      border-radius: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* cards grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 26px;
+    }
+
+    /* flip card container */
+    .flip {
+      perspective: 1200px;
+    }
+
+    .card {
+      position: relative;
+      height: 300px;
+      border-radius: 14px;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(.2, .9, .32, 1);
+      transform-origin: center;
+      cursor: default;
+      box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.015));
+      border: 1px solid var(--glass-border);
+      overflow: hidden;
+    }
+
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      transition: transform .8s cubic-bezier(.2, .9, .32, 1);
+      transform-style: preserve-3d;
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 22px;
+      gap: 12px;
+    }
+
+    .card-front {
+      z-index: 2;
+      transform: rotateY(0deg);
+      justify-content: space-between;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      justify-content: center;
+      align-items: center;
+      padding: 22px;
+      gap: 14px;
+    }
+
+    /* flip on hover */
+    .flip:hover .card-inner,
+    .flip:focus-within .card-inner {
+      transform: rotateY(180deg) translateZ(0);
+    }
+
+    /* content */
+    .lang-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent-1);
+      letter-spacing: 0.2px;
+    }
+
+    .lang-sub {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .lang-tag {
+      display: inline-block;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(169, 107, 255, 0.06), rgba(123, 227, 255, 0.03));
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* back content */
+    .back-desc {
+      color: var(--text-color);
+      font-size: 14px;
+      line-height: 1.45;
+      text-align: center;
+      max-width: 90%;
+    }
+
+    .back-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .link-btn {
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      color: var(--bg-1);
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(123, 227, 255, 0.08);
+    }
+
+    .ghost-btn {
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      background: transparent;
+      font-weight: 700;
+      cursor: pointer;
+      /* Make sure it's clear it's clickable */
+    }
+
+    /* small icon / visuals */
+    .orb {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(123, 227, 255, 0.12), rgba(169, 107, 255, 0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #eaf6ff;
+    }
+
+    /* card glass accent */
+    .card::after {
+      content: "";
+      position: absolute;
+      right: -40%;
+      top: -20%;
+      width: 200%;
+      height: 160%;
+      background: radial-gradient(closest-side, var(--accent-2) 0%, transparent 40%);
+      opacity: 0.06;
+      transform: rotate(18deg);
+      pointer-events: none;
+    }
+
+    /* reveal animations for grid children */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px) scale(.99);
+      transition: all .7s cubic-bezier(.2, .9, .32, 1) .12s;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* footer */
+    footer {
+      margin-top: 48px;
+      padding: 28px 18px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .built-by {
+      margin-top: 6px;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 16px;
+    }
+
+    /* --- MODAL STYLES --- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      place-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: grid;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: linear-gradient(180deg, var(--bg-1), var(--bg-2) 100%);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 0 16px 60px rgba(0, 0, 0, 0.6), var(--glass-glow);
+      width: min(90vw, 600px);
+      padding: 32px;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(.2, .9, .32, 1);
+      color: var(--text-color);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      font-size: 24px;
+      color: var(--accent-1);
+    }
+
+    .modal-content p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    /* responsive tweaks */
+    @media (max-width:880px) {
+      .hero {
+        flex-direction: column;
+        align-items: flex-start
+      }
+
+      .hero .left {
+        max-width: 100%
+      }
+
+      .sidebar {
+        position: static;
+        margin: 18px 0 0;
+        width: auto;
+        transform: none;
+        opacity: 1;
+      }
+    }
+
+    @media (max-width:540px) {
+      .card {
+        height: 260px
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="purple-galaxy">
+
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <div class="parallax" aria-hidden="true">
+    <div class="layer l1"></div>
+    <div class="layer l2"></div>
+    <div class="layer l3"></div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">JS</div>
+        <div>
+          <h1>Programming & DSA Hub</h1>
+          <div class="subtitle">Purple Galaxy · Learn languages · Master DSA</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="sidebar-toggle" class="btn-ghost" aria-expanded="false">☰ Menu</button>
+        <button id="theme-toggle" class="btn-ghost" title="Toggle Theme">🎨 Theme</button>
+      </div>
+    </header>
+
+    <aside id="sidebar" class="sidebar hidden" aria-hidden="true">
+      <h3>Quick Links</h3>
+      <a href="pages/java.html" data-target="java">Java</a>
+      <a href="pages/dsa.html" data-target="dsa">DSA</a>
+      <a href="pages/C++.html" data-target="cpp">C++</a>
+      <a href="pages/C.html" data-target="c">C</a>
+      <a href="pages/Python.html" data-target="python">Python</a>
+      <a href="pages/JavaScript.html" data-target="js">JavaScript</a>
+      <a href="pages/Kotlin.html" data-target="kotlin">Kotlin</a>
+      <a href="pages/Swift.html" data-target="swift">Swift</a>
+      <a href="pages/Rust.html" data-target="rust">Rust</a>
+      <a href="pages/Go.html" data-target="go">Go</a>
+    </aside>
+
+    <section class="hero" role="region" aria-label="intro">
+      <div class="left">
+        <div class="eyebrow">Futuristic · Purple Galaxy Theme</div>
+        <h2>Why languages matter — and why DSA is essential</h2>
+        <p>Different languages bring unique strengths: systems control, rapid prototyping, library support, performance,
+          and concurrency. Pairing that with DSA creates engineers who build scalable, efficient systems.</p>
+
+        <div class="cta">
+          <button class="primary" onclick="scrollToGrid()">Explore Languages</button>
+        </div>
+      </div>
+
+      <div class="right" style="min-width:220px; display:flex; gap:12px; align-items:center; justify-content:center;">
+        <div style="text-align:center;">
+          <div style="font-size:36px; font-weight:800; color:#fff;">🚀</div>
+          <div style="color:var(--muted); font-size:13px; margin-top:6px;">Build skills · Ace interviews</div>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <h3 style="margin:18px 0 8px; color:var(--muted)">Languages & DSA — click a card to flip</h3>
+      <div id="grid" class="grid" role="list">
+        <div class="flip reveal" role="listitem" style="height: 340px;">
+          <div class="card" tabindex="0" aria-label="DSA card" style="height: 100%;">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Data Structures & Algorithms</div>
+                    <div class="lang-sub">Problem solving core</div>
+                  </div>
+                  <div class="orb">🧠</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  The backbone of efficient code — complexity, tradeoffs, and patterns you reuse across languages and
+                  systems.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Essential</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Mastering DSA makes you language-agnostic: you'll pick the right tools and design
+                  efficient, scalable solutions.</div>
+                <div class="back-actions"
+                  style="flex-wrap: wrap; justify-content: center; max-width: 100%; gap: 8px; margin-top: 16px;">
+                  <a class="link-btn" href="pages/dsa_tracker.html" data-lang="dsa_tracker"
+                    style="padding: 10px 14px; font-size: 13px;">📊 DSA_Tracker</a>
+                  <a class="link-btn" href="pages/dsa.html" data-lang="Study_dsa"
+                    style="padding: 10px 14px; font-size: 13px;">📖DSA_Docs</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="dsa-topics"
+                    style="padding: 10px 14px; font-size: 13px;">📝 Topics</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal" role="listitem">
+          <div class="card" tabindex="0" aria-label="Java card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Java</div>
+                    <div class="lang-sub">Enterprise, stable, OOP</div>
+                  </div>
+                  <div class="orb">☕</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Great for scalable backend systems, banks, and enterprise apps. Strong tooling (JVM), typing, and
+                  libraries.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Robust</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Java shines in enterprise systems, large codebases, and interviews where
+                  type-safety and consistent performance matter.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/java.html" data-lang="java">Open Java</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="java-docs">Docs</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal">
+          <div class="card" tabindex="0" aria-label="C++ card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">C++</div>
+                    <div class="lang-sub">Performance + STL</div>
+                  </div>
+                  <div class="orb">⚙️</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  The competitive programming favorite — control, speed, and STL containers make it ideal for
+                  algorithmic problems.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Competitive</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Use C++ when micro-optimizations, memory control, or algorithmic speed are the
+                  priority — the STL accelerates development.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/C++.html" data-lang="cpp">Open C++</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="cpp-stl">STL</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal">
+          <div class="card" tabindex="0" aria-label="Python card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Python</div>
+                    <div class="lang-sub">Expressive & Fast to Prototype</div>
+                  </div>
+                  <div class="orb">🐍</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Super readable syntax, batteries-included standard library, perfect for learning algorithms quickly.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Beginner-friendly</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Python lets you express ideas fast — use it to prototype algorithms and learn
+                  patterns before optimizing in lower-level languages.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/Python.html" data-lang="python">Open Python</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="python-libraries">Libraries</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal">
+          <div class="card" tabindex="0" aria-label="JavaScript card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">JavaScript</div>
+                    <div class="lang-sub">Ubiquitous Web Language</div>
+                  </div>
+                  <div class="orb">🌐</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Runs everywhere — useful for frontend/back-end engineers who must know algorithms for interviews and
+                  production.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Full-stack</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">JavaScript's evented model and ubiquitous environment make it a practical choice
+                  for building prototypes and interview tasks.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/JavaScript.html" data-lang="js">Open JS</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="js-frameworks">Frameworks</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal">
+          <div class="card" tabindex="0" aria-label="Go card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Go</div>
+                    <div class="lang-sub">Concurrency & Simplicity</div>
+                  </div>
+                  <div class="orb">🟦</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Designed for scalable servers and concurrency — simple syntax with powerful goroutines and channels.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Concurrent</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Use Go for cloud-native systems and services where concurrency and low-latency
+                  are critical.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/Go.html" data-lang="go">Open Go</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="go-patterns">Patterns</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal">
+          <div class="card" tabindex="0" aria-label="Rust card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Rust</div>
+                    <div class="lang-sub">Memory-Safe & Fast</div>
+                  </div>
+                  <div class="orb">🟪</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Modern systems programming with ownership model — safety without sacrificing performance.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Safe</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Ideal for building safe, high-performance engines and services. Rust enforces
+                  correctness at compile time.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/Rust.html" data-lang="rust">Open Rust</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="rust-guides">Guides</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal">
+          <div class="card" tabindex="0" aria-label="Kotlin card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Kotlin</div>
+                    <div class="lang-sub">Android + Interop</div>
+                  </div>
+                  <div class="orb">🤖</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Modern JVM language with concise syntax — excellent for Android and interoperable with Java
+                  ecosystems.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">Mobile</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Kotlin reduces boilerplate and improves developer productivity — great for mobile
+                  and server-side JVM projects.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/kotlin.html" data-lang="kotlin">Open Kotlin</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="kotlin-examples">Examples</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip reveal">
+          <div class="card" tabindex="0" aria-label="Swift card">
+            <div class="card-inner">
+              <div class="card-face card-front">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div class="lang-title">Swift</div>
+                    <div class="lang-sub">Apple Ecosystem</div>
+                  </div>
+                  <div class="orb">🍎</div>
+                </div>
+                <div style="margin-top:8px; color:var(--muted); font-size:13px;">
+                  Fast, expressive, and safe — best for iOS/macOS apps and algorithm practice in Apple's ecosystem.
+                </div>
+                <div class="card-meta" style="justify-content:space-between; align-items:flex-end;">
+                  <span class="lang-tag">iOS</span>
+                  <span style="font-size:12px;color:var(--muted)">Flip for more →</span>
+                </div>
+              </div>
+
+              <div class="card-face card-back">
+                <div class="back-desc">Swift offers modern syntax and performance; great for mobile developers
+                  practicing algorithms for apps.</div>
+                <div class="back-actions">
+                  <a class="link-btn" href="pages/swift.html" data-lang="swift">Open Swift</a>
+                  <button class="ghost-btn ghost-btn-modal" data-content-id="swift-docs">Docs</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div>© <span id="year"></span> Programming & DSA Hub</div>
+      <div class="built-by">⚡ Built with ❤️ by Satish</div>
+    </footer>
+  </div>
+
+  <div id="content-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+    tabindex="-1">
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Close Modal" id="modal-close-btn">&times;</button>
+      <h3 id="modal-title">Content Title</h3>
+      <div id="modal-body">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================
+       Particles (lightweight)
+       ============================ */
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = innerWidth;
+    let H = canvas.height = innerHeight;
+    let particles = [];
+    const num = Math.max(40, Math.floor((W * H) / 90000)); // scale with screen
+    function rand(min, max) { return Math.random() * (max - min) + min }
+
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < num; i++) {
+        particles.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: rand(0.4, 2.2),
+          vx: rand(-0.2, 0.6),
+          vy: rand(-0.2, 0.6),
+          // Particle hue is now fixed to purple/blue range for theme consistency
+          hue: rand(210, 280)
+        });
+      }
+    }
+    function resize() {
+      W = canvas.width = innerWidth;
+      H = canvas.height = innerHeight;
+      createParticles();
+    }
+    window.addEventListener('resize', resize);
+    createParticles();
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -10) p.x = W + 10;
+        if (p.x > W + 10) p.x = -10;
+        if (p.y < -10) p.y = H + 10;
+        if (p.y > H + 10) p.y = -10;
+        // Particle color is also fixed to purple/blue for theme consistency
+        const grad = ctx.createRadialGradient(p.x, p.y, p.r, p.x, p.y, p.r * 8);
+        grad.addColorStop(0, `hsla(${p.hue},90%,70%,0.08)`);
+        grad.addColorStop(1, `hsla(${p.hue},80%,50%,0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    /* ============================
+       Parallax small motion
+       ============================ */
+    const layers = document.querySelectorAll('.parallax .layer');
+    window.addEventListener('mousemove', (e) => {
+      const cx = e.clientX / innerWidth - 0.5;
+      const cy = e.clientY / innerHeight - 0.5;
+      layers.forEach((L, i) => {
+        const depth = (i + 1) * 6;
+        L.style.transform = `translate(${cx * depth}px, ${cy * depth}px) scale(${1 - i * 0.02}) rotate(${cx * 6}deg)`;
+      });
+    });
+
+    /* ============================
+       Reveal on scroll
+       ============================ */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(ent => {
+        if (ent.isIntersecting) {
+          ent.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ============================
+       Sidebar toggle
+       ============================ */
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebar-toggle');
+    toggle.addEventListener('click', () => {
+      const hidden = sidebar.classList.toggle('hidden');
+      toggle.setAttribute('aria-expanded', String(!hidden));
+      sidebar.setAttribute('aria-hidden', String(hidden));
+    });
+
+    /* ============================
+       Theme Toggler
+       ============================ */
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    const THEME_KEY = 'user-theme';
+
+    // Define themes
+    const themes = {
+      'purple-galaxy': 'Purple Galaxy',
+      'solar-flare': 'Solar Flare'
+    };
+    const themeKeys = Object.keys(themes);
+
+    // Function to set theme
+    function setTheme(theme) {
+      body.setAttribute('data-theme', theme);
+      localStorage.setItem(THEME_KEY, theme);
+      const currentTitle = body.querySelector('.subtitle');
+      if (currentTitle) {
+        currentTitle.textContent = `${themes[theme]} · Learn languages · Master DSA`;
+      }
+    }
+
+    // Initialize theme from storage or default
+    const initialTheme = localStorage.getItem(THEME_KEY) || themeKeys[0];
+    setTheme(initialTheme);
+
+    // Toggle logic
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      const currentIndex = themeKeys.indexOf(currentTheme);
+      const nextIndex = (currentIndex + 1) % themeKeys.length;
+      const nextTheme = themeKeys[nextIndex];
+      setTheme(nextTheme);
+    });
+
+
+    /* ============================
+       Floating Modal (Content Window)
+       ============================ */
+    const modalOverlay = document.getElementById('content-modal-overlay');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    // Placeholder content map
+    const contentMap = {
+      'dsa-topics': {
+        title: 'DSA: Core Topics',
+        content: `
+            <ul>
+                <li><p><strong>Basic Structures:</strong> Arrays, Linked Lists (Singly, Doubly, Circular), Stacks, Queues (FIFO/LIFO).</p></li>
+                <li><p><strong>Advanced Structures:</strong> Trees (Binary, AVL, Red-Black), Heaps (Min/Max), Hash Tables, Graphs.</p></li>
+                <li><p><strong>Algorithms:</strong> Sorting (Merge, Quick, Heap), Searching (Binary, DFS, BFS), Dynamic Programming, Greedy Algorithms.</p></li>
+                <li><p><strong>Complexity Analysis:</strong> Big O Notation $(\\mathcal{O})$, Big Omega $(\\Omega)$, Big Theta $(\\Theta)$.</p></li>
+            </ul>
+        `
+      },
+      'java-docs': {
+        title: 'Java: Key Concepts',
+        content: `
+            <p>Java is an object-oriented, class-based, concurrent, secured and high-performance language. Key topics include:</p>
+            <ul>
+                <li><p><strong>JVM:</strong> Java Virtual Machine (platform independence).</p></li>
+                <li><p><strong>OOP Pillars:</strong> Encapsulation, Inheritance, Polymorphism, Abstraction.</p></li>
+                <li><p><strong>Concurrency:</strong> Threads, synchronized blocks, Executor services.</p></li>
+                <li><p><strong>Collections:</strong> List, Set, Map interfaces and their implementations.</p></li>
+            </ul>
+        `
+      },
+      'cpp-stl': {
+        title: 'C++: Standard Template Library (STL)',
+        content: `
+            <p>The STL is a set of C++ template classes that provide general-purpose algorithmic solutions.</p>
+            <ul>
+                <li><p><strong>Containers:</strong> <code>vector</code>, <code>list</code>, <code>map</code>, <code>set</code>, <code>unordered_map</code>, <code>deque</code> (for competitive coding).</p></li>
+                <li><p><strong>Algorithms:</strong> <code>sort</code>, <code>find</code>, <code>binary_search</code>, <code>next_permutation</code>.</p></li>
+                <li><p><strong>Iterators:</strong> Mechanism for traversing containers in a generic way.</p></li>
+            </ul>
+        `
+      },
+      'python-libraries': {
+        title: 'Python: Essential Libraries',
+        content: `
+            <p>Python's strength lies in its vast ecosystem of libraries:</p>
+            <ul>
+                <li><p><strong>Data Science:</strong> NumPy (array ops), Pandas (data analysis), Matplotlib (plotting).</p></li>
+                <li><p><strong>Web Development:</strong> Django, Flask (backend frameworks).</p></li>
+                <li><p><strong>Machine Learning:</strong> Scikit-learn, TensorFlow, PyTorch.</p></li>
+                <li><p><strong>Standard:</strong> <code>collections</code>, <code>os</code>, <code>sys</code> (essential built-in modules).</p></li>
+            </ul>
+        `
+      },
+      'js-frameworks': {
+        title: 'JavaScript: Frameworks & Runtime',
+        content: `
+            <p>The modern JavaScript ecosystem spans both client and server.</p>
+            <ul>
+                <li><p><strong>Frontend:</strong> React, Angular, Vue (Single Page Application development).</p></li>
+                <li><p><strong>Backend:</strong> Node.js runtime, Express.js (server-side logic).</p></li>
+                <li><p><strong>Styling:</strong> Tailwind CSS, Bootstrap (utility and component libraries).</p></li>
+            </ul>
+        `
+      },
+      'go-patterns': {
+        title: 'Go: Concurrency Patterns',
+        content: `
+            <p>Go is centered around concurrency using simple, powerful primitives:</p>
+            <ul>
+                <li><p><strong>Goroutines:</strong> Lightweight, independent functions that run concurrently.</p></li>
+                <li><p><strong>Channels:</strong> Typed conduits for communicating and synchronizing goroutines.</p></li>
+                <li><p><strong>Select:</strong> Allows a goroutine to wait on multiple communication operations.</p></li>
+                <li><p><strong>Context:</strong> Used for managing deadlines, cancellations, and values across API boundaries.</p></li>
+            </ul>
+        `
+      },
+      'rust-guides': {
+        title: 'Rust: Ownership & Safety',
+        content: `
+            <p>Rust's core features are designed to guarantee memory safety and thread safety.</p>
+            <ul>
+                <li><p><strong>Ownership:</strong> Every value has an owner, and there can only be one owner at a time.</p></li>
+                <li><p><strong>Borrowing:</strong> References (&) allow using data without taking ownership (mutable or immutable).</p></li>
+                <li><p><strong>Lifetimes:</strong> Ensures references are valid for as long as needed.</p></li>
+                <li><p><strong>Cargo:</strong> The standard build system and package manager.</p></li>
+            </ul>
+        `
+      },
+      'kotlin-examples': {
+        title: 'Kotlin: Modern Features',
+        content: `
+            <p>Designed to be a modern alternative to Java, it runs on the JVM.</p>
+            <ul>
+                <li><p><strong>Null Safety:</strong> Compile-time checks eliminate the dreaded <code>NullPointerException</code>.</p></li>
+                <li><p><strong>Coroutines:</strong> For asynchronous programming on Android and server-side.</p></li>
+                <li><p><strong>Extension Functions:</strong> Ability to "add" new functions to existing classes.</p></li>
+                <li><p><strong>Data Classes:</strong> Concise way to create classes that only hold data.</p></li>
+            </ul>
+        `
+      },
+      'swift-docs': {
+        title: 'Swift: Core Concepts',
+        content: `
+            <p>A fast, safe, modern language for Apple development.</p>
+            <ul>
+                <li><p><strong>Optionals:</strong> Handles the absence of a value (similar to Kotlin's Null Safety).</p></li>
+                <li><p><strong>Structs vs. Classes:</strong> Value types (Structs) vs. Reference types (Classes).</p></li>
+                <li><p><strong>Protocols:</strong> Defines a blueprint of methods, properties, and other requirements.</p></li>
+                <li><p><strong>Memory Management:</strong> Uses Automatic Reference Counting (ARC).</p></li>
+            </ul>
+        `
+      }
+    };
+
+    // Open Modal function
+    function openModal(contentId) {
+      const data = contentMap[contentId];
+      if (data) {
+        modalTitle.textContent = data.title;
+        modalBody.innerHTML = data.content;
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        modalOverlay.focus(); // Focus modal for accessibility
+      }
+    }
+
+    // Close Modal function
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = ''; // Restore background scrolling
+    }
+
+    // Event listeners for modal buttons
+    document.querySelectorAll('.ghost-btn-modal').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const contentId = e.target.getAttribute('data-content-id');
+        openModal(contentId);
+      });
+    });
+
+    // Close button listener
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    // Close on overlay click
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        closeModal();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    /* ============================
+       Keyboard accessibility: flip on Enter/Space
+       ============================ */
+    // ... (Previous code remains the same)
+
+    /* ============================
+       Keyboard accessibility: flip on Enter/Space (FIXED)
+       ============================ */
+    document.querySelectorAll('.flip .card').forEach(card => {
+      const cardInner = card.querySelector('.card-inner');
+
+      // Function to toggle the flip state
+      function toggleFlipState() {
+        const isFlipped = cardInner.style.transform.includes('180deg');
+        if (isFlipped) {
+          // Flip back to front
+          cardInner.style.transform = 'rotateY(0deg)';
+        } else {
+          // Flip to back
+          cardInner.style.transform = 'rotateY(180deg) translateZ(0px)';
+        }
+      }
+
+      // Handle keyboard interaction
+      card.addEventListener('keydown', (e) => {
+        // Check for Enter or Space key press
+        if (e.key === 'Enter' || e.key === ' ') {
+          toggleFlipState();
+          e.preventDefault();
+        }
+      });
+
+      // Handle click on the card body (to allow flipping without hover)
+      // This is optional but improves responsiveness on touch/click-only devices
+      card.addEventListener('click', (e) => {
+        // Prevent clicks on action buttons inside the back face from flipping the card back immediately
+        if (!e.target.closest('.back-actions')) {
+          // If the card is not flipped by CSS hover, we use JS to toggle the state.
+          // Note: On desktop, the CSS hover will override this when the mouse is over the card.
+          if (e.pointerType === 'mouse' || e.pointerType === 'touch') {
+            // We rely on CSS hover for simplicity on mouse, but keep this for touch fallback.
+            // For a reliable fix that works against focusout, we remove the focusout listener completely.
+            // The card will remain flipped until ESC is pressed (handled by modal) or the user clicks/focuses out naturally.
+          }
+        }
+      });
+
+      // *** REMOVED the problematic `focusout` listener: ***
+      // card.addEventListener('focusout', ()=> {
+      //   card.querySelector('.card-inner').style.transform = 'rotateY(0deg)';
+      // });
+    });
+
+    // ... (Rest of the JavaScript remains the same)
+
+
+    /* Footer year */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* small helpers */
+    function scrollToGrid() {
+      document.getElementById('grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    function focusSearch() {
+      alert('Search placeholder — integrate a proper search input.');
+    }
+  </script>
+</body>
+
+</html>

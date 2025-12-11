@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>C Language — Complete Reference (Book)</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+
+  <!-- Page-scoped overrides (DO NOT modify central CSS) -->
+  <style>
+    /* Page-scoped layout fixes: header sits beside sidebar and above content */
+    body.c-page .header { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+    body.c-page .content { margin-left: 280px !important; padding-top: 18px !important; }
+    body.c-page .layout { width: 100% !important; display: block !important; }
+    body.c-page .container { margin: 0 !important; width: 100% !important; max-width: none !important; background: none !important; box-shadow: none !important; border: none !important; }
+    body.c-page .panel { max-width: none; }
+    /* Quick outline */
+    
+    /* Improve code readability slightly for C samples */
+    .code pre { font-size: 13px; line-height:1.45; }
+    .section-sub { color: #a0a0a0; margin-top:6px; }
+    /* make footer text color consistent */
+    .footer .built-by { color: #d4af37; }
+    /* ensure chatbot above outline */
+    #chatbotWindow { z-index:1600; right: 300px; }
+    @media (max-width: 1100px) {
+      #chatbotWindow { right: 20px; }
+     }
+  </style>
+</head>
+
+<body class="guide c-page">
+
+  <!-- Sidebar toggle + Sidebar (keeps central markup) -->
+  <button class="sidebar-toggle">☰ Menu</button>
+  <aside class="sidebar" aria-label="Table of contents">
+    <div class="toc-title">C Language Book</div>
+    <div class="search-container">
+      <input id="searchInput" placeholder="Search topics..." />
+    </div>
+    <ul class="toc">
+      <li><a href="#intro">Intro & Philosophy</a></li>
+      <li><a href="#setup">Toolchain & Build</a></li>
+      <li><a href="#types">Types & Variables</a></li>
+      <li><a href="#control">Control Flow</a></li>
+      <li><a href="#functions">Functions</a></li>
+      <li><a href="#pointers">Pointers</a></li>
+      <li><a href="#arrays-strings">Arrays & Strings</a></li>
+      <li><a href="#struct-union">Structs & Unions</a></li>
+      <li><a href="#memory">Memory & Alloc</a></li>
+      <li><a href="#preprocessor">Preprocessor & Macros</a></li>
+      <li><a href="#io">File I/O & Streams</a></li>
+      <li><a href="#debugging">Debugging & Tools</a></li>
+      <li><a href="#system">System Programming</a></li>
+      <li><a href="#concurrency">Threads & Concurrency</a></li>
+      <li><a href="#optimization">Optimization & UB</a></li>
+      <li><a href="#advanced">Advanced Topics</a></li>
+      <li><a href="#templates">Templates & Snippets</a></li>
+      <li><a href="#practice">Practice & Interview</a></li>
+      <li><a href="#references">References</a></li>
+    </ul>
+    
+  </aside>
+
+  <!-- main layout -->
+  <div class="layout">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo">🔧📘</div>
+        <div>
+          <h1>C — Complete Language Guide (Book)</h1>
+          <div class="subtitle muted">From basics to systems-level programming — deep, practical, and interview-ready</div>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn" onclick="toggleFocusMode()">🎯 Focus Mode</button>
+        <button class="btn ghost" onclick="toggleChatbot()">💬 Chatbot</button>
+      </div>
+      <nav class="top-actions">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn ghost" href="C++.html">C++ Guide</a>
+      <a class="btn ghost" href="dsa_tracker.html">DSA Tracker</a>
+    </nav>
+    </header>
+
+    <!-- floating quick outline -->
+    
+
+    <!-- Content -->
+    <main class="content panel" role="main">
+
+      <!-- INTRO -->
+      <section id="intro" class="panel">
+        <h2>Introduction & Philosophy</h2>
+        <p>The C programming language (1972, Dennis Ritchie) is small, powerful, and close to hardware. C favors explicitness and performance — you manage memory and program structure. Learn C to understand systems, compilers, and how higher-level languages work under the hood.</p>
+        <ul class="bullets">
+          <li>Minimal runtime — the language exposes primitives.</li>
+          <li>Undefined Behavior (UB) exists — learn it, avoid it.</li>
+          <li>Portable if you respect implementation-defined behavior.</li>
+        </ul>
+      </section>
+
+      <!-- TOOLCHAIN -->
+      <section id="setup" class="panel">
+        <h2>Toolchain & Build Pipeline</h2>
+        <p>Stages: preprocessing → compilation (C → assembly) → assembly (→ object) → linking → executable.</p>
+
+        <h3>GCC basics</h3>
+        <div class="code" id="gcc-basic">
+          <button class="copy" onclick="copyCode('gcc-basic')">Copy</button>
+<pre>
+gcc -Wall -Wextra -O2 -std=c11 -g -o myprog main.c util.c
+// -Wall -Wextra : enable warnings
+// -O2 : optimize
+// -g : include debug symbols
+</pre>
+        </div>
+
+        <h3>Makefile minimal example</h3>
+        <div class="code" id="makefile">
+          <button class="copy" onclick="copyCode('makefile')">Copy</button>
+<pre>
+CC=gcc
+CFLAGS=-std=c11 -Wall -Wextra -O2
+SRCS=main.c util.c
+OBJS=$(SRCS:.c=.o)
+myprog: $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS)
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+clean:
+	rm -f *.o myprog
+</pre>
+        </div>
+
+        <h3>Static vs Shared linking</h3>
+        <p>Static: embed libs (larger binary). Shared: smaller binary but depend on system libraries. Use -static or linker's flags.</p>
+      </section>
+
+      <!-- TYPES -->
+      <section id="types" class="panel">
+        <h2>Types & Variables</h2>
+        <p>Built-in types: void, char, int, short, long, float, double. Use <code>stdint.h</code> for fixed-width types (int32_t, uint64_t).</p>
+
+        <h3>Signed vs Unsigned & integer overflow</h3>
+        <div class="code" id="int-overflow">
+          <button class="copy" onclick="copyCode('int-overflow')">Copy</button>
+<pre>
+#include &lt;stdint.h&gt;
+int32_t a = INT32_MAX; // overflow is UB for signed
+uint32_t b = UINT32_MAX;
+b += 1; // wraps around (defined for unsigned)
+</pre>
+        </div>
+
+        <h3>Type qualifiers</h3>
+        <p><code>const</code>, <code>volatile</code>, <code>restrict</code> (C99) — learn how they affect aliasing and optimization.</p>
+      </section>
+
+      <!-- CONTROL -->
+      <section id="control" class="panel">
+        <h2>Control Flow</h2>
+        <p>Standard constructs: if/else, switch, for, while, do-while, break/continue, goto (sparingly).</p>
+
+        <h3>Switch fall-through example (intentional)</h3>
+        <div class="code" id="switch">
+          <button class="copy" onclick="copyCode('switch')">Copy</button>
+<pre>
+switch(code) {
+  case 1:
+    // handle 1
+    break;
+  case 2:
+  case 3:
+    // 2 and 3 handled same
+    break;
+  default:
+    // default
+}
+</pre>
+        </div>
+      </section>
+
+      <!-- FUNCTIONS -->
+      <section id="functions" class="panel">
+        <h2>Functions & Calling Conventions</h2>
+        <p>Functions are declared and defined. Pass-by-value for scalars; pass pointers to mutate data. Watch stack usage for large locals.</p>
+
+        <h3>Function pointer example</h3>
+        <div class="code" id="funcptr">
+          <button class="copy" onclick="copyCode('funcptr')">Copy</button>
+<pre>
+int add(int a,int b){return a+b;}
+int apply(int (*fn)(int,int), int x, int y){ return fn(x,y); }
+// usage: apply(add, 2, 3);
+</pre>
+        </div>
+
+        <h3>Inline & static functions</h3>
+        <p><code>static</code> at file scope hides symbol from linker; <code>inline</code> hints to compiler to inline (semantics subtle).</p>
+      </section>
+
+      <!-- POINTERS -->
+      <section id="pointers" class="panel">
+        <h2>Pointers — the heart of C</h2>
+        <p>Pointers hold addresses. Key: the type tells how to interpret memory at that address. Learn pointer arithmetic and levels (T*, T**, ...).</p>
+
+        <h3>Basic pointer usage</h3>
+        <div class="code" id="ptr-basic">
+          <button class="copy" onclick="copyCode('ptr-basic')">Copy</button>
+<pre>
+int x = 42;
+int *p = &x;
+*p = 100; // writes to x
+int **pp = &p; // pointer-to-pointer
+</pre>
+        </div>
+
+        <h3>Pointer arithmetic & array equivalence</h3>
+        <div class="code" id="ptr-array">
+          <button class="copy" onclick="copyCode('ptr-array')">Copy</button>
+<pre>
+int a[5];
+int *p = a;    // &a[0]
+p[2] = 10;     // *(p+2)
+p++;           // move to next int
+</pre>
+        </div>
+
+        <h3>Common pitfalls</h3>
+        <ul class="bullets">
+          <li>Dereferencing NULL or uninitialized pointers → SIGSEGV</li>
+          <li>Pointer to freed memory (use-after-free)</li>
+          <li>Incorrect pointer arithmetic (type-size matters)</li>
+        </ul>
+      </section>
+
+      <!-- ARRAYS & STRINGS -->
+      <section id="arrays-strings" class="panel">
+        <h2>Arrays & Strings</h2>
+        <p>Strings are char arrays terminated by '\0'. Use safe functions (strncpy, but mind no null). Prefer length-limited routines.</p>
+
+        <h3>Safely read line (getline)</h3>
+        <div class="code" id="getline">
+          <button class="copy" onclick="copyCode('getline')">Copy</button>
+<pre>
+#include &lt;stdio.h&gt;
+char *line = NULL;
+size_t n = 0;
+ssize_t len = getline(&line, &n, stdin);
+// remember: free(line) when done
+</pre>
+        </div>
+
+        <h3>Common string bug — buffer overflow</h3>
+        <p>Avoid gets(); use fgets() and check lengths.</p>
+      </section>
+
+      <!-- STRUCTS & UNIONS -->
+      <section id="struct-union" class="panel">
+        <h2>Structs, Unions & Enums</h2>
+        <p>Struct groups fields; union shares storage; enum gives named integers.</p>
+
+        <h3>Struct example and padding</h3>
+        <div class="code" id="struct-padding">
+          <button class="copy" onclick="copyCode('struct-padding')">Copy</button>
+<pre>
+struct S {
+  char a;
+  int b; // compiler will insert padding between a and b typically
+};
+sizeof(struct S); // may be larger than sum of fields due to alignment
+</pre>
+        </div>
+
+        <h3>Bitfields</h3>
+        <div class="code" id="bitfield">
+          <button class="copy" onclick="copyCode('bitfield')">Copy</button>
+<pre>
+struct Flags {
+  unsigned int a:1;
+  unsigned int b:3;
+  unsigned int c:4;
+};
+</pre>
+        </div>
+      </section>
+
+      <!-- MEMORY -->
+      <section id="memory" class="panel">
+        <h2>Memory Model — Stack, Heap, BSS, Data, Text</h2>
+        <p>Understanding memory layout is essential for debugging and performance.</p>
+
+        <h3>Dynamic allocation</h3>
+        <div class="code" id="malloc-sample">
+          <button class="copy" onclick="copyCode('malloc-sample')">Copy</button>
+<pre>
+int *arr = malloc(n * sizeof *arr);
+if(!arr){ perror("malloc"); exit(1); }
+free(arr);
+</pre>
+        </div>
+
+        <h3>realloc usage</h3>
+        <div class="code" id="realloc">
+          <button class="copy" onclick="copyCode('realloc')">Copy</button>
+<pre>
+int *tmp = realloc(arr, newN * sizeof *arr);
+if(!tmp){ /* handle OOM, arr still valid */ }
+else arr = tmp;
+</pre>
+        </div>
+
+        <h3>Memory leak and valgrind</h3>
+        <p>Use valgrind --leak-check=full ./myprog to find leaks and invalid reads/writes.</p>
+      </section>
+
+      <!-- PREPROCESSOR -->
+      <section id="preprocessor" class="panel">
+        <h2>Preprocessor & Macros</h2>
+        <p>Macros are expanded before compilation. Use inline functions where possible to avoid macro pitfalls.</p>
+
+        <h3>Macro pitfalls (use parentheses!)</h3>
+        <div class="code" id="macro-pitfall">
+          <button class="copy" onclick="copyCode('macro-pitfall')">Copy</button>
+<pre>
+#define SQR(x) (x*x)      // WRONG: use ((x)*(x))
+int v = SQR(1+2); // expands to (1+2*1+2) = unexpected
+</pre>
+        </div>
+
+        <h3>Include guards</h3>
+        <div class="code" id="include-guard">
+          <button class="copy" onclick="copyCode('include-guard')">Copy</button>
+<pre>
+#ifndef MY_HEADER_H
+#define MY_HEADER_H
+// header content
+#endif
+</pre>
+        </div>
+      </section>
+
+      <!-- FILE I/O -->
+      <section id="io" class="panel">
+        <h2>File I/O & Streams</h2>
+        <p>Use <code>fopen/fread/fwrite</code> for binary; <code>fgets/fputs</code> for text. Check return values.</p>
+
+        <h3>Binary file copy example</h3>
+        <div class="code" id="file-copy">
+          <button class="copy" onclick="copyCode('file-copy')">Copy</button>
+<pre>
+FILE *in = fopen("in.bin","rb");
+FILE *out = fopen("out.bin","wb");
+char buf[4096]; size_t n;
+while((n=fread(buf,1,sizeof buf,in))>0) fwrite(buf,1,n,out);
+fclose(in); fclose(out);
+</pre>
+        </div>
+      </section>
+
+      <!-- DEBUGGING -->
+      <section id="debugging" class="panel">
+        <h2>Debugging & Tools</h2>
+        <p>Compile with -g and enable warnings. Use gdb, valgrind, and sanitizers (ASAN/UBSAN) during development.</p>
+
+        <h3>gdb quick steps</h3>
+        <div class="code" id="gdb">
+          <button class="copy" onclick="copyCode('gdb')">Copy</button>
+<pre>
+gcc -g -O0 -o myprog main.c
+gdb ./myprog
+(gdb) break main
+(gdb) run
+(gdb) backtrace
+(gdb) print var
+</pre>
+        </div>
+
+        <h3>Use ASAN</h3>
+        <div class="code" id="asan">
+          <button class="copy" onclick="copyCode('asan')">Copy</button>
+<pre>
+gcc -fsanitize=address -g -O1 -o myprog main.c
+./myprog  // ASAN reports invalid accesses
+</pre>
+        </div>
+      </section>
+
+      <!-- SYSTEM PROGRAMMING -->
+      <section id="system" class="panel">
+        <h2>System Programming Basics</h2>
+        <p>POSIX API: fork, exec, pipes, signals, file descriptors. C is the language of system programming.</p>
+
+        <h3>fork + exec example</h3>
+        <div class="code" id="fork-exec">
+          <button class="copy" onclick="copyCode('fork-exec')">Copy</button>
+<pre>
+pid_t pid = fork();
+if(pid==0){
+  // child
+  execlp("ls","ls","-l",NULL);
+  _exit(1); // only if exec fails
+} else if(pid>0){
+  // parent: wait
+  wait(NULL);
+} else { perror("fork"); }
+</pre>
+        </div>
+
+        <h3>Pipes (parent -> child)</h3>
+        <div class="code" id="pipe">
+          <button class="copy" onclick="copyCode('pipe')">Copy</button>
+<pre>
+int fds[2];
+pipe(fds);
+if(fork()==0){
+  close(fds[1]); // child reads
+  // read from fds[0]
+} else {
+  close(fds[0]); // parent writes
+  // write to fds[1]
+}
+</pre>
+        </div>
+      </section>
+
+      <!-- CONCURRENCY -->
+      <section id="concurrency" class="panel">
+        <h2>Concurrency — pthreads & synchronization</h2>
+        <p>POSIX threads (pthreads) provide threading in C. Protect shared data with mutexes or use atomic operations.</p>
+
+        <h3>pthreads example (simple)</h3>
+        <div class="code" id="pthreads">
+          <button class="copy" onclick="copyCode('pthreads')">Copy</button>
+<pre>
+#include &lt;pthread.h&gt;
+void *worker(void *arg){
+  // do work
+  return NULL;
+}
+pthread_t t;
+pthread_create(&t, NULL, worker, NULL);
+pthread_join(t, NULL);
+</pre>
+        </div>
+
+        <h3>Mutex use</h3>
+        <div class="code" id="mutex">
+          <button class="copy" onclick="copyCode('mutex')">Copy</button>
+<pre>
+pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_lock(&m);
+// critical section
+pthread_mutex_unlock(&m);
+</pre>
+        </div>
+      </section>
+
+      <!-- OPTIMIZATION & UB -->
+      <section id="optimization" class="panel">
+        <h2>Optimization & Undefined Behavior</h2>
+        <p>Undefined behavior lets compilers assume impossible conditions — optimizing with UB can create surprising results. Avoid UB; use sanitizers and strict aliasing rules.</p>
+
+        <h3>Strict aliasing rule example</h3>
+        <p>Don't access same memory as two incompatible types (use memcpy for type punning or use union carefully).</p>
+
+        <h3>Compiler hints</h3>
+        <div class="code" id="likely">
+          <button class="copy" onclick="copyCode('likely')">Copy</button>
+<pre>
+if (__builtin_expect(x == 0, 0)) { /* unlikely path */ }
+</pre>
+        </div>
+      </section>
+
+      <!-- ADVANCED -->
+      <section id="advanced" class="panel">
+        <h2>Advanced Topics</h2>
+        <ul class="bullets">
+          <li>Linker scripts and symbol visibility</li>
+          <li>Inline assembly (gcc asm) — platform-specific</li>
+          <li>Custom allocators & memory pools</li>
+          <li>Network sockets (TCP/UDP) basics</li>
+          <li>Interfacing C with other languages (FFI)</li>
+        </ul>
+      </section>
+
+      <!-- TEMPLATES -->
+      <section id="templates" class="panel">
+        <h2>Useful Templates & Snippets</h2>
+
+        <h3>Fast integer input (scanf alternative)</h3>
+        <div class="code" id="fastio">
+          <button class="copy" onclick="copyCode('fastio')">Copy</button>
+<pre>
+int readInt(){
+  int sign=1, c=getchar_unlocked(), x=0;
+  while(c&lt;=' ') c=getchar_unlocked();
+  if(c=='-'){ sign=-1; c=getchar_unlocked(); }
+  for(; c>='0' && c<='9'; c=getchar_unlocked()) x = x*10 + (c-'0');
+  return x*sign;
+}
+</pre>
+        </div>
+
+        <h3>Safe strdup</h3>
+        <div class="code" id="strdup">
+          <button class="copy" onclick="copyCode('strdup')">Copy</button>
+<pre>
+char *safe_strdup(const char *s){
+  size_t n = strlen(s)+1;
+  char *t = malloc(n);
+  if(t) memcpy(t, s, n);
+  return t;
+}
+</pre>
+        </div>
+      </section>
+
+      <!-- PRACTICE -->
+      <section id="practice" class="panel">
+        <h2>Practice Problems & Interview Questions</h2>
+        <ol>
+          <li>Implement strlen, strcpy, strcmp</li>
+          <li>Write your own malloc using sbrk (educational)</li>
+          <li>Detect and fix memory leaks in given code</li>
+          <li>Implement ring buffer</li>
+          <li>Implement producer-consumer with pthreads</li>
+        </ol>
+
+        <h3>Interview strategy for C</h3>
+        <ul class="bullets">
+          <li>Explain memory layout and ownership clearly.</li>
+          <li>Point out edge cases (null pointers, zero sizes).</li>
+          <li>Show test cases and complexity.</li>
+        </ul>
+      </section>
+
+      <!-- REFERENCES -->
+      <section id="references" class="panel">
+        <h2>References & Further Reading</h2>
+        <ul class="bullets">
+          <li>"The C Programming Language" — Kernighan & Ritchie</li>
+          <li>ISO C Standard (C11/C17) — for definitive behavior</li>
+          <li>GCC manual, glibc manual, POSIX docs</li>
+        </ul>
+      </section>
+
+      <!-- modal for code preview -->
+      <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-inner">
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <pre id="modal-code" style="white-space: pre-wrap;"></pre>
+        </div>
+      </div>
+
+      <!-- C-specific Chatbot window -->
+      <aside id="chatbotWindow" class="chatbot" style="position:fixed; right:20px; bottom:20px; width:380px; max-height:520px; display:none;">
+        <div style="background:#111; border:1px solid #00ff88; border-radius:10px; overflow:hidden;">
+          <div style="padding:10px; color:#00ff88; font-weight:700;">C Chatbot — quick help</div>
+          <div id="chatbotMessages" style="height:360px; overflow:auto; padding:10px; background:#0a0a0a;"></div>
+          <div style="display:flex; gap:8px; padding:10px;">
+            <input id="chatInput" onkeydown="handleChatKeyPress(event)" placeholder="Ask: pointers, malloc, segfault..." style="flex:1; padding:8px; background:#111; border:1px solid #1a1a1a; color:#e0e0e0;"/>
+            <button class="btn" onclick="sendMessage()" style="padding:8px 10px;">Send</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Footer -->
+      <footer class="footer">
+        
+        <div class="built-by">© 2025 ⚡ Built with passion by Satish • For learners, by a learner</div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- central script (unchanged) -->
+  <script src="../assets/scripts.js"></script>
+
+  <!-- Page-local JS: sidebar search, modal attach, and C chatbot implementation -->
+  <script>
+    // Sidebar search
+    (function () {
+      const input = document.getElementById('searchInput');
+      const tocItems = Array.from(document.querySelectorAll('.toc li'));
+      if (!input) return;
+      input.addEventListener('input', function () {
+        const q = this.value.trim().toLowerCase();
+        tocItems.forEach(li => {
+          const a = li.querySelector('a');
+          const txt = a.textContent.toLowerCase();
+          li.style.display = txt.includes(q) ? '' : 'none';
+        });
+      });
+    })();
+
+    // Ensure double-click opens modal with code
+    document.querySelectorAll('.code').forEach(block => {
+      block.addEventListener('dblclick', () => {
+        const id = block.id;
+        if (id && typeof openModalWithCode === 'function') openModalWithCode(id);
+      });
+    });
+
+    // Ensure copyCode fallback
+    if (typeof copyCode !== 'function') {
+      window.copyCode = function (id) {
+        const el = document.getElementById(id);
+        if (!el) return alert('Code block not found');
+        const text = el.innerText.replace(/Copy.*$/g,'').trim();
+        navigator.clipboard.writeText(text).then(()=> alert('Copied')).catch(()=> alert('Copy failed'));
+      };
+    }
+
+    // Chatbot logic: C-specific knowledge base (simple local matching)
+    const cKnowledge = {
+      'what is segmentation fault': 'Segmentation fault (SIGSEGV) is a crash caused by invalid memory access, e.g., dereferencing NULL or freed pointers, buffer overflow, or accessing memory out of bounds.',
+      'why malloc fails': 'malloc can fail when the system is out of memory or when you request a huge allocation. Check for NULL return and handle gracefully. Use malloc sizes carefully and consider using size_t for sizes.',
+      'how to avoid memory leaks': 'Free every allocation when no longer needed, prefer single owner semantics, use tools like valgrind and ASAN to catch leaks and invalid accesses.',
+      'difference between stack and heap': 'Stack: automatic storage for local variables, LIFO, limited size. Heap: dynamic allocation via malloc/calloc/realloc, managed by programmer, larger but needs free().',
+      'what is undefined behavior': 'Undefined Behavior (UB) means the C standard places no requirements on program outcome. Examples: signed overflow, dereferencing invalid pointers, out-of-bounds array access. Avoid UB; use sanitizers to find it.',
+      'how to use realloc safely': 'Use a temporary pointer: tmp = realloc(ptr, newsize); if(tmp==NULL) handle OOM while keeping original ptr valid; else ptr = tmp.',
+      'safe string functions': 'Use strncpy/strncat carefully (they may not add NUL). Prefer snprintf for formatted output and use explicit buffer lengths. Consider strlcpy/strlcat where available.',
+      'how to debug with gdb': 'Compile with -g and -O0 for debugging. Use gdb to set breakpoints (break), run, inspect variables (print), and backtrace (bt) after crash.',
+      'what is volatile': 'volatile tells compiler the value may change outside program flow (hardware, signal handlers) so optimizations should not assume value is constant. It does not make operations atomic.',
+      'how to prevent buffer overflow': 'Always check bounds, use functions that accept buffer size (fgets, snprintf). Validate inputs and avoid unsafe functions like gets().',
+      'explain pointer to pointer': 'A pointer-to-pointer (T**) stores address of a pointer (T*). Useful when you need to modify caller\'s pointer or allocate arrays of pointers.',
+      'how to use function pointers': 'Declare like int (*fn)(int,int); assign a function & call: fn = add; result = fn(2,3); Useful for callbacks and dispatch tables.',
+      'what is strict aliasing': 'Compiler assumes pointers of different types do not point to same memory. Violating it can cause UB. Use char* or memcpy for type punning, or compile with -fno-strict-aliasing if necessary.',
+      'how to detect use-after-free': 'Use valgrind (memcheck) or ASAN. Watch for accesses after free(); set pointer to NULL after free to help detect.',
+      'how to write thread-safe code': 'Protect shared data with mutexes or use atomics. Avoid data races. Use pthread_mutex_lock/unlock or C11 atomics.',
+      'how to read file line by line': 'Use getline (POSIX) for dynamic buffers or fgets for fixed buffers; always check return values.',
+      'how to profile CPU': 'Use gprof or perf; compile with -pg for gprof. Use perf record/report for Linux perf profiling.'
+      // add more mappings as desired...
+    };
+
+    // Chat UI helpers
+    function appendMessage(role, text) {
+      const container = document.getElementById('chatbotMessages');
+      const div = document.createElement('div');
+      div.className = 'chat-message ' + (role === 'user' ? 'user' : 'bot');
+      div.style.marginBottom = '8px';
+      if (role === 'user') {
+        div.innerHTML = `<p style="margin:0; color:#00ff88;"><strong>You:</strong> ${escapeHtml(text)}</p>`;
+      } else {
+        div.innerHTML = `<p style="margin:0; color:#e0e0e0;"><strong>C-Bot:</strong> ${escapeHtml(text)}</p>`;
+      }
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+    function escapeHtml(s){ return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+    // sendMessage — C-specific chatbot matching
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      if(!message) return;
+      appendMessage('user', message);
+      input.value = '';
+      // simple matching
+      setTimeout(() => {
+        const q = message.toLowerCase();
+        // exact phrase mapping tries
+        let bestKey = '';
+        let bestLen = 0;
+        for (const k of Object.keys(cKnowledge)) {
+          if (q.includes(k) && k.length > bestLen) { bestKey = k; bestLen = k.length; }
+        }
+        if (bestKey) {
+          appendMessage('bot', cKnowledge[bestKey]);
+          return;
+        }
+        // keyword heuristics
+        if (q.includes('segfault') || q.includes('seg fault') || q.includes('segmentation')) appendMessage('bot', cKnowledge['what is segmentation fault']);
+        else if (q.includes('malloc') || q.includes('realloc') || q.includes('free')) appendMessage('bot', cKnowledge['why malloc fails']);
+        else if (q.includes('valgrind') || q.includes('leak')) appendMessage('bot', 'Use valgrind --leak-check=full ./yourprog and inspect reported leaks/invalid reads. Run with small test cases iteratively.');
+        else if (q.includes('gdb') || q.includes('debug')) appendMessage('bot', cKnowledge['how to debug with gdb']);
+        else appendMessage('bot', "I can help with pointers, malloc/realloc/free, segfaults, gdb, valgrind, threading, and common C pitfalls. Try: 'why segfault', 'how to debug with gdb', or 'realloc safely'.");
+      }, 350);
+    }
+
+    function handleChatKeyPress(event) {
+      if (event.key === 'Enter') sendMessage();
+    }
+
+    // expose sendMessage and handleChatKeyPress for central scripts that call them
+    window.sendMessage = sendMessage;
+    window.handleChatKeyPress = handleChatKeyPress;
+
+    // ensure chatbot visibility toggles when central toggleChatbot used
+    (function watchChatbotToggle(){
+      const el = document.getElementById('chatbotWindow');
+      if(!el) return;
+      const obs = new MutationObserver(() => { el.style.display = el.classList.contains('active') ? 'block' : 'none'; });
+      obs.observe(el, { attributes: true, attributeFilter: ['class']});
+    })();
+
+    // Show initial help message in chatbot when opened
+    document.getElementById('chatbotWindow').addEventListener('click', function initHelp(){
+      const msgs = document.getElementById('chatbotMessages');
+      if(msgs.childElementCount === 0){
+        appendMessage('bot', 'Hi — I\'m your C helper. Ask about segfaults, malloc, pointers, gdb, valgrind, threads, or common bugs.');
+      }
+    }, { once:true });
+
+    // Smooth scroll on hash load (if central scripts didn't)
+    if (window.location.hash) {
+      setTimeout(() => {
+        const t = document.querySelector(window.location.hash);
+        if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 200);
+    }
+  </script>
+</body>
+</html>
+
