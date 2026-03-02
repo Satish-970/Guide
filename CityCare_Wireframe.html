@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CityCare — Wireframe Skeleton</title>
+<style>
+  :root {
+    --blue: #1B5E93;
+    --blue-light: #EBF3FB;
+    --blue-mid: #2E6FAD;
+    --green: #2E7D32;
+    --red: #C62828;
+    --orange: #E65100;
+    --purple: #6A1B9A;
+    --grey: #F4F5F7;
+    --grey-mid: #DEE2E6;
+    --grey-dark: #6C757D;
+    --text: #1A1A2E;
+    --white: #FFFFFF;
+    --sidebar-w: 220px;
+    --header-h: 56px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #ECEFF1; color: var(--text); }
+
+  /* ── NAV TABS ── */
+  #portal-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--text); display: flex; align-items: center;
+    height: 44px; padding: 0 16px; gap: 4px;
+  }
+  #portal-nav span { color: #aaa; font-size: 12px; margin-right: 8px; letter-spacing: 1px; text-transform: uppercase; }
+  .portal-tab {
+    padding: 6px 16px; border-radius: 4px; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: #ccc; border: 1px solid transparent;
+    transition: all .2s;
+  }
+  .portal-tab:hover { background: #2a2a3e; color: #fff; }
+  .portal-tab.active { background: var(--blue); color: #fff; border-color: var(--blue-mid); }
+
+  /* ── PORTAL WRAPPER ── */
+  .portal { display: none; padding-top: 44px; min-height: 100vh; }
+  .portal.active { display: block; }
+
+  /* ── SHARED LAYOUT ── */
+  .app-shell { display: flex; min-height: calc(100vh - 44px); }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w); background: var(--blue); color: #fff;
+    display: flex; flex-direction: column; min-height: calc(100vh - 44px);
+    position: sticky; top: 44px; flex-shrink: 0;
+  }
+  .sidebar-brand {
+    padding: 18px 20px 14px; border-bottom: 1px solid rgba(255,255,255,.15);
+  }
+  .sidebar-brand .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .sidebar-brand .role-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    background: rgba(255,255,255,.18); padding: 2px 8px; border-radius: 20px;
+    display: inline-block; margin-top: 4px;
+  }
+  .sidebar-menu { padding: 12px 0; flex: 1; }
+  .menu-section { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,.45); padding: 14px 20px 6px; }
+  .menu-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 20px;
+    font-size: 13.5px; cursor: pointer; color: rgba(255,255,255,.8);
+    border-left: 3px solid transparent; transition: all .15s;
+  }
+  .menu-item:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .menu-item.active { background: rgba(255,255,255,.15); color: #fff; border-left-color: #fff; font-weight: 600; }
+  .menu-icon { width: 18px; text-align: center; font-size: 15px; }
+  .sidebar-footer {
+    padding: 14px 20px; border-top: 1px solid rgba(255,255,255,.15);
+    font-size: 12px; color: rgba(255,255,255,.6);
+  }
+  .avatar-row { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,.25);
+    display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+
+  /* ── MAIN CONTENT ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar {
+    height: var(--header-h); background: var(--white); border-bottom: 1px solid var(--grey-mid);
+    display: flex; align-items: center; padding: 0 24px; gap: 16px; position: sticky; top: 44px; z-index: 100;
+  }
+  .topbar-title { font-size: 17px; font-weight: 700; flex: 1; }
+  .topbar-actions { display: flex; gap: 8px; }
+  .btn {
+    padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; transition: all .15s;
+  }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: var(--blue-mid); }
+  .btn-outline { background: transparent; color: var(--blue); border: 1.5px solid var(--blue); }
+  .btn-outline:hover { background: var(--blue-light); }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-success { background: var(--green); color: #fff; }
+  .btn-warning { background: var(--orange); color: #fff; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+  .content { padding: 24px; flex: 1; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white); border-radius: 10px; border: 1px solid var(--grey-mid);
+    padding: 20px; margin-bottom: 20px;
+  }
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--grey-mid);
+  }
+  .card-title { font-size: 14px; font-weight: 700; color: var(--blue); }
+
+  /* ── STAT CARDS ── */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--white); border-radius: 10px; padding: 18px 20px;
+    border: 1px solid var(--grey-mid); display: flex; align-items: center; gap: 14px;
+  }
+  .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .stat-val { font-size: 26px; font-weight: 800; line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--grey-dark); margin-top: 3px; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--grey); }
+  th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .6px; color: var(--grey-dark); }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--grey); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--blue-light); }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: .4px;
+  }
+  .badge-green { background: #E8F5E9; color: #2E7D32; }
+  .badge-red { background: #FFEBEE; color: #C62828; }
+  .badge-orange { background: #FFF3E0; color: #E65100; }
+  .badge-blue { background: #E3F2FD; color: #1565C0; }
+  .badge-grey { background: #F5F5F5; color: #616161; }
+  .badge-purple { background: #F3E5F5; color: #6A1B9A; }
+
+  /* ── FORM ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--grey-dark); text-transform: uppercase; letter-spacing: .5px; }
+  .form-control {
+    padding: 9px 12px; border: 1.5px solid var(--grey-mid); border-radius: 6px;
+    font-size: 13.5px; outline: none; transition: border .15s;
+  }
+  .form-control:focus { border-color: var(--blue); }
+  .form-control.skeleton { background: var(--grey); color: transparent; }
+
+  /* ── MAP PLACEHOLDER ── */
+  .map-placeholder {
+    background: #E8EFF5; border-radius: 8px; border: 2px dashed var(--grey-mid);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--grey-dark); font-size: 13px; gap: 8px;
+  }
+  .map-icon { font-size: 32px; }
+
+  /* ── GRID LAYOUTS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .col-7-5 { display: grid; grid-template-columns: 7fr 5fr; gap: 20px; }
+
+  /* ── EMERGENCY CARD ── */
+  .emergency-card {
+    border-left: 4px solid var(--red); padding: 14px 16px; border-radius: 0 8px 8px 0;
+    background: #FFF8F8; margin-bottom: 12px; display: flex; align-items: center; gap: 14px;
+  }
+  .emergency-card.dispatched { border-left-color: var(--orange); background: #FFFAF5; }
+  .emergency-card.resolved { border-left-color: var(--green); background: #F5FBF5; }
+  .em-meta { flex: 1; }
+  .em-type { font-size: 14px; font-weight: 700; }
+  .em-sub { font-size: 12px; color: var(--grey-dark); margin-top: 2px; }
+
+  /* ── TIMELINE ── */
+  .timeline { padding-left: 20px; border-left: 2px solid var(--grey-mid); }
+  .tl-item { position: relative; padding: 0 0 18px 20px; }
+  .tl-dot {
+    position: absolute; left: -27px; top: 3px; width: 12px; height: 12px;
+    border-radius: 50%; border: 2px solid var(--white); background: var(--blue);
+  }
+  .tl-time { font-size: 11px; color: var(--grey-dark); }
+  .tl-text { font-size: 13px; margin-top: 2px; }
+
+  /* ── PROGRESS ── */
+  .progress-bar { height: 8px; background: var(--grey-mid); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; border-radius: 4px; }
+
+  /* ── TABS ── */
+  .page-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--grey-mid); margin-bottom: 20px; }
+  .page-tab {
+    padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+    color: var(--grey-dark); border-bottom: 2px solid transparent; margin-bottom: -2px;
+  }
+  .page-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── SEARCH BAR ── */
+  .search-bar {
+    display: flex; align-items: center; gap: 8px; background: var(--grey);
+    border: 1.5px solid var(--grey-mid); border-radius: 8px; padding: 8px 14px;
+    font-size: 13px; color: var(--grey-dark); margin-bottom: 16px;
+  }
+
+  /* ── SKELETON LINES ── */
+  .skel { background: var(--grey-mid); border-radius: 4px; }
+  .skel-line { height: 12px; margin: 5px 0; }
+</style>
+</head>
+<body>
+
+<!-- PORTAL SWITCHER -->
+<nav id="portal-nav">
+  <span>CityCare</span>
+  <div class="portal-tab active" onclick="switchPortal('citizen')">👤 Citizen Portal</div>
+  <div class="portal-tab" onclick="switchPortal('dispatcher')">🚨 Dispatcher Console</div>
+  <div class="portal-tab" onclick="switchPortal('doctor')">🩺 Doctor / Nurse</div>
+  <div class="portal-tab" onclick="switchPortal('admin')">🏥 Hospital Admin</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PORTAL 1 — CITIZEN
+═══════════════════════════════════════════════════════════════ -->
+<div class="portal active" id="portal-citizen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo">CityCare</div>
+        <div class="role-badge">Citizen</div>
+      </div>
+      <nav class="sidebar-menu">
+        <div class="menu-section">Main</div>
+        <div class="menu-item active"><span class="menu-icon">🏠</span> Home</div>
+        <div class="menu-item"><span class="menu-icon">🚨</span> Report Emergency</div>
+        <div class="menu-section">Health</div>
+        <div class="menu-item"><span class="menu-icon">🏥</span> Find Facility</div>
+        <div class="menu-item"><span class="menu-icon">📋</span> My Records</div>
+        <div class="menu-item"><span class="menu-icon">💊</span> Treatments</div>
+        <div class="menu-section">Account</div>
+        <div class="menu-item"><span class="menu-icon">👤</span> Profile</div>
+        <div class="menu-item"><span class="menu-icon">🔒</span> Change Password</div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="avatar-row">
+          <div class="avatar">R</div>
+          <div><div style="font-size:13px;font-weight:600;color:#fff">Rahul Mehta</div><div style="font-size:11px">Citizen ID #10042</div></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title">Dashboard</div>
+        <div class="topbar-actions">
+          <button class="btn btn-danger">🚨 Report Emergency</button>
+        </div>
+      </div>
+      <div class="content">
+
+        <!-- EMERGENCY BANNER -->
+        <div style="background:linear-gradient(135deg,#C62828,#E53935);border-radius:12px;padding:20px 24px;color:#fff;margin-bottom:24px;display:flex;align-items:center;gap:20px;">
+          <div style="font-size:40px">🚑</div>
+          <div style="flex:1">
+            <div style="font-size:18px;font-weight:800">Need emergency help?</div>
+            <div style="font-size:13px;opacity:.85;margin-top:3px">Report an accident, heart attack, or any medical emergency instantly. An ambulance will be dispatched to your GPS location.</div>
+          </div>
+          <button class="btn" style="background:#fff;color:#C62828;font-weight:700;white-space:nowrap">Report Now →</button>
+        </div>
+
+        <!-- STATS -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FFF3E0">🚨</div>
+            <div><div class="stat-val" style="color:var(--orange)">2</div><div class="stat-label">Past Emergencies</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E8F5E9">🏥</div>
+            <div><div class="stat-val" style="color:var(--green)">1</div><div class="stat-label">Active Admission</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E3F2FD">💊</div>
+            <div><div class="stat-val" style="color:#1565C0">4</div><div class="stat-label">Treatments on Record</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#EDE7F6">📅</div>
+            <div><div class="stat-val" style="color:var(--purple)">1</div><div class="stat-label">Upcoming Follow-up</div></div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- REPORT EMERGENCY FORM -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🚨 Report an Emergency</div>
+            </div>
+            <div class="form-grid" style="grid-template-columns:1fr;">
+              <div class="form-group">
+                <label>Emergency Type</label>
+                <select class="form-control">
+                  <option>Select type…</option>
+                  <option>Accident</option>
+                  <option>Heart Attack</option>
+                  <option>Fire</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Description (optional)</label>
+                <textarea class="form-control" rows="2" placeholder="Additional details…"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Location</label>
+                <div class="form-control" style="background:var(--grey);color:var(--grey-dark);display:flex;align-items:center;gap:8px">
+                  📍 Detecting GPS location…
+                </div>
+              </div>
+              <div class="map-placeholder" style="height:130px">
+                <div class="map-icon">🗺️</div>
+                <div>Map — GPS auto-detected</div>
+              </div>
+            </div>
+            <div style="margin-top:16px">
+              <button class="btn btn-danger" style="width:100%;padding:11px">🚨 Submit Emergency Report</button>
+            </div>
+          </div>
+
+          <!-- MY RECORDS -->
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">📋 Current Admission</div>
+                <span class="badge badge-green">Admitted</span>
+              </div>
+              <div style="font-size:13px">
+                <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--grey)"><span style="color:var(--grey-dark)">Facility</span><span style="font-weight:600">City General Hospital</span></div>
+                <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--grey)"><span style="color:var(--grey-dark)">Admitted On</span><span>14 Feb 2026</span></div>
+                <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--grey)"><span style="color:var(--grey-dark)">Type</span><span>Emergency</span></div>
+                <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:var(--grey-dark)">Treating Doctor</span><span>Dr. Priya Nair</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">💊 Recent Treatments</div></div>
+              <div class="timeline">
+                <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">14 Feb 2026</div><div class="tl-text">IV fluids + ECG monitoring — <span class="badge badge-green">Completed</span></div></div>
+                <div class="tl-item"><div class="tl-dot" style="background:var(--orange)"></div><div class="tl-time">15 Feb 2026</div><div class="tl-text">Cardiology review + medication — <span class="badge badge-orange">Ongoing</span></div></div>
+                <div class="tl-item" style="padding-bottom:0"><div class="tl-dot" style="background:var(--grey-dark)"></div><div class="tl-time">18 Feb 2026</div><div class="tl-text">Follow-up scheduled — <span class="badge badge-grey">Upcoming</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FIND FACILITY -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">🏥 Nearby Facilities</div><button class="btn btn-outline btn-sm">View All</button></div>
+          <div class="search-bar">🔍 &nbsp;Search hospitals or clinics…</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Facility Name</th><th>Type</th><th>Address</th><th>Available Beds</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong>City General Hospital</strong></td><td>Hospital</td><td>12 MG Road, Coimbatore</td><td>24</td><td><span class="badge badge-green">Open</span></td></tr>
+                <tr><td><strong>Apollo Clinic — RS Puram</strong></td><td>Clinic</td><td>45 RS Puram, Coimbatore</td><td>—</td><td><span class="badge badge-green">Open</span></td></tr>
+                <tr><td><strong>District Medical Centre</strong></td><td>Hospital</td><td>7 Avinashi Rd, Coimbatore</td><td>3</td><td><span class="badge badge-orange">Almost Full</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PORTAL 2 — DISPATCHER
+═══════════════════════════════════════════════════════════════ -->
+<div class="portal" id="portal-dispatcher">
+  <div class="app-shell">
+    <aside class="sidebar" style="background:#8B0000">
+      <div class="sidebar-brand">
+        <div class="logo">CityCare</div>
+        <div class="role-badge">Dispatcher</div>
+      </div>
+      <nav class="sidebar-menu">
+        <div class="menu-section">Operations</div>
+        <div class="menu-item active"><span class="menu-icon">📡</span> Live Queue</div>
+        <div class="menu-item"><span class="menu-icon">🚑</span> Ambulances</div>
+        <div class="menu-item"><span class="menu-icon">🗺️</span> Map View</div>
+        <div class="menu-section">Records</div>
+        <div class="menu-item"><span class="menu-icon">📋</span> All Emergencies</div>
+        <div class="menu-item"><span class="menu-icon">📜</span> Dispatch History</div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="avatar-row">
+          <div class="avatar">S</div>
+          <div><div style="font-size:13px;font-weight:600;color:#fff">Sanjay Kumar</div><div style="font-size:11px">Dispatcher</div></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title">🚨 Emergency Dispatch Console</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#2E7D32;display:inline-block;box-shadow:0 0 0 3px #E8F5E9"></span>
+          <span style="font-size:12px;color:var(--grey-dark)">Live — Auto-refresh ON</span>
+        </div>
+      </div>
+      <div class="content">
+
+        <!-- LIVE STATS -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FFEBEE">🆕</div>
+            <div><div class="stat-val" style="color:var(--red)">3</div><div class="stat-label">New — Unassigned</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FFF3E0">🚑</div>
+            <div><div class="stat-val" style="color:var(--orange)">5</div><div class="stat-label">Ambulances Active</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E8F5E9">✅</div>
+            <div><div class="stat-val" style="color:var(--green)">7</div><div class="stat-label">Available Ambulances</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E3F2FD">📊</div>
+            <div><div class="stat-val" style="color:#1565C0">12</div><div class="stat-label">Resolved Today</div></div>
+          </div>
+        </div>
+
+        <div class="col-7-5">
+          <!-- LIVE EMERGENCY QUEUE -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📡 Live Emergency Queue</div>
+              <div style="display:flex;gap:8px">
+                <span class="badge badge-red">3 Unassigned</span>
+                <button class="btn btn-outline btn-sm">Filter</button>
+              </div>
+            </div>
+
+            <div class="page-tabs">
+              <div class="page-tab active">All</div>
+              <div class="page-tab">Reported</div>
+              <div class="page-tab">Dispatched</div>
+              <div class="page-tab">Responded</div>
+            </div>
+
+            <!-- Emergency cards -->
+            <div class="emergency-card">
+              <div style="font-size:28px">💔</div>
+              <div class="em-meta">
+                <div class="em-type">Heart Attack <span class="badge badge-red" style="margin-left:6px">REPORTED</span></div>
+                <div class="em-sub">📍 12 MG Road, Coimbatore &nbsp;·&nbsp; Citizen #10042 &nbsp;·&nbsp; 2 min ago</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <button class="btn btn-warning btn-sm">Assign Ambulance</button>
+                <button class="btn btn-outline btn-sm">View Details</button>
+              </div>
+            </div>
+
+            <div class="emergency-card">
+              <div style="font-size:28px">🚗</div>
+              <div class="em-meta">
+                <div class="em-type">Accident <span class="badge badge-red" style="margin-left:6px">REPORTED</span></div>
+                <div class="em-sub">📍 Avinashi Rd, Near Tidel Park &nbsp;·&nbsp; Citizen #10098 &nbsp;·&nbsp; 5 min ago</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <button class="btn btn-warning btn-sm">Assign Ambulance</button>
+                <button class="btn btn-outline btn-sm">View Details</button>
+              </div>
+            </div>
+
+            <div class="emergency-card dispatched">
+              <div style="font-size:28px">🔥</div>
+              <div class="em-meta">
+                <div class="em-type">Fire <span class="badge badge-orange" style="margin-left:6px">DISPATCHED</span></div>
+                <div class="em-sub">📍 RS Puram Main St &nbsp;·&nbsp; Citizen #10055 &nbsp;·&nbsp; AMB-007 en route &nbsp;·&nbsp; 9 min ago</div>
+                <div style="margin-top:6px">
+                  <div style="font-size:11px;color:var(--grey-dark)">ETA: ~4 min</div>
+                  <div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--orange)"></div></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <button class="btn btn-success btn-sm">Mark Responded</button>
+                <button class="btn btn-outline btn-sm">View Map</button>
+              </div>
+            </div>
+
+            <div class="emergency-card resolved">
+              <div style="font-size:28px">✅</div>
+              <div class="em-meta">
+                <div class="em-type">Accident <span class="badge badge-green" style="margin-left:6px">RESOLVED</span></div>
+                <div class="em-sub">📍 Gandhipuram Bus Stand &nbsp;·&nbsp; AMB-003 &nbsp;·&nbsp; 44 min ago</div>
+              </div>
+              <button class="btn btn-outline btn-sm">View Report</button>
+            </div>
+          </div>
+
+          <!-- RIGHT PANEL -->
+          <div>
+            <!-- ASSIGN AMBULANCE MODAL-STYLE -->
+            <div class="card" style="border:2px solid var(--orange)">
+              <div class="card-header">
+                <div class="card-title" style="color:var(--orange)">🚑 Assign Ambulance</div>
+                <span class="badge badge-red">Emergency #E-2041</span>
+              </div>
+              <div style="font-size:13px;background:var(--grey);padding:10px 12px;border-radius:6px;margin-bottom:14px">
+                <strong>Heart Attack</strong> — 12 MG Road, Coimbatore<br/>
+                <span style="color:var(--grey-dark)">Reported by Citizen #10042 at 10:32 AM</span>
+              </div>
+              <div class="form-group" style="margin-bottom:12px">
+                <label>Select Ambulance</label>
+                <select class="form-control">
+                  <option>AMB-002 — City General (Available)</option>
+                  <option>AMB-005 — City General (Available)</option>
+                  <option>AMB-009 — District Medical (Available)</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:14px">
+                <label>Dispatcher Notes</label>
+                <textarea class="form-control" rows="2" placeholder="Optional notes…"></textarea>
+              </div>
+              <button class="btn btn-warning" style="width:100%">🚑 Dispatch Ambulance Now</button>
+            </div>
+
+            <!-- AMBULANCE STATUS -->
+            <div class="card">
+              <div class="card-header"><div class="card-title">🚑 Fleet Status</div><button class="btn btn-outline btn-sm">Manage</button></div>
+              <table>
+                <thead><tr><th>Unit</th><th>Status</th><th>Location</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>AMB-001</strong></td><td><span class="badge badge-green">Available</span></td><td>City General</td></tr>
+                  <tr><td><strong>AMB-002</strong></td><td><span class="badge badge-green">Available</span></td><td>City General</td></tr>
+                  <tr><td><strong>AMB-007</strong></td><td><span class="badge badge-orange">Dispatched</span></td><td>RS Puram</td></tr>
+                  <tr><td><strong>AMB-003</strong></td><td><span class="badge badge-green">Available</span></td><td>District Medical</td></tr>
+                  <tr><td><strong>AMB-010</strong></td><td><span class="badge badge-grey">Maintenance</span></td><td>—</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAP VIEW -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">🗺️ Live City Map</div><div style="display:flex;gap:8px"><span class="badge badge-red">3 Active Emergencies</span><span class="badge badge-orange">5 Ambulances En Route</span></div></div>
+          <div class="map-placeholder" style="height:220px">
+            <div class="map-icon">🗺️</div>
+            <div style="font-weight:600">Live Map — Emergency pins + Ambulance positions</div>
+            <div style="font-size:12px;color:var(--grey-dark)">GPS-tracked real-time overlay</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PORTAL 3 — DOCTOR / NURSE
+═══════════════════════════════════════════════════════════════ -->
+<div class="portal" id="portal-doctor">
+  <div class="app-shell">
+    <aside class="sidebar" style="background:#1B5E20">
+      <div class="sidebar-brand">
+        <div class="logo">CityCare</div>
+        <div class="role-badge">Doctor / Nurse</div>
+      </div>
+      <nav class="sidebar-menu">
+        <div class="menu-section">Patients</div>
+        <div class="menu-item active"><span class="menu-icon">📋</span> My Patients</div>
+        <div class="menu-item"><span class="menu-icon">💊</span> Treatments</div>
+        <div class="menu-item"><span class="menu-icon">📅</span> Follow-ups</div>
+        <div class="menu-section">Facility</div>
+        <div class="menu-item"><span class="menu-icon">🏥</span> Ward Overview</div>
+        <div class="menu-item"><span class="menu-icon">👥</span> Staff Directory</div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="avatar-row">
+          <div class="avatar">P</div>
+          <div><div style="font-size:13px;font-weight:600;color:#fff">Dr. Priya Nair</div><div style="font-size:11px">Cardiologist · City General</div></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title">My Patients</div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary">+ Add Treatment</button>
+        </div>
+      </div>
+      <div class="content">
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E8F5E9">🛏️</div>
+            <div><div class="stat-val" style="color:var(--green)">8</div><div class="stat-label">Active Patients</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#FFF3E0">💊</div>
+            <div><div class="stat-val" style="color:var(--orange)">5</div><div class="stat-label">Ongoing Treatments</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E3F2FD">📅</div>
+            <div><div class="stat-val" style="color:#1565C0">3</div><div class="stat-label">Follow-ups Today</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#F3E5F5">✅</div>
+            <div><div class="stat-val" style="color:var(--purple)">12</div><div class="stat-label">Discharged This Week</div></div>
+          </div>
+        </div>
+
+        <div class="col-7-5">
+          <!-- PATIENT LIST -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🛏️ Active Patients</div>
+              <button class="btn btn-outline btn-sm">Filter</button>
+            </div>
+            <div class="search-bar">🔍 &nbsp;Search patients…</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Patient</th><th>Admitted</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Rahul Mehta</strong><br/><span style="font-size:11px;color:var(--grey-dark)">#P-1024 · Age 34</span></td>
+                    <td>14 Feb 2026</td>
+                    <td><span class="badge badge-red">Emergency</span></td>
+                    <td><span class="badge badge-orange">Undergoing Treatment</span></td>
+                    <td><button class="btn btn-primary btn-sm">View</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sunita Rao</strong><br/><span style="font-size:11px;color:var(--grey-dark)">#P-1031 · Age 58</span></td>
+                    <td>16 Feb 2026</td>
+                    <td><span class="badge badge-blue">Scheduled</span></td>
+                    <td><span class="badge badge-orange">Undergoing Treatment</span></td>
+                    <td><button class="btn btn-primary btn-sm">View</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Arun Krishnan</strong><br/><span style="font-size:11px;color:var(--grey-dark)">#P-1035 · Age 45</span></td>
+                    <td>18 Feb 2026</td>
+                    <td><span class="badge badge-grey">Walk-in</span></td>
+                    <td><span class="badge badge-blue">Admitted</span></td>
+                    <td><button class="btn btn-primary btn-sm">View</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PATIENT DETAIL PANEL -->
+          <div>
+            <div class="card" style="border:2px solid var(--green)">
+              <div class="card-header">
+                <div class="card-title" style="color:var(--green)">👤 Rahul Mehta — #P-1024</div>
+                <span class="badge badge-orange">Undergoing Treatment</span>
+              </div>
+              <div style="font-size:13px;margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--grey)"><span style="color:var(--grey-dark)">DOB</span><span>12 Aug 1991 (34 yrs)</span></div>
+                <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--grey)"><span style="color:var(--grey-dark)">Admitted</span><span>14 Feb 2026 — Emergency</span></div>
+                <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:var(--grey-dark)">Facility</span><span>City General Hospital</span></div>
+              </div>
+
+              <!-- ADD TREATMENT -->
+              <div style="background:var(--grey);padding:12px;border-radius:8px">
+                <div style="font-size:12px;font-weight:700;color:var(--grey-dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">+ Add Treatment Entry</div>
+                <div class="form-group" style="margin-bottom:10px">
+                  <label>Description / Diagnosis</label>
+                  <textarea class="form-control" rows="2" placeholder="Describe treatment…"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom:10px">
+                  <label>Medication</label>
+                  <input class="form-control" placeholder="Medication details…"/>
+                </div>
+                <div class="form-grid" style="margin-bottom:12px">
+                  <div class="form-group">
+                    <label>Treatment Date</label>
+                    <input class="form-control" type="date"/>
+                  </div>
+                  <div class="form-group">
+                    <label>Follow-up Date</label>
+                    <input class="form-control" type="date"/>
+                  </div>
+                </div>
+                <button class="btn btn-success" style="width:100%">✅ Save Treatment</button>
+              </div>
+
+              <!-- TREATMENT HISTORY -->
+              <div style="margin-top:16px">
+                <div style="font-size:12px;font-weight:700;color:var(--grey-dark);text-transform:uppercase;margin-bottom:10px">Treatment History</div>
+                <div class="timeline">
+                  <div class="tl-item"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-time">14 Feb — Dr. Priya Nair</div><div class="tl-text">IV fluids + ECG monitoring <span class="badge badge-green">Completed</span></div></div>
+                  <div class="tl-item" style="padding-bottom:0"><div class="tl-dot" style="background:var(--orange)"></div><div class="tl-time">15 Feb — Dr. Priya Nair</div><div class="tl-text">Cardiology review + medication <span class="badge badge-orange">Ongoing</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PORTAL 4 — HOSPITAL ADMIN
+═══════════════════════════════════════════════════════════════ -->
+<div class="portal" id="portal-admin">
+  <div class="app-shell">
+    <aside class="sidebar" style="background:#311B92">
+      <div class="sidebar-brand">
+        <div class="logo">CityCare</div>
+        <div class="role-badge">Hospital Admin</div>
+      </div>
+      <nav class="sidebar-menu">
+        <div class="menu-section">Overview</div>
+        <div class="menu-item active"><span class="menu-icon">📊</span> Dashboard</div>
+        <div class="menu-section">Facility</div>
+        <div class="menu-item"><span class="menu-icon">🏥</span> Facility Details</div>
+        <div class="menu-item"><span class="menu-icon">👥</span> Staff Management</div>
+        <div class="menu-item"><span class="menu-icon">🚑</span> Ambulance Fleet</div>
+        <div class="menu-section">Patients</div>
+        <div class="menu-item"><span class="menu-icon">🛏️</span> Admit Patient</div>
+        <div class="menu-item"><span class="menu-icon">📋</span> All Patients</div>
+        <div class="menu-item"><span class="menu-icon">🚪</span> Discharges</div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="avatar-row">
+          <div class="avatar">M</div>
+          <div><div style="font-size:13px;font-weight:600;color:#fff">Meena Suresh</div><div style="font-size:11px">Hospital Admin</div></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title">City General Hospital — Admin Panel</div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary">+ Admit Patient</button>
+          <button class="btn btn-outline">+ Add Staff</button>
+        </div>
+      </div>
+      <div class="content">
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E8F5E9">🛏️</div>
+            <div><div class="stat-val" style="color:var(--green)">24<span style="font-size:14px;color:var(--grey-dark)">/80</span></div><div class="stat-label">Beds Available</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E3F2FD">👥</div>
+            <div><div class="stat-val" style="color:#1565C0">56</div><div class="stat-label">Active Patients</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#E8F5E9">🚑</div>
+            <div><div class="stat-val" style="color:var(--green)">7<span style="font-size:14px;color:var(--grey-dark)">/10</span></div><div class="stat-label">Ambulances Available</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#EDE7F6">👨‍⚕️</div>
+            <div><div class="stat-val" style="color:var(--purple)">32</div><div class="stat-label">Staff On Duty</div></div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- ADMIT PATIENT -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">🛏️ Admit New Patient</div></div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Citizen ID / Name</label>
+                <input class="form-control" placeholder="Search citizen…"/>
+              </div>
+              <div class="form-group">
+                <label>Admission Type</label>
+                <select class="form-control">
+                  <option>Walk-in</option>
+                  <option>Scheduled</option>
+                  <option>Emergency</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Linked Emergency (if any)</label>
+                <input class="form-control" placeholder="Emergency ID…"/>
+              </div>
+              <div class="form-group">
+                <label>Admission Date & Time</label>
+                <input class="form-control" type="datetime-local"/>
+              </div>
+            </div>
+            <div style="margin-top:16px">
+              <button class="btn btn-primary" style="width:100%">Confirm Admission</button>
+            </div>
+          </div>
+
+          <!-- DISCHARGE PATIENT -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">🚪 Discharge Patient</div></div>
+            <div class="search-bar">🔍 &nbsp;Search admitted patients…</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Patient</th><th>Admitted</th><th>Doctor</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Rahul Mehta</strong></td><td>14 Feb</td><td>Dr. Priya</td><td><button class="btn btn-success btn-sm">Discharge</button></td></tr>
+                  <tr><td><strong>Sunita Rao</strong></td><td>16 Feb</td><td>Dr. Priya</td><td><button class="btn btn-success btn-sm">Discharge</button></td></tr>
+                  <tr><td><strong>Arun Krishnan</strong></td><td>18 Feb</td><td>Dr. Rajan</td><td><button class="btn btn-outline btn-sm">Pending</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- STAFF MANAGEMENT -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">👥 Staff Management</div>
+              <button class="btn btn-outline btn-sm">+ Add Staff</button>
+            </div>
+            <div class="page-tabs">
+              <div class="page-tab active">Doctors</div>
+              <div class="page-tab">Nurses</div>
+              <div class="page-tab">Dispatchers</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Name</th><th>Specialization</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Dr. Priya Nair</strong></td><td>Cardiology</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+                  <tr><td><strong>Dr. Rajan Pillai</strong></td><td>General</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+                  <tr><td><strong>Dr. Kavitha S.</strong></td><td>Orthopaedics</td><td><span class="badge badge-orange">On Leave</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- AMBULANCE FLEET MGMT -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🚑 Ambulance Fleet</div>
+              <button class="btn btn-outline btn-sm">+ Add Unit</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Unit</th><th>Vehicle No.</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><strong>AMB-001</strong></td><td>TN 33 AB 1001</td><td><span class="badge badge-green">Available</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+                  <tr><td><strong>AMB-002</strong></td><td>TN 33 AB 1002</td><td><span class="badge badge-green">Available</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+                  <tr><td><strong>AMB-007</strong></td><td>TN 33 AB 1007</td><td><span class="badge badge-orange">Dispatched</span></td><td><button class="btn btn-outline btn-sm">View</button></td></tr>
+                  <tr><td><strong>AMB-010</strong></td><td>TN 33 AB 1010</td><td><span class="badge badge-grey">Maintenance</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="margin-top:14px">
+              <div style="font-size:12px;color:var(--grey-dark);margin-bottom:6px">Fleet Availability</div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:70%;background:var(--green)"></div></div>
+                <span style="font-size:13px;font-weight:700;color:var(--green)">7/10 Available</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FACILITY DETAILS -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">🏥 Facility Overview — City General Hospital</div><button class="btn btn-outline btn-sm">Edit Details</button></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;font-size:13px">
+            <div style="background:var(--grey);padding:12px;border-radius:8px">
+              <div style="font-size:11px;color:var(--grey-dark);text-transform:uppercase;font-weight:700;margin-bottom:4px">Type</div>
+              <div style="font-weight:600">Hospital</div>
+            </div>
+            <div style="background:var(--grey);padding:12px;border-radius:8px">
+              <div style="font-size:11px;color:var(--grey-dark);text-transform:uppercase;font-weight:700;margin-bottom:4px">Total Beds</div>
+              <div style="font-weight:600">80</div>
+            </div>
+            <div style="background:var(--grey);padding:12px;border-radius:8px">
+              <div style="font-size:11px;color:var(--grey-dark);text-transform:uppercase;font-weight:700;margin-bottom:4px">Available Beds</div>
+              <div style="font-weight:600;color:var(--green)">24</div>
+            </div>
+            <div style="background:var(--grey);padding:12px;border-radius:8px">
+              <div style="font-size:11px;color:var(--grey-dark);text-transform:uppercase;font-weight:700;margin-bottom:4px">Status</div>
+              <div><span class="badge badge-green">Active</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchPortal(name) {
+    document.querySelectorAll('.portal').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.portal-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('portal-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>
