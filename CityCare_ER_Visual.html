@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CityCare — ER Diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #1e1e2e;
+  font-family: 'Inter', sans-serif;
+  color: #cdd6f4;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* TOOLBAR */
+#toolbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 52px;
+  background: #181825;
+  border-bottom: 1px solid #313244;
+  display: flex; align-items: center; gap: 8px; padding: 0 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+#toolbar h1 {
+  font-size: 14px; font-weight: 600; color: #cdd6f4;
+  margin-right: 16px; letter-spacing: 0.3px;
+}
+#toolbar h1 span { color: #89b4fa; }
+.tb-sep { width: 1px; height: 24px; background: #313244; margin: 0 8px; }
+.tb-btn {
+  background: #313244; border: 1px solid #45475a; color: #cdd6f4;
+  padding: 5px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.15s;
+}
+.tb-btn:hover { background: #45475a; color: #cdd6f4; }
+.tb-hint {
+  margin-left: auto; font-size: 11px; color: #585b70;
+}
+
+/* CANVAS */
+#canvas-wrap {
+  position: fixed; top: 52px; left: 0; right: 0; bottom: 0;
+  overflow: hidden; cursor: grab;
+}
+#canvas-wrap.grabbing { cursor: grabbing; }
+#canvas {
+  position: absolute;
+  transform-origin: 0 0;
+}
+
+/* SVG LAYER */
+#svg-layer {
+  position: absolute; top: 0; left: 0;
+  pointer-events: none; overflow: visible;
+}
+
+/* ENTITY */
+.entity {
+  position: absolute;
+  background: #181825;
+  border-radius: 8px;
+  min-width: 220px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  user-select: none;
+  cursor: move;
+  transition: box-shadow 0.2s;
+}
+.entity:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+}
+.entity.dragging {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.8);
+  z-index: 50 !important;
+}
+
+.entity-header {
+  padding: 10px 14px 9px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+  position: relative;
+}
+.entity-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 700;
+  color: #fff; letter-spacing: 0.5px;
+}
+.entity-subtitle {
+  font-size: 10px; color: rgba(255,255,255,0.45);
+  margin-top: 2px; font-weight: 400;
+}
+
+.fields-list { padding: 4px 0 6px; }
+
+.field-row {
+  display: flex; align-items: flex-start;
+  padding: 4px 14px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  min-height: 28px;
+}
+.field-row:last-child { border-bottom: none; }
+.field-row.divider {
+  padding: 2px 14px;
+  background: rgba(255,255,255,0.03);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: rgba(255,255,255,0.2);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.key-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; font-weight: 700;
+  padding: 1px 4px; border-radius: 3px;
+  margin-top: 3px; flex-shrink: 0;
+  min-width: 20px; text-align: center;
+}
+.pk { background: rgba(249,191,59,0.15); color: #f9bf3b; border: 1px solid rgba(249,191,59,0.3); }
+.fk { background: rgba(137,180,250,0.12); color: #89b4fa; border: 1px solid rgba(137,180,250,0.25); }
+.sp { width: 20px; flex-shrink: 0; }
+
+.field-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: #cdd6f4;
+  flex: 1; padding-top: 2px; line-height: 1.3;
+}
+.field-name.is-pk { color: #f9bf3b; }
+.field-name.is-fk { color: #89b4fa; }
+
+.field-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: rgba(255,255,255,0.22);
+  padding-top: 3px; white-space: nowrap; flex-shrink: 0;
+}
+
+/* LEGEND */
+#legend {
+  position: fixed; bottom: 20px; left: 20px; z-index: 100;
+  background: #181825; border: 1px solid #313244; border-radius: 8px;
+  padding: 12px 16px; font-size: 11px;
+}
+#legend h3 { font-size: 10px; color: #585b70; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.leg-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; color: #a6adc8; }
+.leg-item:last-child { margin-bottom: 0; }
+.leg-line { width: 28px; height: 2px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* ZOOM DISPLAY */
+#zoom-display {
+  position: fixed; bottom: 20px; right: 20px; z-index: 100;
+  background: #181825; border: 1px solid #313244; border-radius: 6px;
+  padding: 6px 12px; font-size: 11px; color: #585b70;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* MINIMAP */
+#minimap {
+  display: none;
+}
+
+/* TOOLTIP */
+#tooltip {
+  position: fixed; z-index: 200;
+  background: #11111b; border: 1px solid #313244; border-radius: 6px;
+  padding: 8px 12px; font-size: 11px; color: #a6adc8;
+  max-width: 260px; line-height: 1.5; pointer-events: none;
+  display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <h1>City<span>Care</span> &nbsp;·&nbsp; ER Diagram</h1>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" onclick="resetView()">⟳ Reset View</button>
+  <button class="tb-btn" onclick="zoomIn()">+ Zoom In</button>
+  <button class="tb-btn" onclick="zoomOut()">− Zoom Out</button>
+  <button class="tb-btn" onclick="fitAll()">⊡ Fit All</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" onclick="exportSVG()">↓ Export SVG</button>
+  <span class="tb-hint">Drag to pan &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Drag entities to move</span>
+</div>
+
+<div id="canvas-wrap">
+  <div id="canvas">
+    <svg id="svg-layer"></svg>
+    <!-- Entities injected by JS -->
+  </div>
+</div>
+
+<div id="legend">
+  <h3>Legend</h3>
+  <div class="leg-item"><div class="key-badge pk" style="min-width:18px">PK</div> Primary Key</div>
+  <div class="leg-item"><div class="key-badge fk" style="min-width:18px">FK</div> Foreign Key</div>
+  <div class="leg-sep" style="height:1px;background:#313244;margin:6px 0"></div>
+  <div class="leg-item"><div class="leg-line" style="background:#89b4fa;border-top:2px solid #89b4fa"></div> One-to-Many (1:N)</div>
+  <div class="leg-item"><div class="leg-line" style="background:#a6e3a1;border-top:2px dashed #a6e3a1"></div> One-to-One (1:1)</div>
+  <div class="leg-item"><div class="leg-line" style="background:#f38ba8;border-top:2px dotted #f38ba8"></div> Optional (0..1)</div>
+</div>
+
+<div id="zoom-display">100%</div>
+<div id="tooltip"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════════
+const ENTITIES = [
+  {
+    id: 'USER', label: 'USER', sub: 'Login accounts for all roles',
+    color: '#89b4fa', x: 60, y: 80,
+    fields: [
+      { key:'PK', name:'UserID',       type:'INT',          desc:'Auto-generated unique ID. Referenced by every other table.' },
+      { key:'',   name:'Name',         type:'VARCHAR(120)', desc:'Full name of the person.' },
+      { key:'',   name:'Email',        type:'VARCHAR(150)', desc:'Login identifier. Must be unique across all users.' },
+      { key:'',   name:'Phone',        type:'VARCHAR(20)',  desc:'Mobile number. Must be unique.' },
+      { key:'',   name:'PasswordHash', type:'VARCHAR(256)', desc:'Bcrypt-encrypted password. Plain text never stored.' },
+      { key:'',   name:'Role',         type:'ENUM',         desc:'Citizen | Dispatcher | HospitalAdmin — drives portal routing.' },
+      { key:'',   name:'Status',       type:'ENUM',         desc:'Active | Inactive | Suspended.' },
+      { key:'',   name:'CreatedAt',    type:'DATETIME',     desc:'Timestamp when account was created.' },
+    ]
+  },
+  {
+    id: 'FACILITY', label: 'FACILITY', sub: 'Hospitals and clinics',
+    color: '#2ec4b6', x: 420, y: 80,
+    fields: [
+      { key:'PK', name:'FacilityID',    type:'INT',          desc:'Auto-generated unique ID for this facility.' },
+      { key:'',   name:'Name',          type:'VARCHAR(200)', desc:'Official name e.g. City General Hospital.' },
+      { key:'',   name:'Type',          type:'ENUM',         desc:'Hospital | Clinic.' },
+      { key:'',   name:'Address',       type:'TEXT',         desc:'Full street address.' },
+      { key:'',   name:'Latitude',      type:'DECIMAL(9,6)', desc:'GPS latitude for nearest-facility routing.' },
+      { key:'',   name:'Longitude',     type:'DECIMAL(9,6)', desc:'GPS longitude for nearest-facility routing.' },
+      { key:'',   name:'TotalBeds',     type:'INT',          desc:'Maximum bed capacity.' },
+      { key:'',   name:'AvailableBeds', type:'INT',          desc:'Live free bed count. Auto-updated on admit/discharge.' },
+      { key:'',   name:'Status',        type:'ENUM',         desc:'Active | Inactive.' },
+    ]
+  },
+  {
+    id: 'DISPATCHER_PROFILE', label: 'DISPATCHER_PROFILE', sub: 'Links dispatcher to facility',
+    color: '#cba6f7', x: 420, y: 480,
+    fields: [
+      { key:'PK', name:'DispatcherProfileID', type:'INT',     desc:'Auto-generated unique ID.' },
+      { key:'FK', name:'UserID',              type:'INT',     desc:'→ USER. Must be Role=Dispatcher. UNIQUE constraint.' },
+      { key:'FK', name:'FacilityID',          type:'INT',     desc:'→ FACILITY. The facility this dispatcher serves.' },
+      { key:'',   name:'IsOnDuty',            type:'BOOLEAN', desc:'TRUE = receives emergencies. Toggled at shift start/end.' },
+    ]
+  },
+  {
+    id: 'STAFF', label: 'STAFF', sub: 'Doctors & nurses (not login users)',
+    color: '#fab387', x: 780, y: 80,
+    fields: [
+      { key:'PK', name:'StaffID',        type:'INT',          desc:'Auto-generated unique ID.' },
+      { key:'FK', name:'FacilityID',     type:'INT',          desc:'→ FACILITY. Where this staff member works.' },
+      { key:'',   name:'Name',           type:'VARCHAR(120)', desc:'Full name shown on treatment records.' },
+      { key:'',   name:'Role',           type:'ENUM',         desc:'Doctor | Nurse. Only Doctors assign treatments.' },
+      { key:'',   name:'Specialization', type:'VARCHAR(100)', desc:'e.g. Cardiology, Orthopaedics. Optional.' },
+      { key:'',   name:'Phone',          type:'VARCHAR(20)',  desc:'Internal contact. Not public-facing.' },
+      { key:'',   name:'Status',         type:'ENUM',         desc:'Active | On Leave | Inactive.' },
+    ]
+  },
+  {
+    id: 'AMBULANCE', label: 'AMBULANCE', sub: 'Physical vehicles per facility',
+    color: '#f38ba8', x: 780, y: 420,
+    fields: [
+      { key:'PK', name:'AmbulanceID',   type:'INT',         desc:'Auto-generated unique ID.' },
+      { key:'FK', name:'FacilityID',    type:'INT',         desc:'→ FACILITY. Home base. Dispatchers see own facility fleet only.' },
+      { key:'',   name:'VehicleNumber', type:'VARCHAR(30)', desc:'Registration plate. Must be globally unique.' },
+      { key:'',   name:'Model',         type:'VARCHAR(100)',desc:'Vehicle model e.g. Tata Winger. Optional.' },
+      { key:'',   name:'Status',        type:'ENUM',        desc:'Available | Dispatched (system-set) | Maintenance.' },
+    ]
+  },
+  {
+    id: 'EMERGENCY', label: 'EMERGENCY', sub: 'Incident reported by citizen',
+    color: '#f38ba8', x: 60, y: 580,
+    fields: [
+      { key:'PK', name:'EmergencyID',        type:'INT',          desc:'Auto-generated unique incident number.' },
+      { key:'FK', name:'ReportedByUserID',   type:'INT',          desc:'→ USER. Citizen who submitted the report. Always set.' },
+      { key:'',   name:'VictimType',         type:'ENUM',         desc:'SELF = reporter is victim | OTHER = different person.' },
+      { key:'FK', name:'VictimUserID',       type:'INT (NULL)',   desc:'→ USER. Set if victim is registered citizen. NULL for strangers.' },
+      { key:'',   name:'VictimName',         type:'VARCHAR(150)', desc:'Used when victim is unregistered. NULL if VictimUserID is set.' },
+      { key:'',   name:'Type',               type:'ENUM',         desc:'Accident | Heart Attack | Fire | Other.' },
+      { key:'',   name:'Description',        type:'TEXT',         desc:'Optional citizen notes passed to dispatcher.' },
+      { key:'',   name:'Latitude',           type:'DECIMAL(9,6)', desc:'Emergency scene GPS latitude.' },
+      { key:'',   name:'Longitude',          type:'DECIMAL(9,6)', desc:'Emergency scene GPS longitude.' },
+      { key:'FK', name:'AssignedFacilityID', type:'INT',          desc:'→ FACILITY. Nearest facility, auto-set by system.' },
+      { key:'',   name:'ReportedAt',         type:'DATETIME',     desc:'Exact submit timestamp. Auto-set.' },
+      { key:'',   name:'Status',             type:'ENUM',         desc:'Reported→Dispatched→Responded→Resolved | Cancelled.' },
+    ]
+  },
+  {
+    id: 'AMB_DISPATCH', label: 'AMBULANCE_DISPATCH', sub: 'Dispatcher assigns ambulance to emergency',
+    color: '#fab387', x: 420, y: 760,
+    fields: [
+      { key:'PK', name:'DispatchID',   type:'INT',      desc:'Auto-generated unique ID.' },
+      { key:'FK', name:'EmergencyID',  type:'INT',      desc:'→ EMERGENCY. UNIQUE — one dispatch per emergency at a time.' },
+      { key:'FK', name:'DispatcherID', type:'INT',      desc:'→ USER. Dispatcher who clicked Deploy.' },
+      { key:'FK', name:'AmbulanceID',  type:'INT',      desc:'→ AMBULANCE. Vehicle deployed. Status → Dispatched on creation.' },
+      { key:'',   name:'DispatchedAt', type:'DATETIME', desc:'When Deploy was clicked. Auto-set.' },
+      { key:'',   name:'ArrivalAt',    type:'DATETIME', desc:'When ambulance reached scene. NULL until marked.' },
+      { key:'',   name:'ClearedAt',    type:'DATETIME', desc:'When ambulance freed. Triggers Status→Available + Resolved.' },
+      { key:'',   name:'Notes',        type:'TEXT',     desc:'Dispatcher operational notes. Optional.' },
+    ]
+  },
+  {
+    id: 'PATIENT', label: 'PATIENT', sub: 'One row per hospital admission visit',
+    color: '#89dceb', x: 1120, y: 580,
+    fields: [
+      { key:'PK', name:'PatientID',     type:'INT',          desc:'Auto-generated unique ID. New row per visit.' },
+      { key:'FK', name:'UserID',        type:'INT (NULL)',   desc:'→ USER. NULL for unregistered victims. Never assume set.' },
+      { key:'',   name:'PatientName',   type:'VARCHAR(150)', desc:'Used only when UserID is NULL (stranger admitted via emergency).' },
+      { key:'FK', name:'FacilityID',    type:'INT',          desc:'→ FACILITY. Determines bed count and admin visibility.' },
+      { key:'FK', name:'EmergencyID',   type:'INT (NULL)',   desc:'→ EMERGENCY. Set if arrived via ambulance. NULL for walk-ins.' },
+      { key:'',   name:'AdmissionDate', type:'DATETIME',     desc:'Official check-in time. Triggers AvailableBeds−1.' },
+      { key:'',   name:'DischargeDate', type:'DATETIME',     desc:'NULL until discharged. Triggers AvailableBeds+1.' },
+      { key:'',   name:'AdmissionType', type:'ENUM',         desc:'Emergency | Scheduled | WalkIn.' },
+      { key:'',   name:'Status',        type:'ENUM',         desc:'Admitted | Undergoing Treatment | Discharged.' },
+    ]
+  },
+  {
+    id: 'TREATMENT', label: 'TREATMENT', sub: 'Medical entries per admission',
+    color: '#a6e3a1', x: 1120, y: 940,
+    fields: [
+      { key:'PK', name:'TreatmentID',   type:'INT',      desc:'Auto-generated unique ID.' },
+      { key:'FK', name:'PatientID',     type:'INT',      desc:'→ PATIENT. The admission this treatment belongs to.' },
+      { key:'FK', name:'StaffID',       type:'INT',      desc:'→ STAFF. Doctor who administered. Role=Doctor only.' },
+      { key:'',   name:'Description',   type:'TEXT',     desc:'Clinical notes, diagnosis, procedures. Required.' },
+      { key:'',   name:'Medication',    type:'TEXT',     desc:'Drugs and dosages. Optional.' },
+      { key:'',   name:'TreatmentDate', type:'DATETIME', desc:'When treatment was given.' },
+      { key:'',   name:'FollowUpDate',  type:'DATE',     desc:'Optional review date reminder.' },
+      { key:'',   name:'Status',        type:'ENUM',     desc:'Ongoing | Completed (triggers discharge check) | Referred.' },
+    ]
+  },
+];
+
+// RELATIONSHIPS: [fromId, toId, label, fromSide, toSide, style, cardinality]
+// sides: top, bottom, left, right
+// style: 'one-many' | 'one-one' | 'one-optional'
+const RELATIONS = [
+  { from:'USER',     to:'DISPATCHER_PROFILE', label:'1:0..1',  fromPort:'bottom', toPort:'top',    style:'one-one',      note:'One user has at most one dispatcher profile' },
+  { from:'FACILITY', to:'DISPATCHER_PROFILE', label:'1:N',     fromPort:'bottom', toPort:'top',    style:'one-many',     note:'One facility has many dispatchers (shifts)' },
+  { from:'FACILITY', to:'STAFF',              label:'1:N',     fromPort:'right',  toPort:'left',   style:'one-many',     note:'One facility employs many staff members' },
+  { from:'FACILITY', to:'AMBULANCE',          label:'1:N',     fromPort:'right',  toPort:'left',   style:'one-many',     note:'One facility owns many ambulances' },
+  { from:'FACILITY', to:'EMERGENCY',          label:'1:N',     fromPort:'left',   toPort:'top',    style:'one-many',     note:'Emergencies are routed to a facility' },
+  { from:'USER',     to:'EMERGENCY',          label:'1:N',     fromPort:'bottom', toPort:'top',    style:'one-many',     note:'Citizen (reporter) creates many emergencies' },
+  { from:'USER',     to:'EMERGENCY',          label:'0..N',    fromPort:'left',   toPort:'left',   style:'one-optional', note:'Citizen may appear as victim in emergencies' },
+  { from:'EMERGENCY',to:'AMB_DISPATCH',       label:'1:0..1',  fromPort:'bottom', toPort:'top',    style:'one-optional', note:'Emergency has at most one active dispatch (UNIQUE)' },
+  { from:'USER',     to:'AMB_DISPATCH',       label:'1:N',     fromPort:'bottom', toPort:'left',   style:'one-many',     note:'Dispatcher (user) manages many dispatches' },
+  { from:'AMBULANCE',to:'AMB_DISPATCH',       label:'1:N',     fromPort:'bottom', toPort:'right',  style:'one-many',     note:'Ambulance has many dispatch records over time' },
+  { from:'EMERGENCY',to:'PATIENT',            label:'1:0..1',  fromPort:'right',  toPort:'left',   style:'one-optional', note:'Emergency may result in a patient admission' },
+  { from:'USER',     to:'PATIENT',            label:'1:0..N',  fromPort:'right',  toPort:'top',    style:'one-many',     note:'Citizen may be admitted multiple times (nullable)' },
+  { from:'FACILITY', to:'PATIENT',            label:'1:N',     fromPort:'right',  toPort:'top',    style:'one-many',     note:'Facility manages many patient admissions' },
+  { from:'PATIENT',  to:'TREATMENT',          label:'1:N',     fromPort:'bottom', toPort:'top',    style:'one-many',     note:'One admission has many treatment entries' },
+  { from:'STAFF',    to:'TREATMENT',          label:'1:N',     fromPort:'bottom', toPort:'top',    style:'one-many',     note:'Doctor writes many treatment records' },
+];
+
+// ════════════════════════════════════════════════════════════
+// LAYOUT ENGINE
+// ════════════════════════════════════════════════════════════
+const ENTITY_COLOR_ALPHA = '18';
+
+// Better layout positions
+const POSITIONS = {
+  USER:                { x: 80,   y: 100  },
+  FACILITY:            { x: 520,  y: 100  },
+  DISPATCHER_PROFILE:  { x: 80,   y: 520  },
+  STAFF:               { x: 960,  y: 100  },
+  AMBULANCE:           { x: 960,  y: 480  },
+  EMERGENCY:           { x: 80,   y: 900  },
+  AMB_DISPATCH:        { x: 520,  y: 900  },
+  PATIENT:             { x: 960,  y: 880  },
+  TREATMENT:           { x: 1380, y: 880  },
+};
+
+ENTITIES.forEach(e => {
+  if (POSITIONS[e.id]) { e.x = POSITIONS[e.id].x; e.y = POSITIONS[e.id].y; }
+});
+
+// ════════════════════════════════════════════════════════════
+// RENDER ENTITIES
+// ════════════════════════════════════════════════════════════
+const canvas = document.getElementById('canvas');
+const svg = document.getElementById('svg-layer');
+const tooltip = document.getElementById('tooltip');
+
+const entityEls = {};
+const entityRects = {};
+
+function buildEntity(e) {
+  const el = document.createElement('div');
+  el.className = 'entity';
+  el.id = 'ent-' + e.id;
+  el.style.left = e.x + 'px';
+  el.style.top  = e.y + 'px';
+  el.style.zIndex = 10;
+  el.style.borderTop = `3px solid ${e.color}`;
+  el.style.boxShadow = `0 4px 24px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.06)`;
+
+  // Header
+  const hdr = document.createElement('div');
+  hdr.className = 'entity-header';
+  hdr.style.background = `linear-gradient(135deg, ${e.color}22 0%, transparent 100%)`;
+
+  const title = document.createElement('div');
+  title.className = 'entity-title';
+  title.style.color = e.color;
+  title.textContent = e.label;
+
+  const sub = document.createElement('div');
+  sub.className = 'entity-subtitle';
+  sub.textContent = e.sub;
+
+  hdr.appendChild(title);
+  hdr.appendChild(sub);
+  el.appendChild(hdr);
+
+  // Fields
+  const list = document.createElement('div');
+  list.className = 'fields-list';
+
+  // Group: PK first, then divider, then rest
+  const pks = e.fields.filter(f => f.key === 'PK');
+  const rest = e.fields.filter(f => f.key !== 'PK');
+
+  pks.forEach(f => list.appendChild(buildField(f)));
+
+  if (rest.length) {
+    const div = document.createElement('div');
+    div.className = 'field-row divider';
+    div.textContent = 'ATTRIBUTES';
+    list.appendChild(div);
+    rest.forEach(f => list.appendChild(buildField(f)));
+  }
+
+  el.appendChild(list);
+  canvas.appendChild(el);
+  entityEls[e.id] = el;
+
+  // Make draggable
+  makeDraggable(el, e);
+  // Hover tooltip
+  el.addEventListener('mouseenter', () => el.style.boxShadow = `0 8px 32px rgba(0,0,0,0.8), 0 0 0 1px ${e.color}55, inset 0 0 0 1px rgba(255,255,255,0.08)`);
+  el.addEventListener('mouseleave', () => el.style.boxShadow = `0 4px 24px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.06)`);
+}
+
+function buildField(f) {
+  const row = document.createElement('div');
+  row.className = 'field-row';
+  row.title = f.desc;
+
+  const badge = document.createElement('div');
+  if (f.key) {
+    badge.className = 'key-badge ' + f.key.toLowerCase();
+    badge.textContent = f.key;
+  } else {
+    badge.className = 'sp';
+  }
+
+  const name = document.createElement('div');
+  name.className = 'field-name' + (f.key === 'PK' ? ' is-pk' : f.key === 'FK' ? ' is-fk' : '');
+  name.textContent = f.name;
+
+  const type = document.createElement('div');
+  type.className = 'field-type';
+  type.textContent = f.type;
+
+  row.appendChild(badge);
+  row.appendChild(name);
+  row.appendChild(type);
+
+  // Field-level tooltip
+  row.addEventListener('mouseenter', (ev) => {
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = `<strong style="color:#cdd6f4">${f.name}</strong><br><span style="color:#6c7086">${f.type}</span><br><br>${f.desc}`;
+  });
+  row.addEventListener('mousemove', (ev) => {
+    tooltip.style.left = (ev.clientX + 16) + 'px';
+    tooltip.style.top  = (ev.clientY - 8) + 'px';
+  });
+  row.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+
+  return row;
+}
+
+// ════════════════════════════════════════════════════════════
+// RENDER ALL ENTITIES FIRST, THEN GET SIZES, THEN DRAW LINES
+// ════════════════════════════════════════════════════════════
+ENTITIES.forEach(buildEntity);
+
+function getRect(id) {
+  const el = entityEls[id];
+  return {
+    x: parseInt(el.style.left),
+    y: parseInt(el.style.top),
+    w: el.offsetWidth,
+    h: el.offsetHeight,
+  };
+}
+
+function getPortPoint(id, port, offsetIdx, totalOnPort) {
+  const r = getRect(id);
+  const spread = 16;
+  const base = (totalOnPort - 1) * spread / 2;
+  const offset = offsetIdx * spread - base;
+
+  switch(port) {
+    case 'top':    return { x: r.x + r.w/2 + offset, y: r.y };
+    case 'bottom': return { x: r.x + r.w/2 + offset, y: r.y + r.h };
+    case 'left':   return { x: r.x,      y: r.y + r.h/2 + offset };
+    case 'right':  return { x: r.x + r.w, y: r.y + r.h/2 + offset };
+  }
+}
+
+// Count port usage
+const portCounts = {};
+RELATIONS.forEach(r => {
+  const fk = r.from + r.fromPort;
+  const tk = r.to + r.toPort;
+  portCounts[fk] = (portCounts[fk] || 0) + 1;
+  portCounts[tk] = (portCounts[tk] || 0) + 1;
+});
+const portIdx = {};
+
+const STYLE_MAP = {
+  'one-many':     { color: '#89b4fa', dasharray: 'none',    labelColor: '#89b4fa' },
+  'one-one':      { color: '#a6e3a1', dasharray: '6,3',     labelColor: '#a6e3a1' },
+  'one-optional': { color: '#cba6f7', dasharray: '4,4',     labelColor: '#cba6f7' },
+};
+
+function drawCrowFoot(svgEl, px, py, angle, color) {
+  const len = 14; const spread = 6;
+  const cos = Math.cos(angle); const sin = Math.sin(angle);
+  // End bar (one side)
+  const barX1 = px + spread * sin; const barY1 = py - spread * cos;
+  const barX2 = px - spread * sin; const barY2 = py + spread * cos;
+  // Crow foot tines
+  const tipX = px - len * cos; const tipY = py - len * sin;
+  const t1x = px + spread * sin - len*0.5*cos; const t1y = py - spread*cos - len*0.5*sin;
+  const t2x = px - spread * sin - len*0.5*cos; const t2y = py + spread*cos - len*0.5*sin;
+
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+
+  // Three tines of crow foot
+  [[px, py, tipX, tipY],[px, py, t1x, t1y],[px, py, t2x, t2y]].forEach(([x1,y1,x2,y2]) => {
+    const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+    l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+    l.setAttribute('stroke', color); l.setAttribute('stroke-width', '1.5');
+    l.setAttribute('stroke-linecap', 'round');
+    g.appendChild(l);
+  });
+
+  // End bar (the "one" side marker)
+  const bar = document.createElementNS('http://www.w3.org/2000/svg','line');
+  bar.setAttribute('x1', barX1); bar.setAttribute('y1', barY1);
+  bar.setAttribute('x2', barX2); bar.setAttribute('y2', barY2);
+  bar.setAttribute('stroke', color); bar.setAttribute('stroke-width', '1.5');
+  g.appendChild(bar);
+
+  svgEl.appendChild(g);
+}
+
+function drawOneMarker(svgEl, px, py, angle, color) {
+  const spread = 5; const dist = 8;
+  const cos = Math.cos(angle); const sin = Math.sin(angle);
+  const cx = px - dist * cos; const cy = py - dist * sin;
+  const x1 = cx + spread * sin; const y1 = cy - spread * cos;
+  const x2 = cx - spread * sin; const y2 = cy + spread * cos;
+  const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1',x1); l.setAttribute('y1',y1);
+  l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+  l.setAttribute('stroke', color); l.setAttribute('stroke-width','1.5');
+  svgEl.appendChild(l);
+}
+
+function drawRelations() {
+  svg.innerHTML = '';
+  // Set SVG size to canvas content size
+  const allRects = ENTITIES.map(e => {
+    const r = getRect(e.id);
+    return { right: r.x + r.w, bottom: r.y + r.h };
+  });
+  const W = Math.max(...allRects.map(r => r.right)) + 200;
+  const H = Math.max(...allRects.map(r => r.bottom)) + 200;
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+
+  // Define arrowhead markers
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  svg.appendChild(defs);
+
+  const portOccupancy = {};
+
+  RELATIONS.forEach((rel, ri) => {
+    const fk = rel.from + rel.fromPort;
+    const tk = rel.to + rel.toPort;
+    const fi = portOccupancy[fk] || 0; portOccupancy[fk] = fi + 1;
+    const ti = portOccupancy[tk] || 0; portOccupancy[tk] = ti + 1;
+    const ftotal = portCounts[fk] || 1;
+    const ttotal = portCounts[tk] || 1;
+
+    const p1 = getPortPoint(rel.from, rel.fromPort, fi, ftotal);
+    const p2 = getPortPoint(rel.to,   rel.toPort,   ti, ttotal);
+
+    const st = STYLE_MAP[rel.style] || STYLE_MAP['one-many'];
+    const color = st.color;
+
+    // Build orthogonal path
+    const path = makePath(p1, p2, rel.fromPort, rel.toPort);
+
+    const pathEl = document.createElementNS('http://www.w3.org/2000/svg','path');
+    pathEl.setAttribute('d', path);
+    pathEl.setAttribute('stroke', color);
+    pathEl.setAttribute('stroke-width', '1.8');
+    pathEl.setAttribute('fill', 'none');
+    pathEl.setAttribute('opacity', '0.75');
+    if (st.dasharray !== 'none') pathEl.setAttribute('stroke-dasharray', st.dasharray);
+    pathEl.setAttribute('stroke-linecap', 'round');
+    pathEl.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(pathEl);
+
+    // Draw crow foot at TO end (many side)
+    const angle2 = portAngle(rel.toPort);
+    if (rel.style === 'one-many' || rel.style === 'one-optional') {
+      drawCrowFoot(svg, p2.x, p2.y, angle2, color);
+    } else {
+      drawOneMarker(svg, p2.x, p2.y, angle2, color);
+    }
+    // Draw one-bar at FROM end
+    const angle1 = portAngle(rel.fromPort, true);
+    drawOneMarker(svg, p1.x, p1.y, angle1, color);
+
+    // Label in the middle of the path
+    const midX = (p1.x + p2.x) / 2;
+    const midY = (p1.y + p2.y) / 2;
+    const labelBg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    const lw = rel.label.length * 7 + 8;
+    labelBg.setAttribute('x', midX - lw/2); labelBg.setAttribute('y', midY - 9);
+    labelBg.setAttribute('width', lw); labelBg.setAttribute('height', 16);
+    labelBg.setAttribute('rx', 3); labelBg.setAttribute('fill', '#1e1e2e');
+    labelBg.setAttribute('stroke', color); labelBg.setAttribute('stroke-width', '1');
+    labelBg.setAttribute('opacity','0.9');
+    svg.appendChild(labelBg);
+
+    const labelEl = document.createElementNS('http://www.w3.org/2000/svg','text');
+    labelEl.setAttribute('x', midX); labelEl.setAttribute('y', midY + 4);
+    labelEl.setAttribute('text-anchor','middle');
+    labelEl.setAttribute('font-family','JetBrains Mono, monospace');
+    labelEl.setAttribute('font-size','9.5');
+    labelEl.setAttribute('fill', color);
+    labelEl.setAttribute('font-weight','600');
+    labelEl.textContent = rel.label;
+    svg.appendChild(labelEl);
+  });
+}
+
+function portAngle(port, reverse=false) {
+  const map = { top: -Math.PI/2, bottom: Math.PI/2, left: Math.PI, right: 0 };
+  const a = map[port] || 0;
+  return reverse ? a + Math.PI : a;
+}
+
+function makePath(p1, p2, fromPort, toPort) {
+  // Orthogonal routing with nice corners
+  const gap = 30;
+  let x1=p1.x, y1=p1.y, x2=p2.x, y2=p2.y;
+
+  // Exit vector
+  const ex1 = fromPort === 'right' ? gap : fromPort === 'left' ? -gap : 0;
+  const ey1 = fromPort === 'bottom' ? gap : fromPort === 'top' ? -gap : 0;
+  const ex2 = toPort === 'right' ? gap : toPort === 'left' ? -gap : 0;
+  const ey2 = toPort === 'bottom' ? gap : toPort === 'top' ? -gap : 0;
+
+  const mx1 = x1 + ex1; const my1 = y1 + ey1;
+  const mx2 = x2 + ex2; const my2 = y2 + ey2;
+
+  // Mid points for routing
+  let d = `M ${x1} ${y1} L ${mx1} ${my1}`;
+
+  if ((fromPort === 'right' || fromPort === 'left') && (toPort === 'top' || toPort === 'bottom')) {
+    d += ` L ${mx1} ${my2} L ${mx2} ${my2} L ${x2} ${y2}`;
+  } else if ((fromPort === 'top' || fromPort === 'bottom') && (toPort === 'left' || toPort === 'right')) {
+    d += ` L ${mx2} ${my1} L ${mx2} ${my2} L ${x2} ${y2}`;
+  } else if (fromPort === toPort) {
+    const midH = (my1 + my2) / 2;
+    d += ` L ${mx1} ${midH} L ${mx2} ${midH} L ${mx2} ${my2} L ${x2} ${y2}`;
+  } else {
+    d += ` L ${mx1} ${my2} L ${x2} ${y2}`;
+  }
+
+  return d;
+}
+
+// ════════════════════════════════════════════════════════════
+// PAN & ZOOM
+// ════════════════════════════════════════════════════════════
+let scale = 0.72, panX = 60, panY = 20;
+const wrap = document.getElementById('canvas-wrap');
+
+function applyTransform() {
+  canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+  document.getElementById('zoom-display').textContent = Math.round(scale * 100) + '%';
+  drawRelations();
+}
+
+// Pan
+let isPanning = false, panStart = {x:0,y:0}, panOrigin = {x:0,y:0};
+wrap.addEventListener('mousedown', e => {
+  if (e.target === wrap || e.target === canvas || e.target === svg) {
+    isPanning = true;
+    panStart = {x: e.clientX, y: e.clientY};
+    panOrigin = {x: panX, y: panY};
+    wrap.classList.add('grabbing');
+  }
+});
+window.addEventListener('mousemove', e => {
+  if (!isPanning) return;
+  panX = panOrigin.x + e.clientX - panStart.x;
+  panY = panOrigin.y + e.clientY - panStart.y;
+  applyTransform();
+});
+window.addEventListener('mouseup', () => { isPanning = false; wrap.classList.remove('grabbing'); });
+
+// Scroll zoom
+wrap.addEventListener('wheel', e => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.92 : 1.08;
+  const newScale = Math.max(0.2, Math.min(3, scale * delta));
+  // Zoom toward cursor
+  const cx = e.clientX - wrap.getBoundingClientRect().left;
+  const cy = e.clientY - wrap.getBoundingClientRect().top;
+  panX = cx - (cx - panX) * (newScale / scale);
+  panY = cy - (cy - panY) * (newScale / scale);
+  scale = newScale;
+  applyTransform();
+}, { passive: false });
+
+// ════════════════════════════════════════════════════════════
+// ENTITY DRAGGING
+// ════════════════════════════════════════════════════════════
+function makeDraggable(el, entity) {
+  let dragging = false;
+  let startMouse = {x:0,y:0}, startPos = {x:0,y:0};
+
+  el.addEventListener('mousedown', e => {
+    if (e.target.tagName === 'A') return;
+    e.stopPropagation();
+    dragging = true;
+    startMouse = {x: e.clientX, y: e.clientY};
+    startPos = {x: entity.x, y: entity.y};
+    el.classList.add('dragging');
+    el.style.zIndex = 100;
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  });
+
+  function onMove(e) {
+    if (!dragging) return;
+    const dx = (e.clientX - startMouse.x) / scale;
+    const dy = (e.clientY - startMouse.y) / scale;
+    entity.x = Math.round(startPos.x + dx);
+    entity.y = Math.round(startPos.y + dy);
+    el.style.left = entity.x + 'px';
+    el.style.top  = entity.y + 'px';
+    drawRelations();
+  }
+
+  function onUp() {
+    dragging = false;
+    el.classList.remove('dragging');
+    el.style.zIndex = 10;
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+    drawRelations();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// TOOLBAR ACTIONS
+// ════════════════════════════════════════════════════════════
+function resetView() { scale=0.72; panX=60; panY=20; applyTransform(); }
+function zoomIn()  { scale = Math.min(3, scale * 1.15); applyTransform(); }
+function zoomOut() { scale = Math.max(0.2, scale / 1.15); applyTransform(); }
+
+function fitAll() {
+  const wrapW = wrap.offsetWidth;
+  const wrapH = wrap.offsetHeight;
+  const margin = 60;
+
+  // Get bounding box of all entities
+  let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+  ENTITIES.forEach(e => {
+    const r = getRect(e.id);
+    minX = Math.min(minX, r.x);
+    minY = Math.min(minY, r.y);
+    maxX = Math.max(maxX, r.x + r.w);
+    maxY = Math.max(maxY, r.y + r.h);
+  });
+
+  const contentW = maxX - minX + margin * 2;
+  const contentH = maxY - minY + margin * 2;
+  const newScale = Math.min(wrapW / contentW, wrapH / contentH, 1);
+  scale = newScale;
+  panX = margin - minX * newScale;
+  panY = margin - minY * newScale;
+  applyTransform();
+}
+
+function exportSVG() {
+  // Serialize SVG with embedded entity data as foreignObject
+  const svgClone = svg.cloneNode(true);
+  const blob = new Blob([svgClone.outerHTML], {type:'image/svg+xml'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CityCare_ER_Diagram.svg';
+  a.click();
+}
+
+// ════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════
+// Wait for entities to render, then draw lines
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    applyTransform();
+    // Auto-fit on load
+    setTimeout(fitAll, 100);
+  });
+});
+</script>
+</body>
+</html>
