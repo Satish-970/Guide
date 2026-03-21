@@ -1,0 +1,43 @@
+CityCare Project - Changes from the Last 2 Days
+===============================================
+
+1. Configuration & Setup
+------------------------
+- pom.xml (Added spring-boot-starter-aop & postgresql dependency)
+- src/main/resources/application.properties (Switched to PostgreSQL, enforced lowercase 'citycare' URL)
+- src/main/resources/banner.txt (Created the custom blue/cyan CityCare ASCII startup banner)
+- src/main/java/com/cts/CityCare/CityCare/CityCareApplication.java (Fixed startup crash by removing duplicate @EnableJpaAuditing)
+
+2. System Audit Tracking
+------------------------
+- src/main/java/com/cts/CityCare/CityCare/config/AuditConfig.java (Created logic to inject current user)
+- src/main/java/com/cts/CityCare/CityCare/config/AuditorAwareImpl.java (Created)
+- src/main/java/com/cts/CityCare/CityCare/aspect/AuditLogAspect.java (Created Spring AOP aspect to auto-log database saves/deletes to audit_logs table)
+- src/main/java/com/cts/CityCare/CityCare/repository/AuditLogRepository.java (Added custom findLogsByUserEmail @Query)
+- src/main/java/com/cts/CityCare/CityCare/service/AuditLogService.java (Created full service layer)
+- src/main/java/com/cts/CityCare/CityCare/controller/AuditLogController.java (Created REST endpoints with Role restrictions)
+- src/main/java/com/cts/CityCare/CityCare/dto/response/AuditLogResponse.java (Created)
+
+3. Exception Handling & Validations
+-----------------------------------
+- src/main/java/com/cts/CityCare/CityCare/exception/GlobalExceptionHandler.java (Added 2 new interceptors for MethodArgumentNotValidException & ConstraintViolationException)
+- src/main/java/com/cts/CityCare/CityCare/dto/response/ApiResponse.java (Added 'validationError' payload to map structured JSON errors natively)
+
+4. Facility Module Security Refactor
+------------------------------------
+- src/main/java/com/cts/CityCare/CityCare/dto/response/FacilityResponse.java (Created)
+- src/main/java/com/cts/CityCare/CityCare/dto/response/StaffResponse.java (Created)
+- src/main/java/com/cts/CityCare/CityCare/service/FacilityService.java (Secured by mapping internal Entities to Response DTOs instead)
+- src/main/java/com/cts/CityCare/CityCare/controller/FacilityController.java (Secured returning DTOs instead of raw entities)
+
+5. Entities (Removed @JsonIgnore & Added Jakarta Constraints)
+-------------------------------------------------------------
+- src/main/java/com/cts/CityCare/CityCare/entity/BaseEntity.java (Added @CreatedBy and @LastModifiedBy)
+- src/main/java/com/cts/CityCare/CityCare/entity/User.java (Removed @JsonIgnore, added @Size, @Pattern for Phone/Email)
+- src/main/java/com/cts/CityCare/CityCare/entity/Facility.java (Added @Size, @Min, @Max on capacity)
+- src/main/java/com/cts/CityCare/CityCare/entity/Staff.java (Removed @JsonIgnore, added @Size)
+- src/main/java/com/cts/CityCare/CityCare/entity/Emergency.java (Removed @JsonIgnoreProperties, added @Size limits)
+- src/main/java/com/cts/CityCare/CityCare/entity/Treatment.java (Removed @JsonIgnoreProperties, added @Size limits)
+- src/main/java/com/cts/CityCare/CityCare/entity/Patient.java (Removed @JsonIgnoreProperties, added @PastOrPresent, @Size)
+- src/main/java/com/cts/CityCare/CityCare/entity/Citizen.java (Added @Size, @Past requirements)
+- src/main/java/com/cts/CityCare/CityCare/entity/Ambulance.java (Added @Pattern for valid Vehicle plates, @Size)
