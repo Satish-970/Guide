@@ -1,0 +1,773 @@
+{
+  "info": {
+    "name": "CityCare Microservices",
+    "description": "Complete Postman collection for CityCare microservices. All requests route through the API Gateway at port 8080. Set the `token` variable after login to authenticate subsequent requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token",   "value": "", "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Register Citizen",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\",\n  \"phone\": \"+91-9876543210\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "  pm.collectionVariables.set('token', json.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Admin - Create Doctor/Nurse",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/admin/staff", "host": ["{{baseUrl}}"], "path": ["admin","staff"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Smith\",\n  \"email\": \"drsmith@citycare.com\",\n  \"password\": \"doctor123\",\n  \"phone\": \"+91-9000000001\",\n  \"role\": \"DOCTOR\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Admin - List All Staff",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/staff", "host": ["{{baseUrl}}"], "path": ["admin","staff"] }
+          }
+        },
+        {
+          "name": "Admin - Create Dispatcher",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/admin/dispatchers", "host": ["{{baseUrl}}"], "path": ["admin","dispatchers"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Dispatcher\",\n  \"email\": \"alice@citycare.com\",\n  \"password\": \"dispatch123\",\n  \"phone\": \"+91-9000000002\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Admin - List All Dispatchers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/dispatchers", "host": ["{{baseUrl}}"], "path": ["admin","dispatchers"] }
+          }
+        },
+        {
+          "name": "Admin - Create Compliance Officer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/admin/compliance-officers", "host": ["{{baseUrl}}"], "path": ["admin","compliance-officers"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bob Officer\",\n  \"email\": \"bob@citycare.com\",\n  \"password\": \"comply123\",\n  \"phone\": \"+91-9000000003\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Admin - Create Health Officer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/admin/health-officers", "host": ["{{baseUrl}}"], "path": ["admin","health-officers"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carol Health\",\n  \"email\": \"carol@citycare.com\",\n  \"password\": \"health123\",\n  \"phone\": \"+91-9000000004\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Admin - List All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/users", "host": ["{{baseUrl}}"], "path": ["admin","users"] }
+          }
+        },
+        {
+          "name": "Admin - Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/users/1", "host": ["{{baseUrl}}"], "path": ["admin","users","1"] }
+          }
+        },
+        {
+          "name": "Admin - Deactivate User",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/users/1/deactivate", "host": ["{{baseUrl}}"], "path": ["admin","users","1","deactivate"] }
+          }
+        },
+        {
+          "name": "Admin - Activate User",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/users/1/activate", "host": ["{{baseUrl}}"], "path": ["admin","users","1","activate"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Citizen Service",
+      "item": [
+        {
+          "name": "Create or Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-Auth-UserId", "value": "1" }
+            ],
+            "url": { "raw": "{{baseUrl}}/citizens/profile", "host": ["{{baseUrl}}"], "path": ["citizens","profile"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"gender\": \"MALE\",\n  \"address\": \"12 Main Street, Coimbatore\",\n  \"contactInfo\": \"+91-9876543210\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-Auth-UserId", "value": "1" }
+            ],
+            "url": { "raw": "{{baseUrl}}/citizens/profile", "host": ["{{baseUrl}}"], "path": ["citizens","profile"] }
+          }
+        },
+        {
+          "name": "Get All Citizens",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/citizens", "host": ["{{baseUrl}}"], "path": ["citizens"] }
+          }
+        },
+        {
+          "name": "Get Citizen by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/citizens/1", "host": ["{{baseUrl}}"], "path": ["citizens","1"] }
+          }
+        },
+        {
+          "name": "Upload Document",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/citizens/1/documents", "host": ["{{baseUrl}}"], "path": ["citizens","1","documents"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Citizen Documents",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/citizens/1/documents", "host": ["{{baseUrl}}"], "path": ["citizens","1","documents"] }
+          }
+        },
+        {
+          "name": "Verify or Reject Document",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/citizens/documents/1/verify?status=VERIFIED",
+              "host": ["{{baseUrl}}"],
+              "path": ["citizens","documents","1","verify"],
+              "query": [{ "key": "status", "value": "VERIFIED", "description": "PENDING | VERIFIED | REJECTED" }]
+            }
+          }
+        },
+        {
+          "name": "[Internal] Auto-Create Citizen on Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/citizens/internal/create", "host": ["{{baseUrl}}"], "path": ["citizens","internal","create"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"name\": \"John Doe\",\n  \"contactInfo\": \"+91-9876543210\"\n}"
+            }
+          }
+        },
+        {
+          "name": "[Internal] Get Citizen by UserId",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/citizens/internal/user/1", "host": ["{{baseUrl}}"], "path": ["citizens","internal","user","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Emergency Service",
+      "item": [
+        {
+          "name": "Report Emergency",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-Auth-UserId", "value": "1" }
+            ],
+            "url": { "raw": "{{baseUrl}}/emergencies/report", "host": ["{{baseUrl}}"], "path": ["emergencies","report"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"ACCIDENT\",\n  \"location\": \"Gandhipuram, Coimbatore\",\n  \"description\": \"Two-vehicle collision near the bus stand\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Emergencies",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-Auth-UserId", "value": "1" }
+            ],
+            "url": { "raw": "{{baseUrl}}/emergencies/my", "host": ["{{baseUrl}}"], "path": ["emergencies","my"] }
+          }
+        },
+        {
+          "name": "Get Pending Emergencies",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/emergencies/pending", "host": ["{{baseUrl}}"], "path": ["emergencies","pending"] }
+          }
+        },
+        {
+          "name": "Get Available Ambulances",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/emergencies/ambulances/available", "host": ["{{baseUrl}}"], "path": ["emergencies","ambulances","available"] }
+          }
+        },
+        {
+          "name": "Dispatch Ambulance",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-Auth-UserId", "value": "2" }
+            ],
+            "url": { "raw": "{{baseUrl}}/emergencies/1/dispatch", "host": ["{{baseUrl}}"], "path": ["emergencies","1","dispatch"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ambulanceId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Dispatched Emergencies",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/emergencies/dispatched", "host": ["{{baseUrl}}"], "path": ["emergencies","dispatched"] }
+          }
+        },
+        {
+          "name": "Get Emergency by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/emergencies/1", "host": ["{{baseUrl}}"], "path": ["emergencies","1"] }
+          }
+        },
+        {
+          "name": "Update Emergency Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/1/status?status=ADMITTED",
+              "host": ["{{baseUrl}}"],
+              "path": ["emergencies","1","status"],
+              "query": [{ "key": "status", "value": "ADMITTED", "description": "REPORTED | DISPATCHED | ADMITTED | CLOSED" }]
+            }
+          }
+        },
+        {
+          "name": "Get Citizen for Emergency (OpenFeign)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/emergencies/1/citizen", "host": ["{{baseUrl}}"], "path": ["emergencies","1","citizen"] }
+          }
+        },
+        {
+          "name": "Admin - Add Ambulance",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/emergencies/admin/ambulances", "host": ["{{baseUrl}}"], "path": ["emergencies","admin","ambulances"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleNumber\": \"TN 33 AB 1234\",\n  \"model\": \"Force Traveller\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Admin - List All Ambulances",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/emergencies/admin/ambulances", "host": ["{{baseUrl}}"], "path": ["emergencies","admin","ambulances"] }
+          }
+        },
+        {
+          "name": "Admin - Update Ambulance Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/admin/ambulances/1/status?status=MAINTENANCE",
+              "host": ["{{baseUrl}}"],
+              "path": ["emergencies","admin","ambulances","1","status"],
+              "query": [{ "key": "status", "value": "MAINTENANCE", "description": "AVAILABLE | DISPATCHED | MAINTENANCE" }]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Patient Treatment Service",
+      "item": [
+        {
+          "name": "Admit Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/patients/admit", "host": ["{{baseUrl}}"], "path": ["patients","admit"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"citizenId\": 1,\n  \"emergencyId\": 1,\n  \"admissionDate\": \"2026-04-05\",\n  \"ward\": \"ICU\",\n  \"notes\": \"Critical condition, requires monitoring\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Patients",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/patients", "host": ["{{baseUrl}}"], "path": ["patients"] }
+          }
+        },
+        {
+          "name": "Get Patient by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/patients/1", "host": ["{{baseUrl}}"], "path": ["patients","1"] }
+          }
+        },
+        {
+          "name": "Update Patient Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/patients/1/status?status=STABLE",
+              "host": ["{{baseUrl}}"],
+              "path": ["patients","1","status"],
+              "query": [{ "key": "status", "value": "STABLE", "description": "ADMITTED | UNDER_OBSERVATION | STABLE | DISCHARGED" }]
+            }
+          }
+        },
+        {
+          "name": "Get Citizen for Patient (OpenFeign)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/patients/1/citizen", "host": ["{{baseUrl}}"], "path": ["patients","1","citizen"] }
+          }
+        },
+        {
+          "name": "Get Emergency for Patient (OpenFeign)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/patients/1/emergency", "host": ["{{baseUrl}}"], "path": ["patients","1","emergency"] }
+          }
+        },
+        {
+          "name": "Add Treatment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-Auth-UserId", "value": "3" }
+            ],
+            "url": { "raw": "{{baseUrl}}/treatments", "host": ["{{baseUrl}}"], "path": ["treatments"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": 1,\n  \"description\": \"IV fluids and wound dressing\",\n  \"medicationName\": \"Paracetamol\",\n  \"dosage\": \"500mg every 8 hours\",\n  \"endDate\": \"2026-04-10\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Treatments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/treatments", "host": ["{{baseUrl}}"], "path": ["treatments"] }
+          }
+        },
+        {
+          "name": "Get Treatment by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/treatments/1", "host": ["{{baseUrl}}"], "path": ["treatments","1"] }
+          }
+        },
+        {
+          "name": "Get Treatments for Patient",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/patients/1/treatments", "host": ["{{baseUrl}}"], "path": ["patients","1","treatments"] }
+          }
+        },
+        {
+          "name": "Update Treatment Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/treatments/1/status?status=COMPLETED",
+              "host": ["{{baseUrl}}"],
+              "path": ["treatments","1","status"],
+              "query": [{ "key": "status", "value": "COMPLETED", "description": "ONGOING | COMPLETED | CANCELLED" }]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Facility Service",
+      "item": [
+        {
+          "name": "Create Facility",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/facilities", "host": ["{{baseUrl}}"], "path": ["facilities"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CityCare General Hospital\",\n  \"type\": \"HOSPITAL\",\n  \"location\": \"RS Puram, Coimbatore\",\n  \"capacity\": 200,\n  \"status\": \"ACTIVE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Facilities",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/facilities", "host": ["{{baseUrl}}"], "path": ["facilities"] }
+          }
+        },
+        {
+          "name": "Get Facility by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/facilities/1", "host": ["{{baseUrl}}"], "path": ["facilities","1"] }
+          }
+        },
+        {
+          "name": "Update Facility",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/facilities/1", "host": ["{{baseUrl}}"], "path": ["facilities","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CityCare General Hospital\",\n  \"type\": \"HOSPITAL\",\n  \"location\": \"RS Puram, Coimbatore\",\n  \"capacity\": 250,\n  \"status\": \"ACTIVE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Facility",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/facilities/1", "host": ["{{baseUrl}}"], "path": ["facilities","1"] }
+          }
+        },
+        {
+          "name": "Assign Staff to Facility",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/facilities/staff", "host": ["{{baseUrl}}"], "path": ["facilities","staff"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Smith\",\n  \"role\": \"DOCTOR\",\n  \"facilityId\": 1,\n  \"contactInfo\": \"+91-9000000001\",\n  \"userId\": 3\n}"
+            }
+          }
+        },
+        {
+          "name": "List All Staff",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/facilities/staff", "host": ["{{baseUrl}}"], "path": ["facilities","staff"] }
+          }
+        },
+        {
+          "name": "List Staff in Facility",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/facilities/1/staff", "host": ["{{baseUrl}}"], "path": ["facilities","1","staff"] }
+          }
+        },
+        {
+          "name": "Get Staff by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/facilities/staff/1", "host": ["{{baseUrl}}"], "path": ["facilities","staff","1"] }
+          }
+        },
+        {
+          "name": "Update Staff Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/facilities/staff/1/status?status=INACTIVE",
+              "host": ["{{baseUrl}}"],
+              "path": ["facilities","staff","1","status"],
+              "query": [{ "key": "status", "value": "INACTIVE", "description": "ACTIVE | INACTIVE" }]
+            }
+          }
+        },
+        {
+          "name": "Get Auth User for Staff (OpenFeign)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/facilities/staff/1/user", "host": ["{{baseUrl}}"], "path": ["facilities","staff","1","user"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Compliance Service",
+      "item": [
+        {
+          "name": "Create Compliance Record",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-Auth-UserId", "value": "5" }
+            ],
+            "url": { "raw": "{{baseUrl}}/compliance/records", "host": ["{{baseUrl}}"], "path": ["compliance","records"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"entityId\": 1,\n  \"type\": \"FACILITY\",\n  \"result\": \"COMPLIANT\",\n  \"date\": \"2026-04-05\",\n  \"notes\": \"All safety protocols met\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Compliance Records",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/compliance/records", "host": ["{{baseUrl}}"], "path": ["compliance","records"] }
+          }
+        },
+        {
+          "name": "Get Compliance Record by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/compliance/records/1", "host": ["{{baseUrl}}"], "path": ["compliance","records","1"] }
+          }
+        },
+        {
+          "name": "Get Records by Entity ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/compliance/records/entity/1", "host": ["{{baseUrl}}"], "path": ["compliance","records","entity","1"] }
+          }
+        },
+        {
+          "name": "Get Records by Type",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/compliance/records/type/FACILITY",
+              "host": ["{{baseUrl}}"],
+              "path": ["compliance","records","type","FACILITY"],
+              "description": "Types: FACILITY | PATIENT | EMERGENCY"
+            }
+          }
+        },
+        {
+          "name": "Create Audit",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-Auth-UserId", "value": "5" }
+            ],
+            "url": { "raw": "{{baseUrl}}/compliance/audits", "host": ["{{baseUrl}}"], "path": ["compliance","audits"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scope\": \"Q1 2026 Hospital Safety Audit\",\n  \"date\": \"2026-04-05\",\n  \"findings\": \"All equipment up to standard\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Audits",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/compliance/audits", "host": ["{{baseUrl}}"], "path": ["compliance","audits"] }
+          }
+        },
+        {
+          "name": "Get Audit by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/compliance/audits/1", "host": ["{{baseUrl}}"], "path": ["compliance","audits","1"] }
+          }
+        },
+        {
+          "name": "Update Audit Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/compliance/audits/1/status?status=COMPLETED&findings=No+issues+found",
+              "host": ["{{baseUrl}}"],
+              "path": ["compliance","audits","1","status"],
+              "query": [
+                { "key": "status", "value": "COMPLETED", "description": "SCHEDULED | IN_PROGRESS | COMPLETED | CANCELLED" },
+                { "key": "findings", "value": "No issues found" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/compliance/logs", "host": ["{{baseUrl}}"], "path": ["compliance","logs"] }
+          }
+        },
+        {
+          "name": "Get Audit Logs by User",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/compliance/logs/user/5", "host": ["{{baseUrl}}"], "path": ["compliance","logs","user","5"] }
+          }
+        }
+      ]
+    }
+
+  ]
+}
